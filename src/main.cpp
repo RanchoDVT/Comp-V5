@@ -21,10 +21,11 @@ bool CTRLR2ENABLE;
 bool BETAENABLED;
 bool LOGTOFILE;
 std::string VERSION = "2.0pr2";
-std::string BUILD_DATE = "4/23/24";
+std::string BUILD_DATE = "4/25/24";
 std::size_t MAXOPTIONSSIZE;
 std::size_t CTRLR1POLLINGRATE;
 std::size_t ARMVOLTAGE; // Voltage setting for arm motor.
+int drivercontrollogo;
 
 /* Stall Torque (with 36:1 gears)	2.1 Nm			*/
 /* Encoder	1800 ticks/rev with 36:1 gears			*/
@@ -40,22 +41,14 @@ vex::motor ClawMotor = vex::motor(vex::PORT3, vex::ratio36_1, false);
 vex::motor ArmMotor = vex::motor(vex::PORT8, vex::ratio36_1, false);
 vex::bumper RearBumper = vex::bumper(Brain.ThreeWirePort.A);
 vex::controller Controller1 = vex::controller(vex::primary);
-#if (CTRLR2ENABLE)
-{
-	vex::controller Controller2 = vex::controller(vex::partner);
-}
-#endif
+vex::controller Controller2 = vex::controller(vex::partner);
 vex::competition Competition;
-#if (VISIONENABLE)
-{
-	/*vex-vision-config:begin*/
-	vex::vision::signature PURPLECUBE = vex::vision::signature(1, 1755, 3073, 2414, 6847, 9223, 8035, 4.7, 0);
-	vex::vision::signature GREENCUBE = vex::vision::signature(2, -7943, -4519, -6231, -4025, -2043, -3034, 2.7, 0);
-	vex::vision::signature ORANGECUBE = vex::vision::signature(3, 8099, 9043, 8571, -1895, -1371, -1633, 2.5, 0);
-	vex::vision Vision7 = vex::vision(vex::PORT7, 50, PURPLECUBE, GREENCUBE, ORANGECUBE);
-	/*vex-vision-config:end*/
-}
-#endif
+/*vex-vision-config:begin*/
+vex::vision::signature PURPLECUBE = vex::vision::signature(1, 1755, 3073, 2414, 6847, 9223, 8035, 4.7, 0);
+vex::vision::signature GREENCUBE = vex::vision::signature(2, -7943, -4519, -6231, -4025, -2043, -3034, 2.7, 0);
+vex::vision::signature ORANGECUBE = vex::vision::signature(3, 8099, 9043, 8571, -1895, -1371, -1633, 2.5, 0);
+vex::vision Vision7 = vex::vision(vex::PORT7, 50, PURPLECUBE, GREENCUBE, ORANGECUBE);
+/*vex-vision-config:end*/
 
 /**
  * @author @DVT7125
@@ -66,7 +59,7 @@ vex::competition Competition;
 void startup()
 {
 	clearScreen(true, true);
-
+	vex::task calibrate(calibrategiro);
 	configParser();
 
 	std::ostringstream message;
@@ -74,7 +67,7 @@ void startup()
 	logHandler("main", message.str(), Log::Level::Info);
 
 	message.str(std::string());
-
+	drivercontrollogo = 00;
 	vex::task gifplay(gifplayer);
 
 	Controller1.Screen.print("Starting up...");
@@ -87,53 +80,18 @@ void startup()
 
 	vex::competition::bStopAllTasksBetweenModes = false;
 
-	// Set stopping, these should never get changed.
-	Drivetrain.setStopping(vex::coast); // Prevent tip over at high speeds.
-	ClawMotor.setStopping(vex::hold);
-
-	logHandler("calibrateDrivetrain", "Calibrating Inertial Gyro...", Log::Level::Info);
-	Inertial.calibrate();
-
-	while (Inertial.isCalibrating())
-	{
-		vex::this_thread::sleep_for(25);
-	}
-
-	logHandler("calibrateDrivetrain", "Finished Calibrating Inertial Gyro.", Log::Level::Info);
-
 	message << "Battery is at: " << Brain.Battery.capacity() << "%%";
 	if (Brain.Battery.capacity() < 90)
 	{
-		logHandler("startup", message.str(), Log::Level::Warn);
 		logHandler("startup", message.str(), Log::Level::Warn);
 	}
 	else
 	{
 		logHandler("startup", message.str(), Log::Level::Info);
-		logHandler("startup", message.str(), Log::Level::Info);
 	}
-
 	message.str(std::string());
 
-	message.str(std::string());
-
-	std::string autorun = getUserOption("Run Autonomous?", {"Yes", "No"});
-	if (autorun == "Yes")
-	{
-		logHandler("startup", "Starting autonomous from setup.", Log::Level::Trace);
-		Controller1.Screen.print("Running autonomous.");
-		autonomous();
-		logHandler("startup", "Finished autonomous.", Log::Level::Trace);
-	}
-	else if (autorun == "No")
-	{
-		Controller1.Screen.print("Skipped autonomous.");
-		logHandler("startup", "Skipped autonomous.", Log::Level::Trace);
-		vex::this_thread::sleep_for(1000);
-		vex::this_thread::sleep_for(1000);
-	}
-
-	std::string armSetting = getUserOption("Arm Mode", {"Hold", "Coast"});
+	std::string armSetting = getUserOption("Arm Mode:", {"Hold", "Coast"});
 	if (armSetting == "Hold")
 	{
 		ArmMotor.setStopping(vex::hold);
@@ -150,14 +108,7 @@ void startup()
 
 	message.str(std::string());
 
-	message << "Arm set to " << armSetting << ".";
-	logHandler("startup", message.str(), Log::Level::Trace);
-	Controller1.Screen.print((message.str().c_str()));
-	vex::this_thread::sleep_for(1000);
-
-	message.str(std::string());
-
-	std::string ArmVolts = getUserOption("Arm Volts", {"9", "6", "12"});
+	std::string ArmVolts = getUserOption("Arm Volts:", {"9", "6", "12"});
 	if (ArmVolts == "9")
 	{
 		ARMVOLTAGE = 9;
@@ -171,17 +122,28 @@ void startup()
 	{
 		ARMVOLTAGE = 12;
 	}
-
 	message << "Arm set to " << ArmVolts << " volts.";
 	logHandler("startup", message.str(), Log::Level::Trace);
 	Controller1.Screen.print((message.str()).c_str());
+	message.str(std::string());
 	vex::this_thread::sleep_for(1000);
 
-	message << "Arm set to " << ArmVolts << " volts.";
-	logHandler("startup", message.str(), Log::Level::Trace);
-	Controller1.Screen.print((message.str()).c_str());
-	vex::this_thread::sleep_for(1000);
+	std::string autorun = getUserOption("Run Autonomous?", {"Yes", "No"});
+	if (autorun == "Yes")
+	{
+		logHandler("startup", "Starting autonomous from setup.", Log::Level::Trace);
+		Controller1.Screen.print("Running autonomous.");
+		autonomous();
+		logHandler("startup", "Finished autonomous.", Log::Level::Trace);
+	}
+	else if (autorun == "No")
+	{
+		Controller1.Screen.print("Skipped autonomous.");
+		logHandler("startup", "Skipped autonomous.", Log::Level::Trace);
+		vex::this_thread::sleep_for(1000);
+	}
 	CONTROLLER1COMMAND = true;
+	drivercontrollogo = 1;
 	clearScreen(false, true);
 }
 

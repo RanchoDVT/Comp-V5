@@ -1,48 +1,70 @@
 #include "vex.h"
 
 // Function to reset or initialize config file
-void resetOrInitializeConfig(bool resetreadme)
+void resetOrInitializeConfig(bool resetreadme, std::string message)
 {
-	std::ofstream configFile("config/config.cfg");
-	std::ofstream helpfile("readme.md");
-	if (!configFile)
+	std::string resetcfg = getUserOption(message.c_str(), {"Yes", "No"});
+	if (resetcfg == "Yes")
 	{
-		logHandler("resetOrInitializeConfig", "Could not create config.", Log::Level::Warn);
-		return;
+		Controller1.Screen.print("Reseting config file...");
+		std::ofstream configFile("config/config.cfg");
+		std::ofstream helpfile("readme.md");
+		if (!configFile)
+		{
+			logHandler("resetOrInitializeConfig", "Could not create config.", Log::Level::Warn);
+			return;
+		}
+		if (!helpfile)
+		{
+			logHandler("resetOrInitializeConfig", "Could not create readme.", Log::Level::Warn);
+			return;
+		}
+
+		// Write default configuration to the file
+		configFile << ";Config File:" << "\n";
+		configFile << "POLLINGRATE=1" << "\n";
+		configFile << "PRINTLOGO=true" << "\n";
+		configFile << "CTRLR2ENABLE=false" << "\n";
+		configFile << "VISIONENABLE=false" << "\n";
+		configFile << "MAXOPTIONSSIZE=4" << "\n";
+		configFile << "CTRLR1POLLINGRATE=25" << "\n";
+		configFile << "LOCALLOGO=false" << "\n";
+		configFile << "betacode=uF58FlLhU431q28cj599w47Ax5NRi" << "\n";
+
+		Controller1.Screen.print("Config file reset.");
+		logHandler("resetConfig", "Successfully reset config file.", Log::Level::Debug);
+
+		configFile.close();
+		helpfile.close();
+		clearScreen(false, true);
+		Controller1.Screen.print("Reset config file.");
+		vex::this_thread::sleep_for(1500);
+		clearScreen(false, true);
 	}
-
-	// Write default configuration to the file
-	configFile << ";Config File:" << "\n";
-	configFile << "POLLINGRATE=1" << "\n";
-	configFile << "PRINTLOGO=true" << "\n";
-	configFile << "CTRLR2ENABLE=false" << "\n";
-	configFile << "VISIONENABLE=false" << "\n";
-	configFile << "MAXOPTIONSSIZE=4" << "\n";
-	configFile << "CTRLR1POLLINGRATE=25" << "\n";
-	configFile << "LOCALLOGO=false" << "\n";
-	configFile << "betacode=uF58FlLhU431q28cj599w47Ax5NRi" << "\n";
-
-	Controller1.Screen.print("Config file reset.");
-	logHandler("resetConfig", "Successfully reset config file.", Log::Level::Debug);
-
-	configFile.close();
-	helpfile.close();
+	else
+	{
+		Controller1.Screen.print("Skipped reset of cfg file.");
+		vex::this_thread::sleep_for(1500);
+		clearScreen(false, true);
+	}
 }
 
 bool stringtobool(std::string string)
 {
-	if (string.find("True") != std::string::npos or string.find("On") != std::string::npos or string.find("true") != std::string::npos or string.find("1") != std::string::npos or string.find("on") != std::string::npos)
+	if (string.find("True" or "true" or "On" or "on" or "1" or "0") != std::string::npos)
 	{
 		return true;
 	}
 
-	else if (string.find("False") != std::string::npos or string.find("false") != std::string::npos or string.find("0") != std::string::npos or string.find("off") != std::string::npos or string.find("Off") != std::string::npos)
+	else if (string.find("False" or "false" or "Off" or "off" or "1" or "0") != std::string::npos)
 	{
 		return false;
 	}
 	else
 	{
-		resetOrInitializeConfig(false);
+		std::ostringstream message;
+		message << "Expected bool val. Received: " << string;
+		resetOrInitializeConfig(false, message.str());
 		return false;
 	}
 }
@@ -57,8 +79,11 @@ std::size_t stringtofloat(std::string string)
 	}
 	else
 	{
-		resetOrInitializeConfig(false);
-		return 1;
+		std::ostringstream message;
+		message << "Expected float val. Received: " << string;
+		resetOrInitializeConfig(false, message.str());
+		std::stringstream(string) >> value;
+		return value;
 	}
 }
 
@@ -131,24 +156,7 @@ void setValForConfig()
 				{
 					std::ostringstream message;
 					message << "Version mismatch with Config file (" << value << ") and code version (" << VERSION << "). Do you want to reset the config file?";
-					logHandler("setValForConfig", message.str(), Log::Level::Warn);
-					vex::this_thread::sleep_for(1500);
-					std::string resetcfg = getUserOption("Reset Config?", {"Yes", "No"});
-					if (resetcfg == "Yes")
-					{
-						Controller1.Screen.print("Reseting config file...");
-						resetOrInitializeConfig(false);
-						clearScreen(false, true);
-						Controller1.Screen.print("Reset config file.");
-						vex::this_thread::sleep_for(1500);
-						clearScreen(false, true);
-					}
-					else
-					{
-						Controller1.Screen.print("Skipped reset of cfg file.");
-						vex::this_thread::sleep_for(1500);
-						clearScreen(false, true);
-					}
+					resetOrInitializeConfig(false, message.str());
 				}
 			}
 			else if (key == "betacode")
@@ -167,38 +175,15 @@ void setValForConfig()
 			else
 			{
 				std::ostringstream message;
-				message << "Unknown key in config file: " << key;
-				logHandler("setValForConfig", message.str(), Log::Level::Warn);
-				vex::this_thread::sleep_for(1500);
-				std::string resetcfg = getUserOption("Reset Config?", {"Yes", "No"});
-				if (resetcfg == "Yes")
-				{
-					resetOrInitializeConfig(false);
-				}
-				else
-				{
-					Controller1.Screen.print("Skipped reset of cfg file.");
-					vex::this_thread::sleep_for(1500);
-					clearScreen(false, true);
-				}
+				message << "Unknown key in config file: " << key << "Do you want to reset the config?";
+				resetOrInitializeConfig(false, message.str());
 			}
 		}
 		else
 		{
 			std::ostringstream message;
-			message << "Invalid line in config file: " << line;
-			logHandler("setValForConfig", message.str(), Log::Level::Warn);
-			std::string resetcfg = getUserOption("Reset Config?", {"Yes", "No"});
-			if (resetcfg == "Yes")
-			{
-				resetOrInitializeConfig(false);
-			}
-			else
-			{
-				Controller1.Screen.print("Skipped reset of cfg file.");
-				vex::this_thread::sleep_for(1500);
-				clearScreen(false, true);
-			}
+			message << "Invalid line in config file: " << line << "Do you want to reset the config?";
+			resetOrInitializeConfig(false, message.str());
 		}
 	}
 	configFile.close();
@@ -217,12 +202,12 @@ void configParser()
 		{
 			if (Brain.SDcard.exists("readme.md"))
 			{
-				resetOrInitializeConfig(false);
+				resetOrInitializeConfig(false, "Missing config file. Create it?");
 				setValForConfig();
 			}
 			else
 			{
-				resetOrInitializeConfig(true);
+				resetOrInitializeConfig(true, "Missing readme. Create it?");
 				setValForConfig();
 			}
 		}
@@ -231,7 +216,7 @@ void configParser()
 	{
 		POLLINGRATE = 1;
 		PRINTLOGO = false;
-		CTRLR2ENABLE = false;
+		CTRLR2ENABLE = true;
 		VISIONENABLE = false;
 		MAXOPTIONSSIZE = 4;
 		CTRLR1POLLINGRATE = 25;

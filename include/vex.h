@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <string>	 ///< Required for using string objects
@@ -52,6 +51,7 @@ extern std::string BUILD_DATE;
 extern std::size_t MAXOPTIONSSIZE;
 extern std::size_t CTRLR1POLLINGRATE;
 extern std::size_t ARMVOLTAGE; // Voltage setting for arm motor.
+extern int drivercontrollogo;
 
 extern vex::brain Brain;
 extern vex::motor LeftDriveSmart;
@@ -62,13 +62,29 @@ extern vex::motor ClawMotor;
 extern vex::motor ArmMotor;
 extern vex::bumper RearBumper;
 extern vex::controller Controller1;
+extern vex::controller Controller2;
+extern vex::vision::signature PURPLECUBE;
+extern vex::vision::signature GREENCUBE;
+extern vex::vision::signature ORANGECUBE;
+extern vex::vision Vision7;
+
+
+int calibrategiro();
 
 void configParser();
+
+const char *LogToString(Log::Level str);
 void clearScreen(const bool &brainClear, const bool &controller1Clear);
 void logHandler(const std::string &module, const std::string &message, const Log::Level &level);
 std::string getUserOption(const std::string &settingName, const std::vector<std::string> &options);
+
+/// @brief A module that records motor temps.
 int motorTempMonitor();
+
+/// @brief A module that plays a gif on the brain.
+/// @param drivercontrollogo 
+int gifplayer();
+
 void userControl();
 void autonomous();
-const char *LogToString(Log::Level str);
-int gifplayer();
+

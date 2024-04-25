@@ -71,6 +71,7 @@ void autonomous()
 	Drivetrain.setDriveVelocity(60, vex::percent); // Best speed for stability.
 	Drivetrain.setTurnVelocity(60, vex::percent);  // Best speed for stability.
 	Drivetrain.setStopping(vex::brake);			   // To make sure robot stops in same place every time.
+	drivercontrollogo = 0;
 	Drivetrain.driveFor(vex::reverse, 20.0, vex::inches, true);
 	Drivetrain.driveFor(vex::forward, 20.0, vex::inches, true); // Estimated time to finish ~3 seconds.
 	vex::this_thread::sleep_for(2000);
@@ -99,7 +100,7 @@ void userControl()
 	Controller1.ButtonR2.pressed(controller_R2_Pressed);
 	vex::this_thread::sleep_for(30); // Wait for callbacks to load.
 
-	vex::task motortemp(motorTempMonitor, vex::task::taskPriorityHigh);
+	vex::task motortemp(motorTempMonitor);
 	// Variables
 	float turnVolts;
 	float forwardVolts;

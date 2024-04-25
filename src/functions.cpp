@@ -186,7 +186,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 	{
 		buttonString.clear();
 		clearScreen(false, true);
-		Controller1.Screen.print("%s:", settingName.c_str());
+		Controller1.Screen.print("%s", settingName.c_str());
 
 		for (int i = 0; i < 2; ++i) // Checks for option size, and allows for options.
 		{
@@ -311,12 +311,6 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 	return options[Index];
 }
 
-/**
- * @author @DVT7125
- * @date 4/10/24
- * @brief A module that records motor temps.
- * @return 0
- */
 int motorTempMonitor()
 {
 	logHandler("motorTempMonitor", "motorTempMonitor is starting up...", Log::Level::Trace);
@@ -376,11 +370,45 @@ int motorTempMonitor()
 
 int gifplayer()
 {
-	vex::Gif gif("assets/logo.gif", 0, 0, true);
-
-	while (LOCALLOGO)
+	if (drivercontrollogo == 1)
 	{
-		Brain.Screen.printAt(5, 230, "frame %3d", gif.getFrameIndex());
+		vex::Gif gif("assets/drivercontrol.gif", 0, 0, true);
+
+		while (LOCALLOGO)
+		{
+			Brain.Screen.printAt(5, 230, "frame %3d", gif.getFrameIndex());
+		}
+	}
+	else if (drivercontrollogo == 0)
+	{
+		vex::Gif gif("assets/autonomous.gif", 0, 0, true);
+
+		while (LOCALLOGO)
+		{
+			Brain.Screen.printAt(5, 230, "frame %3d", gif.getFrameIndex());
+		}
+	}
+	else
+	{
+		vex::Gif gif("assets/loading.gif", 0, 0, true);
+
+		while (LOCALLOGO)
+		{
+			Brain.Screen.printAt(5, 230, "frame %3d", gif.getFrameIndex());
+		}
 	}
 	return 0;
+}
+
+int calibrategiro()
+{
+	logHandler("calibrateDrivetrain", "Calibrating Inertial Gyro...", Log::Level::Info);
+	Inertial.calibrate();
+
+	while (Inertial.isCalibrating())
+	{
+		vex::this_thread::sleep_for(25);
+	}
+	logHandler("calibrateDrivetrain", "Finished Calibrating Inertial Gyro.", Log::Level::Info);
+	return 1;
 }
