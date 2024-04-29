@@ -59,16 +59,11 @@ vex::vision Vision7 = vex::vision(vex::PORT7, 50, PURPLECUBE, GREENCUBE, ORANGEC
 void startup()
 {
 	clearScreen(true, true);
-	vex::task calibrate(calibrategiro);
+	drivercontrollogo = 00;
+
 	configParser();
 
-	std::ostringstream message;
-	message << "Version: " << VERSION << " | Build date: " << BUILD_DATE;
-	logHandler("main", message.str(), Log::Level::Info);
-
-	message.str(std::string());
-	drivercontrollogo = 00;
-	vex::task gifplay(gifplayer);
+        std::ostringstream message;
 
 	Controller1.Screen.print("Starting up...");
 	logHandler("startup", "Starting GUI startup...", Log::Level::Info);
