@@ -12,20 +12,109 @@
 
 #include "vex.h" /// Header file
 
-bool CONTROLLER1COMMAND = false;
-float POLLINGRATE; // In MS. | 20ms (Default) = 50Hz | 10ms (PID for motors) = 100Hz | 2ms = 500Hz (10X faster) | 1ms = 1000Hz (20X faster) | 0.125ms = 8000Hz (160X faster)
-bool PRINTLOGO;
-bool LOCALLOGO;
-bool VISIONENABLE;
-bool CTRLR2ENABLE;
-bool BETAENABLED;
-bool LOGTOFILE;
-std::string VERSION = "2.0pr2";
-std::string BUILD_DATE = "4/25/24";
-std::size_t MAXOPTIONSSIZE;
-std::size_t CTRLR1POLLINGRATE;
-std::size_t ARMVOLTAGE; // Voltage setting for arm motor.
-int drivercontrollogo;
+class Config
+{
+
+public:
+	class SD
+	{
+
+	public:
+		// Setter
+		void setMaxOptionSize(std::size_t value)
+		{
+			MAXOPTIONSSIZE = value;
+			return;
+		}
+		// Getter
+		std::size_t getMaxOptionSize()
+		{
+			return MAXOPTIONSSIZE;
+		}
+		// Setter
+		void ctrlr1PollingRate(std::size_t value)
+		{
+			CTRLR1POLLINGRATE = value;
+			return;
+		}
+		// Getter
+		std::size_t getCtrlr1PollingRate()
+		{
+			return CTRLR1POLLINGRATE;
+		}
+		// Setter
+		void setArmVoltage(std::size_t value)
+		{
+			ARMVOLTAGE = value;
+			return;
+		}
+		// Getter
+		std::size_t getArmVoltage()
+		{
+			return ARMVOLTAGE;
+		}
+		// Setter
+		void setPollingRate(float value)
+		{
+			POLLINGRATE = value;
+			return;
+		}
+		// Getter
+		std::size_t getMaxOptionSize()
+		{
+			return POLLINGRATE;
+		}
+
+	private:
+		// Private attribute
+		std::size_t MAXOPTIONSSIZE;
+		std::size_t CTRLR1POLLINGRATE;
+		std::size_t ARMVOLTAGE; // Voltage setting for arm motor.
+		float POLLINGRATE;		// In MS. | 20ms (Default) = 50Hz | 10ms (PID for motors) = 100Hz | 2ms = 500Hz (10X faster) | 1ms = 1000Hz (20X faster) | 0.125ms = 8000Hz (160X faster)
+		bool PRINTLOGO;
+		bool LOCALLOGO;
+		bool VISIONENABLE;
+		bool CTRLR2ENABLE;
+		bool BETAENABLED;
+		bool LOGTOFILE;
+
+	protected:
+	};
+	std::string getVersion()
+	{
+		return VERSION;
+	}
+	std::string getBuildDate()
+	{
+		return BUILD_DATE;
+	}
+	bool getCommandModeStatus()
+	{
+		return CONTROLLER1COMMAND;
+	}
+	void setCommandMode(bool value)
+	{
+		CONTROLLER1COMMAND = value;
+		return;
+	}
+	int getLogoStatus()
+	{
+		return drivercontrollogo;
+	}
+	void setLogoStatus(int value)
+	{
+		drivercontrollogo = value;
+		return;
+	}
+
+private:
+	std::string VERSION = "2.0pr2";
+	std::string BUILD_DATE = "4/25/24";
+	bool CONTROLLER1COMMAND = false;
+	int drivercontrollogo;
+};
+
+Config CFG;
 
 /* Stall Torque (with 36:1 gears)	2.1 Nm			*/
 /* Encoder	1800 ticks/rev with 36:1 gears			*/
@@ -63,7 +152,7 @@ void startup()
 
 	configParser();
 
-        std::ostringstream message;
+	std::ostringstream message;
 
 	Controller1.Screen.print("Starting up...");
 	logHandler("startup", "Starting GUI startup...", Log::Level::Info);
@@ -150,6 +239,7 @@ void startup()
  */
 int main()
 {
+	CFG.getBuildDate();
 	printf("\033[2J\033[1;1H\033[0m"); // Clears console and Sets color to grey.
 	Competition.autonomous(autonomous);
 	startup();
