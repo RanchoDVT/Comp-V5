@@ -8,7 +8,7 @@
  * @param message The error message.
  * @param level Set the error Level from `Log::Level`.
  */
-void logHandler(const std::string &module, const std::string &message, const Log::Level &level)
+void logHandler(const std::string& module, const std::string& message, const Log::Level& level)
 {
 	std::ofstream LogFile("log.txt", std::ios_base::out | std::ios_base::app);
 	std::string logEntry;
