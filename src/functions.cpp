@@ -159,19 +159,19 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 		return options[1]; // Return default, as you have to have at least one option for it to compile.
 	}
 
-	{
-		std::ostringstream optmessage;
-		optmessage << "Options: ";
-		for (auto optionIterator = options.begin(); optionIterator != options.end(); ++optionIterator)
+	std::ostringstream optmessage;
+	optmessage << "Options: ";
+	    for (auto optionIterator = options.begin(); optionIterator != options.end(); ++optionIterator)
+	    {
+		if (optionIterator != options.begin())
 		{
-			if (optionIterator != options.begin())
-			{
-				optmessage << ", "; // Separate options with a comma and space (except for the first option)
-			}
-			optmessage << *optionIterator;
+		    optmessage << ", "; // Separate options with a comma and space (except for the first option)
 		}
-		logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
-	}
+		    optmessage << *optionIterator;
+	    }
+	logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
+
+        optmessage.str(std::string());
 
 	std::size_t wrongAttemptCount = 0;
 	const std::size_t maxWrongAttempts = 3;
@@ -238,12 +238,11 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 			Controller1.Screen.setCursor(3, 24);
 			Controller1.Screen.print("^");
 		}
-
-		{
-			std::ostringstream bttnMessage;
-			bttnMessage << "Available buttons for current visible options: " << buttonString; // Append button string to message.
-			logHandler("getUserOption", bttnMessage.str(), Log::Level::Debug);
-		}
+		
+		optmessage << "Available buttons for current visible options: " << buttonString; // Append button string to message.
+		logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
+		optmessage.str(std::string());
+		
 		const std::string &buttonPressed = ctrl1BttnPressed(); // Get user input
 		if (buttonPressed == "A")
 		{
@@ -269,7 +268,6 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 			}
 		}
 		// If the wrong button is pressed, its index will = the options size, so I know if they get it wrong.
-		std::ostringstream IndexMessage;
 
 		if (Index < options.size() or offset < 0 or (buttonPressed == "UP" and options.size() >= 3 and offset != 0))
 		{
@@ -305,6 +303,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 			{
 				logHandler("getUserOption", "Your half arsed.", Log::Level::Fatal);
 			}
+			optmessage.str(std::string());
 		}
 	}
 	clearScreen(false, true);
