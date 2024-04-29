@@ -31,32 +31,27 @@ void resetOrInitializeConfig(bool resetreadme, std::string message)
 		configFile << "LOCALLOGO=false" << "\n";
 		configFile << "betacode=uF58FlLhU431q28cj599w47Ax5NRi" << "\n";
 
-		Controller1.Screen.print("Config file reset.");
 		logHandler("resetConfig", "Successfully reset config file.", Log::Level::Debug);
 
 		configFile.close();
 		helpfile.close();
-		clearScreen(false, true);
-		Controller1.Screen.print("Reset config file.");
-		vex::this_thread::sleep_for(1500);
-		clearScreen(false, true);
+		return;
 	}
 	else
 	{
-		Controller1.Screen.print("Skipped reset of cfg file.");
-		vex::this_thread::sleep_for(1500);
-		clearScreen(false, true);
+		logHandler("resetConfig", "Skipped reseting config file.", Log::Level::Debug);
+		return;
 	}
 }
 
-bool stringtobool(std::string string)
+bool stringtobool(std::string& string)
 {
-	if (string.find("True" or "true" or "On" or "on" or "1" or "0") != std::string::npos)
+	if (string.find("True") or string.find("On") or string.find("true") or string.find("1") or string.find("on"))
 	{
 		return true;
 	}
 
-	else if (string.find("False" or "false" or "Off" or "off" or "1" or "0") != std::string::npos)
+	else if (string.find("False") or string.find("false") or string.find("off") or string.find("0") or string.find("Off"))
 	{
 		return false;
 	}
@@ -101,7 +96,7 @@ void setValForConfig()
 	while (std::getline(configFile, line))
 	{
 		// Parse each line from config file
-		if (line.empty() || line[0] == ';')
+		if (line.empty() or line[0] == ';')
 		{
 			continue; // Skip empty lines and comments
 		}
@@ -192,10 +187,10 @@ void setValForConfig()
 // Function to parse config file and initialize variables
 void configParser()
 {
-    std::ostreamsream message;
-    message << "Version: " << VERSION << " | Build date: " << BUILD_DATE;
-    logHandler("main", message.str(), Log::Level::Info);
-	
+	std::ostringstream message;
+	message << "Version: " << VERSION << " | Build date: " << BUILD_DATE;
+	logHandler("main", message.str(), Log::Level::Info);
+
 	if (Brain.SDcard.isInserted())
 	{
 		if (Brain.SDcard.exists("config/config.cfg"))
@@ -220,14 +215,14 @@ void configParser()
 	{
 		POLLINGRATE = 1;
 		PRINTLOGO = false;
-		CTRLR2ENABLE = true;
+		CTRLR2ENABLE = false;
 		VISIONENABLE = false;
 		MAXOPTIONSSIZE = 4;
 		CTRLR1POLLINGRATE = 25;
 		LOCALLOGO = false;
 		logHandler("configParser", "No SD card installed. Using default values.", Log::Level::Info);
 	}
-	{
 	vex::task calibrate(calibrategiro);
 	vex::task gifplay(gifplayer);
+	return;
 }
