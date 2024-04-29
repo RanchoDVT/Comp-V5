@@ -192,6 +192,10 @@ void setValForConfig()
 // Function to parse config file and initialize variables
 void configParser()
 {
+    std::ostreamsream message;
+    message << "Version: " << VERSION << " | Build date: " << BUILD_DATE;
+    logHandler("main", message.str(), Log::Level::Info);
+	
 	if (Brain.SDcard.isInserted())
 	{
 		if (Brain.SDcard.exists("config/config.cfg"))
@@ -223,4 +227,7 @@ void configParser()
 		LOCALLOGO = false;
 		logHandler("configParser", "No SD card installed. Using default values.", Log::Level::Info);
 	}
+	{
+	vex::task calibrate(calibrategiro);
+	vex::task gifplay(gifplayer);
 }
