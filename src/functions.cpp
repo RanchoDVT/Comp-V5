@@ -26,7 +26,7 @@ const char *LogToString(Log::Level str)
  * @param brainClear Wither to clear the brain (`true`) or not (`false`).
  * @param controller1Clear Wither to clear controller1 (`true`) or not (`false`).
  */
-void clearScreen(const bool &brainClear, const bool &controller1Clear)
+void clearScreen(const bool& brainClear, const bool& controller1Clear)
 {
 	if (brainClear)
 	{
@@ -146,7 +146,7 @@ std::string ctrl1BttnPressed()
  * @param options Passed options {"test", "test2"} (From 2 options to 4)
  * @return The user's choice.
  */
-std::string getUserOption(const std::string &settingName, const std::vector<std::string> &options)
+std::string getUserOption(const std::string& settingName, const std::vector<std::string>& options)
 {
 	if (CONTROLLER1COMMAND)
 	{
@@ -243,7 +243,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 		logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
 		optmessage.str(std::string());
 		
-		const std::string &buttonPressed = ctrl1BttnPressed(); // Get user input
+		const std::string& buttonPressed = ctrl1BttnPressed(); // Get user input
 		if (buttonPressed == "A")
 		{
 			Index = 0;
@@ -271,8 +271,8 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 
 		if (Index < options.size() or offset < 0 or (buttonPressed == "UP" and options.size() >= 3 and offset != 0))
 		{
-			IndexMessage << "[Valid Selection] Index = " << Index << " | Offset = " << offset; // Append int to string
-			logHandler("get_User_Option", IndexMessage.str(), Log::Level::Debug);
+			optmessage << "[Valid Selection] Index = " << Index << " | Offset = " << offset; // Append int to string
+			logHandler("get_User_Option", optmessage.str(), Log::Level::Debug);
 			if (buttonPressed == "UP" and offset != 0)
 			{
 				++offset;
@@ -285,8 +285,8 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 
 		else
 		{
-			IndexMessage << "[Invalid Selection] Index = " << Index << " | Offset = " << offset; // Append int to string
-			logHandler("getUserOption", IndexMessage.str(), Log::Level::Debug);
+			optmessage << "[Invalid Selection] Index = " << Index << " | Offset = " << offset; // Append int to string
+			logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
 			// Display message
 			if (wrongAttemptCount < maxWrongAttempts)
 			{
