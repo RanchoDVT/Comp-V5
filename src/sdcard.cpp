@@ -44,7 +44,7 @@ void resetOrInitializeConfig(bool resetreadme, std::string message)
 	}
 }
 
-bool stringtobool(std::string& string)
+bool stringtobool(std::string &string)
 {
 	if (string.find("True") or string.find("On") or string.find("true") or string.find("1") or string.find("on"))
 	{

@@ -12,21 +12,20 @@
 
 #include "vex.h" /// Header file
 
-		std::size_t MAXOPTIONSSIZE;
-		std::size_t CTRLR1POLLINGRATE;
-		std::size_t ARMVOLTAGE; // Voltage setting for arm motor.
-		float POLLINGRATE;		// In MS. | 20ms (Default) = 50Hz | 10ms (PID for motors) = 100Hz | 2ms = 500Hz (10X faster) | 1ms = 1000Hz (20X faster) | 0.125ms = 8000Hz (160X faster)
-		bool PRINTLOGO;
-		bool LOCALLOGO;
-		bool VISIONENABLE;
-		bool CTRLR2ENABLE;
-		bool BETAENABLED;
-		bool LOGTOFILE;
-	std::string VERSION = "2.0pr2";
-	std::string BUILD_DATE = "4/25/24";
-	bool CONTROLLER1COMMAND = false;
-	int drivercontrollogo;
-
+std::size_t MAXOPTIONSSIZE;
+std::size_t CTRLR1POLLINGRATE;
+std::size_t ARMVOLTAGE; // Voltage setting for arm motor.
+float POLLINGRATE;		// In MS. | 20ms (Default) = 50Hz | 10ms (PID for motors) = 100Hz | 2ms = 500Hz (10X faster) | 1ms = 1000Hz (20X faster) | 0.125ms = 8000Hz (160X faster)
+bool PRINTLOGO;
+bool LOCALLOGO;
+bool VISIONENABLE;
+bool CTRLR2ENABLE;
+bool BETAENABLED;
+bool LOGTOFILE;
+std::string VERSION = "2.0pr2";
+std::string BUILD_DATE = "4/25/24";
+bool CONTROLLER1COMMAND = false;
+int drivercontrollogo;
 
 /* Stall Torque (with 36:1 gears)	2.1 Nm			*/
 /* Encoder	1800 ticks/rev with 36:1 gears			*/

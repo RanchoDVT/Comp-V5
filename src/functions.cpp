@@ -26,7 +26,7 @@ const char *LogToString(Log::Level str)
  * @param brainClear Wither to clear the brain (`true`) or not (`false`).
  * @param controller1Clear Wither to clear controller1 (`true`) or not (`false`).
  */
-void clearScreen(const bool& brainClear, const bool& controller1Clear)
+void clearScreen(const bool &brainClear, const bool &controller1Clear)
 {
 	if (brainClear)
 	{
@@ -146,7 +146,7 @@ std::string ctrl1BttnPressed()
  * @param options Passed options {"test", "test2"} (From 2 options to 4)
  * @return The user's choice.
  */
-std::string getUserOption(const std::string& settingName, const std::vector<std::string>& options)
+std::string getUserOption(const std::string &settingName, const std::vector<std::string> &options)
 {
 	if (CONTROLLER1COMMAND)
 	{
@@ -161,17 +161,17 @@ std::string getUserOption(const std::string& settingName, const std::vector<std:
 
 	std::ostringstream optmessage;
 	optmessage << "Options: ";
-	    for (auto optionIterator = options.begin(); optionIterator != options.end(); ++optionIterator)
-	    {
+	for (auto optionIterator = options.begin(); optionIterator != options.end(); ++optionIterator)
+	{
 		if (optionIterator != options.begin())
 		{
-		    optmessage << ", "; // Separate options with a comma and space (except for the first option)
+			optmessage << ", "; // Separate options with a comma and space (except for the first option)
 		}
-		    optmessage << *optionIterator;
-	    }
+		optmessage << *optionIterator;
+	}
 	logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
 
-        optmessage.str(std::string());
+	optmessage.str(std::string());
 
 	std::size_t wrongAttemptCount = 0;
 	const std::size_t maxWrongAttempts = 3;
@@ -186,7 +186,7 @@ std::string getUserOption(const std::string& settingName, const std::vector<std:
 	{
 		buttonString.clear();
 		clearScreen(false, true);
-		Controller1.Screen.print("%s", settingName.c_str());
+		Controller1.Screen.print(settingName.c_str());
 
 		for (int i = 0; i < 2; ++i) // Checks for option size, and allows for options.
 		{
@@ -238,12 +238,12 @@ std::string getUserOption(const std::string& settingName, const std::vector<std:
 			Controller1.Screen.setCursor(3, 24);
 			Controller1.Screen.print("^");
 		}
-		
+
 		optmessage << "Available buttons for current visible options: " << buttonString; // Append button string to message.
 		logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
 		optmessage.str(std::string());
-		
-		const std::string& buttonPressed = ctrl1BttnPressed(); // Get user input
+
+		const std::string &buttonPressed = ctrl1BttnPressed(); // Get user input
 		if (buttonPressed == "A")
 		{
 			Index = 0;
@@ -293,9 +293,9 @@ std::string getUserOption(const std::string& settingName, const std::vector<std:
 				clearScreen(false, true);
 				Controller1.Screen.print(wrongMessages[wrongAttemptCount].c_str());
 				++wrongAttemptCount; // Increment wrong attempt count
-				std::ostringstream failattemptdebug;
-				failattemptdebug << "wrongAttemptCount: " << wrongAttemptCount; // Append int to string
-				logHandler("getUserOption", failattemptdebug.str(), Log::Level::Debug);
+				optmessage.str(std::string());
+				optmessage << "wrongAttemptCount: " << wrongAttemptCount; // Append int to string
+				logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
 				vex::this_thread::sleep_for(2000);
 			}
 
@@ -354,7 +354,7 @@ int motorTempMonitor()
 		// Log motor temperatures
 		motorTemps << "\n | LeftTemp: " << leftDriveTemp << "°\n | RightTemp: " << rightDriveTemp << "°\n | ArmTemp: " << armTemp << "°\n | ClawTemp: " << clawTemp << "°\n | Battery Voltage: " << Brain.Battery.voltage() << "V\n";
 		logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Info);
-		dataBuffer << "\nX Axis: " << Inertial.acceleration(vex::axisType::xaxis) << "\nY Axis: " << Inertial.acceleration(vex::axisType::yaxis) << "\nZ Axis: " << Inertial.acceleration(vex::axisType::zaxis);
+		dataBuffer << "\nX Axis: " << Inertial.pitch(vex::rotationUnits::deg) << "\nY Axis: " << Inertial.roll(vex::rotationUnits::deg) << "\nZ Axis: " << Inertial.yaw(vex::rotationUnits::deg) << "\nX Axis Acc:" << Inertial.acceleration(vex::axisType::xaxis) << "\nY Axis Acc:" << Inertial.acceleration(vex::axisType::yaxis) << "\nZ Axis Acc:" << Inertial.acceleration(vex::axisType::zaxis) << Inertial.acceleration(vex::axisType::zaxis) << "\n";
 		logHandler("motorTempMonitor", dataBuffer.str(), Log::Level::Info);
 		clearScreen(false, true);
 		Controller1.Screen.print("LM: %d° | RM: %d°", leftDriveTemp, rightDriveTemp);

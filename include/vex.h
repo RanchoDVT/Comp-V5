@@ -68,7 +68,6 @@ extern vex::vision::signature GREENCUBE;
 extern vex::vision::signature ORANGECUBE;
 extern vex::vision Vision7;
 
-
 int calibrategiro();
 
 void configParser();
@@ -82,9 +81,8 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 int motorTempMonitor();
 
 /// @brief A module that plays a gif on the brain.
-/// @param drivercontrollogo 
+/// @param drivercontrollogo
 int gifplayer();
 
 void userControl();
 void autonomous();
-
