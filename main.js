@@ -1,3 +1,6 @@
+const button = document.querySelector('button');
+const pre = document.querySelector('pre');
+
 const openDirectory = async (mode = "read") => {
   // Feature detection. The API needs to be supported
   // and the app not run in an iframe.
@@ -14,7 +17,6 @@ const openDirectory = async (mode = "read") => {
   if (supportsFileSystemAccess) {
     let directoryStructure = undefined;
 
-    // Recursive function that walks the directory structure.
     const getFiles = async (dirHandle, path = dirHandle.name) => {
       const dirs = [];
       const files = [];
@@ -43,11 +45,9 @@ const openDirectory = async (mode = "read") => {
     };
 
     try {
-      // Open the directory.
       const handle = await showDirectoryPicker({
         mode,
       });
-      // Get the directory structure.
       directoryStructure = getFiles(handle, undefined);
     } catch (err) {
       if (err.name !== "AbortError") {
@@ -73,3 +73,12 @@ const openDirectory = async (mode = "read") => {
     }
   });
 };
+
+button.addEventListener('click', async () => {
+  const filesInDirectory = await openDirectory();
+  if (!filesInDirectory) {
+    return;
+  }
+  Array.from(filesInDirectory).forEach((file) => (pre.textContent += `${file.name}\n`));
+});
+        
