@@ -13,34 +13,50 @@ nav {
 	background-color: #38444d;
 }
 
-li {
+nav li {
 	float: left;
-	cursor: pointer;
-	border-right: 1px solid #bbb;
 }
+
+footer {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: #38444d;
+	backdrop-filter: 8;
+	color: white;
+	text-align: center;
+}
+
+a {
+	color: #7bbaeb;
+}
+
 
 li a,
 .dropbtn {
 	display: inline-block;
+	cursor: pointer;
 	color: white;
 	text-align: center;
 	padding: 14px 16px;
 	text-decoration: none;
-}
-
-li a:hover:not(.active) {
-	background-color: darkgray;
+	border-right: 1px solid #bbb;
 }
 
 .active {
 	background-color: rgb(170, 96, 36);
 }
 
+li a:hover:not(.active) {
+	background-color: darkgray;
+}
+
 li.dropdown {
 	display: inline-block;
 }
 
-li:last-child {
+li:last-child a {
 	border-left: 1px solid #bbb;
 	border-right: none;
 }
@@ -49,6 +65,7 @@ li:last-child {
 	display: none;
 	position: absolute;
 	min-width: 160px;
+	padding: 8px 0px;
 }
 
 .dropdown-content a {
@@ -61,5 +78,4 @@ li:last-child {
 
 .dropdown:hover .dropdown-content {
 	display: block;
-	padding: 8px 0px;
 }
