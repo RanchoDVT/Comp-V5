@@ -224,5 +224,7 @@ void configParser()
 	}
 	vex::task calibrate(calibrategiro);
 	vex::task gifplay(gifplayer);
+	Drivetrain.setStopping(vex::brakeType::coast);
+	ClawMotor.setStopping(vex::brakeType::coast);
 	return;
 }
