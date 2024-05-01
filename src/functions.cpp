@@ -354,7 +354,7 @@ int motorTempMonitor()
 		// Log motor temperatures
 		motorTemps << "\n | LeftTemp: " << leftDriveTemp << "°\n | RightTemp: " << rightDriveTemp << "°\n | ArmTemp: " << armTemp << "°\n | ClawTemp: " << clawTemp << "°\n | Battery Voltage: " << Brain.Battery.voltage() << "V\n";
 		logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Info);
-		dataBuffer << "\nX Axis: " << Inertial.pitch(vex::rotationUnits::deg) << "\nY Axis: " << Inertial.roll(vex::rotationUnits::deg) << "\nZ Axis: " << Inertial.yaw(vex::rotationUnits::deg) << "\nX Axis Acc:" << Inertial.acceleration(vex::axisType::xaxis) << "\nY Axis Acc:" << Inertial.acceleration(vex::axisType::yaxis) << "\nZ Axis Acc:" << Inertial.acceleration(vex::axisType::zaxis) << Inertial.acceleration(vex::axisType::zaxis);
+		dataBuffer << "\nX Axis: " << Inertial.pitch(vex::rotationUnits::deg) << "\nY Axis: " << Inertial.roll(vex::rotationUnits::deg) << "\nZ Axis: " << Inertial.yaw(vex::rotationUnits::deg);
 		logHandler("motorTempMonitor", dataBuffer.str(), Log::Level::Info);
 		clearScreen(false, true);
 		Controller1.Screen.print("LM: %d° | RM: %d°", leftDriveTemp, rightDriveTemp);
@@ -369,33 +369,41 @@ int motorTempMonitor()
 
 int gifplayer()
 {
-	if (drivercontrollogo == 1)
-	{
-		vex::Gif gif("assets/drivercontrol.gif", 0, 0, true);
 
-		while (LOCALLOGO)
-		{
-			Brain.Screen.printAt(5, 230, "frame %3d", gif.getFrameIndex());
-		}
-	}
-	else if (drivercontrollogo == 0)
-	{
-		vex::Gif gif("assets/autonomous.gif", 0, 0, true);
-
-		while (LOCALLOGO)
-		{
-			Brain.Screen.printAt(5, 230, "frame %3d", gif.getFrameIndex());
-		}
-	}
-	else
+	if (drivercontrollogo == 00)
 	{
 		vex::Gif gif("assets/loading.gif", 0, 0, true);
 
-		while (LOCALLOGO)
+		while (LOCALLOGO and drivercontrollogo == 00)
 		{
-			Brain.Screen.printAt(5, 230, "frame %3d", gif.getFrameIndex());
+			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
 		}
+		gif.~Gif();
+		clearScreen(true, false);
 	}
+	if (drivercontrollogo == 2)
+	{
+		vex::Gif gif("assets/auto.gif", 0, 0, true);
+
+		while (LOCALLOGO and drivercontrollogo == 2)
+		{
+			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
+		}
+		gif.~Gif();
+		clearScreen(true, false);
+	}
+	if (drivercontrollogo == 1)
+	{
+		vex::Gif gif("assets/user.gif", 0, 0, true);
+
+		while (LOCALLOGO and drivercontrollogo == 1)
+		{
+			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
+		}
+		gif.~Gif();
+		clearScreen(true, false);
+	}
+	printf("NO!!");
 	return 0;
 }
 
