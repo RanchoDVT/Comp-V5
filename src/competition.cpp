@@ -71,7 +71,7 @@ void autonomous()
 	Drivetrain.setDriveVelocity(60, vex::percent); // Best speed for stability.
 	Drivetrain.setTurnVelocity(60, vex::percent);  // Best speed for stability.
 	Drivetrain.setStopping(vex::brake);			   // To make sure robot stops in same place every time.
-	drivercontrollogo = 0;
+	drivercontrollogo = 2;
 	Drivetrain.driveFor(vex::reverse, 20.0, vex::inches, true);
 	Drivetrain.driveFor(vex::forward, 20.0, vex::inches, true); // Estimated time to finish ~3 seconds.
 	vex::this_thread::sleep_for(2000);
