@@ -64,9 +64,9 @@ bool stringtobool(std::string &string)
 	}
 }
 
-std::size_t stringtofloat(std::string string)
+float stringtofloat(std::string string)
 {
-	std::size_t value;
+	float value;
 	if (std::any_of(string.begin(), string.end(), ::isdigit))
 	{
 		std::stringstream(string) >> value;

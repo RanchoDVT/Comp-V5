@@ -7,6 +7,7 @@
 #include <fstream>	 ///< Requried for using std::getline, and making and reading files.
 #include <fstream>	 ///< Requried for using std::getline, and making and reading files.
 #include <algorithm> ///< Requried for using ::isdigit and std::any_of
+#include <iostream>
 
 #include <stdlib.h>	 ///< Required for standard library definitions
 #include <stdbool.h> ///< Required for standard boolean definitions
