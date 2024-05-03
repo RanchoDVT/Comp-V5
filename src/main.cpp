@@ -104,7 +104,19 @@ void startup()
 	message.str(std::string());
 
 	std::string ArmVolts = getUserOption("Arm Volts:", {"9", "6", "12"});
-	ARMVOLTAGE = std::atoi(ArmVolts.c_str());
+	if (ArmVolts == "9")
+	{
+		ARMVOLTAGE = 9;
+	}
+	else if (ArmVolts == "6")
+	{
+		// Allows for more precise controls
+		ARMVOLTAGE = 6;
+	}
+	else if (ArmVolts == "12")
+	{
+		ARMVOLTAGE = 12;
+	}
 	
 	message << "Arm set to " << ARMVOLTAGE << " volts.";
 	logHandler("startup", message.str(), Log::Level::Trace);

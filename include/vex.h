@@ -86,3 +86,4 @@ int gifplayer();
 
 void userControl();
 void autonomous();
+float stringtofloat(std::string string);

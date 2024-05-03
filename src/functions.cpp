@@ -48,71 +48,93 @@ void clearScreen(const bool &brainClear, const bool &controller1Clear)
  * @brief A module that handles controller button press.
  * @return A string representing the button pressed on the controller.
  */
-char ctrl1BttnPressed()
+std::string ctrl1BttnPressed()
 {
 	if (CONTROLLER1COMMAND)
 	{
 		logHandler("ctrl1BttnPressed", "Ctrl1 is in command mode!", Log::Level::Error);
 	}
 
-	char buttonPressed;
+	std::string buttonPressed;
 
 	while (!CONTROLLER1COMMAND)
 	{
 		if (Controller1.ButtonA.pressing())
 		{
-			buttonPressed = 'A';
+			buttonPressed = "A";
 			break;
 		}
 
 		else if (Controller1.ButtonX.pressing())
 		{
-			buttonPressed = 'X';
+			buttonPressed = "X";
 			break;
 		}
 
 		else if (Controller1.ButtonY.pressing())
 		{
-			buttonPressed = 'Y';
+			buttonPressed = "Y";
 			break;
 		}
 
 		else if (Controller1.ButtonB.pressing())
 		{
-			buttonPressed = 'B';
+			buttonPressed = "B";
 			break;
 		}
 
 		else if (Controller1.ButtonUp.pressing())
 		{
-			buttonPressed = 'U';
+			buttonPressed = "UP";
 			break;
 		}
 
 		else if (Controller1.ButtonDown.pressing())
 		{
-			buttonPressed = 'D';
+			buttonPressed = "DOWN";
 			break;
 		}
 
 		else if (Controller1.ButtonRight.pressing())
 		{
-			buttonPressed = 'R';
+			buttonPressed = "RIGHT";
 			break;
 		}
 
 		else if (Controller1.ButtonLeft.pressing())
 		{
-			buttonPressed = 'L';
+			buttonPressed = "LEFT";
+			break;
+		}
+
+		else if (Controller1.ButtonL1.pressing())
+		{
+			buttonPressed = "L1";
+			break;
+		}
+
+		else if (Controller1.ButtonL2.pressing())
+		{
+			buttonPressed = "L2";
+			break;
+		}
+
+		else if (Controller1.ButtonR1.pressing())
+		{
+			buttonPressed = "R1";
+			break;
+		}
+		else if (Controller1.ButtonR2.pressing())
+		{
+			buttonPressed = "R2";
 			break;
 		}
 
 		vex::this_thread::sleep_for(CTRLR1POLLINGRATE);
 	}
 
-	std::ostringstream message;
-	message << "Selected button: " << buttonPressed;
-	logHandler("ctrl1BttnPressed", message.str(), Log::Level::Debug);
+	std::string message = "Selected button: " + buttonPressed;
+	logHandler("ctrl1BttnPressed", message, Log::Level::Debug);
 	return buttonPressed;
 }
 
@@ -157,20 +179,22 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 		"Invalid selection!", "Do you need a map?", "Rocks can do this!"};
 	std::string buttonString;
 	// Have a index number for what they selected and convert it to the option.
-	std::size_t Index = options.size(); // Invalid selection by default
+	std::size_t Index = 0; // Invalid selection by default
 	int offset = 0;
 
-	std::vector<char> buttons{'A', 'B', 'X', 'Y'};
-	std::vector<char> scrollButtons{'D', 'U'};
+	const std::vector<std::string> buttons = {"A", "X", "Y", "B"};
+	const std::vector<std::string> scrollButtons = {"DOWN", "UP"};
 
-	while (Controller1.installed())
+	while (!CONTROLLER1COMMAND)
 	{
+		buttonString.clear();
 		clearScreen(false, true);
 		Controller1.Screen.print(settingName.c_str());
+
 		for (int i = 0; i < 2; ++i)
 		{
 			Controller1.Screen.newLine();
-			Controller1.Screen.print("%c: %s", buttons[i - offset], options[i - offset].c_str());
+			Controller1.Screen.print("%s: %s", buttons[i - offset].c_str(), options[i - offset].c_str());
 			buttonString += buttons[i - offset];
 			if (i != 1) // Add comma if not the last button
 			{
@@ -192,45 +216,23 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 		optmessage << "Available buttons for current visible options: " << buttonString; // Append button string to message.
 		logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
 		optmessage.str(std::string());
-		const char &buttonPressed = ctrl1BttnPressed(); // Get user input
+		const std::string &buttonPressed = ctrl1BttnPressed(); // Get user input
 
-		int cnt = count(buttons.begin(), buttons.end(), buttonPressed);
-		int cnt2 = count(scrollButtons.begin(), scrollButtons.end(), buttonPressed);
-		if (cnt != 0)
+		auto match = std::find(begin(buttons), end(buttons), buttonPressed);
+		auto match2 = std::find(begin(scrollButtons), end(scrollButtons), buttonPressed);
+		if (end(buttons) != match)
 		{
+			Index = std::distance(begin(buttons), match);
 			optmessage << "[Valid Selection] Index = " << Index << " | Offset = " << offset; // Append int to string
 			logHandler("get_User_Option", optmessage.str(), Log::Level::Debug);
-			Index = buttons[offset];
 			break;
 		}
-		else if (cnt2 != 0)
+
+		if (end(scrollButtons) != match2)
 		{
+			++offset;
 			optmessage << "[Valid Selection] Index = " << Index << " | Offset = " << offset; // Append int to string
 			logHandler("get_User_Option", optmessage.str(), Log::Level::Debug);
-			++offset;
-		}
-
-		else
-		{
-			optmessage << "[Invalid Selection] Index = " << Index << " | Offset = " << offset; // Append int to string
-			logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
-			// Display message
-			if (wrongAttemptCount < maxWrongAttempts)
-			{
-				clearScreen(false, true);
-				Controller1.Screen.print(wrongMessages[wrongAttemptCount].c_str());
-				++wrongAttemptCount; // Increment wrong attempt count
-				optmessage.str(std::string());
-				optmessage << "wrongAttemptCount: " << wrongAttemptCount; // Append int to string
-				logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
-				vex::this_thread::sleep_for(2000);
-			}
-
-			else
-			{
-				logHandler("getUserOption", "Your half arsed.", Log::Level::Fatal);
-			}
-			optmessage.str(std::string());
 		}
 	}
 	clearScreen(false, true);
@@ -330,7 +332,6 @@ int gifplayer()
 		gif.~Gif();
 		clearScreen(true, false);
 	}
-	printf("NO!!");
 	return 0;
 }
 
