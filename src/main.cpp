@@ -33,22 +33,22 @@ int drivercontrollogo;
 /* Encoder	900 ticks/rev with 18:1 gears			*/
 
 vex::brain Brain;
-vex::motor LeftDriveSmart = vex::motor(vex::PORT1, vex::ratio36_1, false);
-vex::motor RightDriveSmart = vex::motor(vex::PORT10, vex::ratio36_1, true);
+vex::motor LeftDriveSmart = vex::motor(vex::PORT1, vex::gearSetting::ratio36_1, false);
+vex::motor RightDriveSmart = vex::motor(vex::PORT10, vex::gearSetting::ratio36_1, true);
 vex::inertial Inertial = vex::inertial(vex::PORT2);
-vex::smartdrive Drivetrain = vex::smartdrive(LeftDriveSmart, RightDriveSmart, Inertial, 319.19, 320, 40, vex::mm, 1);
-vex::motor ClawMotor = vex::motor(vex::PORT3, vex::ratio36_1, false);
-vex::motor ArmMotor = vex::motor(vex::PORT8, vex::ratio36_1, false);
+vex::smartdrive Drivetrain = vex::smartdrive(LeftDriveSmart, RightDriveSmart, Inertial, 320, 320, 40, vex::distanceUnits::mm, 1);
+vex::motor ClawMotor = vex::motor(vex::PORT3, vex::gearSetting::ratio36_1, false);
+vex::motor ArmMotor = vex::motor(vex::PORT8, vex::gearSetting::ratio36_1, false);
 vex::bumper RearBumper = vex::bumper(Brain.ThreeWirePort.A);
-vex::controller Controller1 = vex::controller(vex::primary);
-vex::controller Controller2 = vex::controller(vex::partner);
+vex::controller Controller1 = vex::controller(vex::controllerType::primary);
+vex::controller Controller2 = vex::controller(vex::controllerType::partner);
 vex::competition Competition;
 /*vex-vision-config:begin*/
 vex::vision::signature PURPLECUBE = vex::vision::signature(1, 1755, 3073, 2414, 6847, 9223, 8035, 4.7, 0);
 vex::vision::signature GREENCUBE = vex::vision::signature(2, -7943, -4519, -6231, -4025, -2043, -3034, 2.7, 0);
 vex::vision::signature ORANGECUBE = vex::vision::signature(3, 8099, 9043, 8571, -1895, -1371, -1633, 2.5, 0);
 vex::vision Vision7 = vex::vision(vex::PORT7, 50, PURPLECUBE, GREENCUBE, ORANGECUBE);
-/*vex-vision-config:end*/
+/*vex-vision-config:end*/	
 
 /**
  * @author @DVT7125
@@ -86,11 +86,11 @@ void startup()
 	std::string armSetting = getUserOption("Arm Mode:", {"Hold", "Coast"});
 	if (armSetting == "Hold")
 	{
-		ArmMotor.setStopping(vex::hold);
+		ArmMotor.setStopping(vex::brakeType::coast);
 	}
 	else if (armSetting == "Coast")
 	{
-		ArmMotor.setStopping(vex::coast);
+		ArmMotor.setStopping(vex::brakeType::coast);
 	}
 
 	message << "Arm set to " << armSetting << ".";
@@ -101,20 +101,8 @@ void startup()
 	message.str(std::string());
 
 	std::string ArmVolts = getUserOption("Arm Volts:", {"9", "6", "12"});
-	if (ArmVolts == "9")
-	{
-		ARMVOLTAGE = 9;
-	}
-	else if (ArmVolts == "6")
-	{
-		// Allows for more precise controls
-		ARMVOLTAGE = 6;
-	}
-	else if (ArmVolts == "12")
-	{
-		ARMVOLTAGE = 12;
-	}
-	
+	ARMVOLTAGE = std::atol(ArmVolts.c_str());
+
 	message << "Arm set to " << ARMVOLTAGE << " volts.";
 	logHandler("startup", message.str(), Log::Level::Trace);
 	Controller1.Screen.print((message.str()).c_str());

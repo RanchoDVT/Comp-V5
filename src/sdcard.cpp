@@ -29,6 +29,7 @@ void resetOrInitializeConfig(bool resetreadme, std::string message)
 		configFile << "MAXOPTIONSSIZE=4" << "\n";
 		configFile << "CTRLR1POLLINGRATE=25" << "\n";
 		configFile << "LOCALLOGO=false" << "\n";
+		configFile << "VERSION=" << VERSION << "\n";
 		configFile << "betacode=uF58FlLhU431q28cj599w47Ax5NRi" << "\n";
 
 		logHandler("resetConfig", "Successfully reset config file.", Log::Level::Debug);
@@ -69,7 +70,7 @@ float stringtofloat(std::string string)
 	float value;
 	if (std::any_of(string.begin(), string.end(), ::isdigit))
 	{
-		std::stringstream(string) >> value;
+		value = std::atol(string.c_str());
 		return value;
 	}
 	else
@@ -77,7 +78,7 @@ float stringtofloat(std::string string)
 		std::ostringstream message;
 		message << "Expected float val. Received: " << string;
 		resetOrInitializeConfig(false, message.str());
-		std::stringstream(string) >> value;
+		value = std::atol(string.c_str());
 		return value;
 	}
 }
