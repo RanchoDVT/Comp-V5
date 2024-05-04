@@ -58,9 +58,6 @@ vex::vision Vision7 = vex::vision(vex::PORT7, 50, PURPLECUBE, GREENCUBE, ORANGEC
  */
 void startup()
 {
-	clearScreen(true, true);
-	drivercontrollogo = 00;
-
 	configParser();
 
 	std::ostringstream message;

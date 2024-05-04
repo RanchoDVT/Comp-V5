@@ -190,6 +190,8 @@ void configParser()
 	std::ostringstream message;
 	message << "Version: " << VERSION << " | Build date: " << BUILD_DATE;
 	logHandler("main", message.str(), Log::Level::Info);
+	clearScreen(true, true);
+	drivercontrollogo = 0;
 
 	if (Brain.SDcard.isInserted())
 	{

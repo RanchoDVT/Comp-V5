@@ -5,7 +5,6 @@
 #include <vector>	 ///< Required for using vector containers
 #include <cmath>	 ///< Required for using std::abs with an int
 #include <fstream>	 ///< Requried for using std::getline, and making and reading files.
-#include <fstream>	 ///< Requried for using std::getline, and making and reading files.
 #include <algorithm> ///< Requried for using ::isdigit and std::any_of
 
 #include <stdlib.h>	 ///< Required for standard library definitions
@@ -70,6 +69,7 @@ extern vex::vision Vision7;
 
 int calibrategiro();
 
+// Function to parse config file and initialize variables
 void configParser();
 
 const char *LogToString(Log::Level str);
