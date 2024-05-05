@@ -20,7 +20,7 @@ void logHandler(const std::string &module, const std::string &message, const Log
 			LOGTOFILE = false; // Prevent looping :)
 		}
 
-		LogFile << "[" << LogToString(level) << "] > Time: " << Brain.Timer.time(vex::timeUnits::sec) << " > Module: " << module << " > " << message.c_str() << "\n";
+		LogFile << "[" << LogToString(level) << "] > Time: " << Brain.Timer.time(vex::timeUnits::sec) << " > Module: " << module << " > " << message << "\n";
 	}
 
 	switch (level)

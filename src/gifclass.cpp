@@ -89,7 +89,7 @@ gd_open_gif(FILE *fp)
 	/* Aspect Ratio */
 	fread(&aspect, 1, 1, fp);
 	/* Create gd_GIF Structure. */
-	gif = (gd_GIF *)calloc(1, sizeof(*gif) + (BYTES_PER_PIXEL + 1) * width * height);
+	gif = static_cast<gd_GIF *>(calloc(1, sizeof(*gif) + (BYTES_PER_PIXEL + 1) * width * height));
 	if (!gif)
 		goto fail;
 	gif->fp = fp;
@@ -101,7 +101,7 @@ gd_open_gif(FILE *fp)
 	fread(gif->gct.colors, 1, 3 * gif->gct.size, fp);
 	gif->palette = &gif->gct;
 	gif->bgindex = bgidx;
-	gif->canvas = (uint8_t *)&gif[1];
+	gif->canvas = reinterpret_cast<uint8_t *>(&gif[1]);
 	gif->frame = &gif->canvas[BYTES_PER_PIXEL * width * height];
 	if (gif->bgindex)
 		memset(gif->frame, gif->bgindex, gif->width * gif->height);
@@ -248,12 +248,12 @@ new_table(int key_size)
 {
 	int key;
 	int init_bulk = MAX(1 << (key_size + 1), 0x100);
-	Table *table = (Table *)malloc(sizeof(*table) + sizeof(Entry) * init_bulk);
+	Table *table = reinterpret_cast<Table *>(malloc(sizeof(*table) + sizeof(Entry) * init_bulk));
 	if (table)
 	{
 		table->bulk = init_bulk;
 		table->nentries = (1 << key_size) + 2;
-		table->entries = (Entry *)&table[1];
+		table->entries = reinterpret_cast<Entry *>(&table[1]);
 		for (key = 0; key < (1 << key_size); key++)
 			table->entries[key] = (Entry){1, 0xFFF, (uint8_t)key};
 	}
@@ -271,10 +271,10 @@ add_entry(Table **tablep, uint16_t length, uint16_t prefix, uint8_t suffix)
 	if (table->nentries == table->bulk)
 	{
 		table->bulk *= 2;
-		table = (Table *)realloc(table, sizeof(*table) + sizeof(Entry) * table->bulk);
+		table = static_cast<Table *>(realloc(table, sizeof(*table) + sizeof(Entry) * table->bulk));
 		if (!table)
 			return -1;
-		table->entries = (Entry *)&table[1];
+		table->entries = reinterpret_cast<Entry *>(&table[1]);
 		*tablep = table;
 	}
 	table->entries[table->nentries] = (Entry){length, prefix, suffix};
@@ -576,9 +576,9 @@ int vex::Gif::render_task(void *arg)
 
 		while ((err = gd_get_frame(gif)) > 0)
 		{
-			gd_render_frame(gif, (uint8_t *)instance->_buffer);
+			gd_render_frame(gif, static_cast<uint8_t *>(instance->_buffer));
 
-			instance->_lcd.drawImageFromBuffer((uint32_t *)instance->_buffer, instance->_sx, instance->_sy, gif->width, gif->height);
+			instance->_lcd.drawImageFromBuffer(reinterpret_cast<uint32_t *>(instance->_buffer), instance->_sx, instance->_sy, gif->width, gif->height);
 			instance->_frame++;
 
 			// how long to get, render and draw to screen
@@ -660,7 +660,7 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 			}
 
 			// memory for rendering frame
-			_buffer = (uint32_t *)malloc(_gif->width * _gif->height * sizeof(uint32_t));
+			_buffer = static_cast<uint32_t *>(malloc(_gif->width * _gif->height * sizeof(uint32_t)));
 			if (_buffer == NULL)
 			{
 				// out of memory

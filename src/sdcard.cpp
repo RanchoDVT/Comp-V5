@@ -65,7 +65,7 @@ bool stringtobool(const std::string &string)
 	}
 }
 
-float stringtofloat(const std::string string)
+float stringtofloat(const std::string &string)
 {
 	float value;
 	if (std::any_of(string.begin(), string.end(), ::isdigit))

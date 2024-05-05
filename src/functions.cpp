@@ -16,6 +16,8 @@ const char *LogToString(Log::Level str)
 		return "Error";
 	case Log::Level::Fatal:
 		return "Fatal";
+	default:
+		return "Error";
 	}
 }
 
