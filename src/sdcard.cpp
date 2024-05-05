@@ -1,9 +1,15 @@
 #include "vex.h"
 
-// Function to reset or initialize config file
-void resetOrInitializeConfig(bool resetreadme, std::string message)
+/**
+ * @brief Reset or initialize the config file based on user input.
+ *
+ * @param resetreadme Flag to reset readme file.
+ * @param message Message to display to the user.
+ */
+void resetOrInitializeConfig(const bool &resetreadme, const std::string &message)
 {
-	std::string resetcfg = getUserOption(message.c_str(), {"Yes", "No"});
+	MAXOPTIONSSIZE=4;
+	std::string resetcfg = getUserOption(message, {"Yes", "No"});
 	if (resetcfg == "Yes")
 	{
 		Controller1.Screen.print("Reseting config file...");
@@ -25,38 +31,41 @@ void resetOrInitializeConfig(bool resetreadme, std::string message)
 		configFile << "POLLINGRATE=1" << "\n";
 		configFile << "PRINTLOGO=true" << "\n";
 		configFile << "CTRLR2ENABLE=false" << "\n";
+		configFile << "LOGTOFILE=true" << "\n";
 		configFile << "VISIONENABLE=false" << "\n";
 		configFile << "MAXOPTIONSSIZE=4" << "\n";
 		configFile << "CTRLR1POLLINGRATE=25" << "\n";
 		configFile << "LOCALLOGO=false" << "\n";
+		configFile << "VERSION=" << VERSION << "\n";
 		configFile << "betacode=uF58FlLhU431q28cj599w47Ax5NRi" << "\n";
 
-		Controller1.Screen.print("Config file reset.");
 		logHandler("resetConfig", "Successfully reset config file.", Log::Level::Debug);
 
 		configFile.close();
 		helpfile.close();
-		clearScreen(false, true);
-		Controller1.Screen.print("Reset config file.");
-		vex::this_thread::sleep_for(1500);
-		clearScreen(false, true);
+		return;
 	}
 	else
 	{
-		Controller1.Screen.print("Skipped reset of cfg file.");
-		vex::this_thread::sleep_for(1500);
-		clearScreen(false, true);
+		logHandler("resetConfig", "Skipped reseting config file.", Log::Level::Debug);
+		return;
 	}
 }
 
-bool stringtobool(std::string string)
+/**
+ * @brief Convert a string representation of boolean to bool.
+ *
+ * @param string String representation of boolean.
+ * @return bool Converted boolean value.
+ */
+bool stringtobool(const std::string &string)
 {
-	if (string.find("True" or "true" or "On" or "on" or "1" or "0") != std::string::npos)
+	if (string.find("True") or string.find("On") or string.find("true") or string.find("1") or string.find("on"))
 	{
 		return true;
 	}
 
-	else if (string.find("False" or "false" or "Off" or "off" or "1" or "0") != std::string::npos)
+	else if (string.find("False") or string.find("false") or string.find("off") or string.find("0") or string.find("Off"))
 	{
 		return false;
 	}
@@ -69,12 +78,18 @@ bool stringtobool(std::string string)
 	}
 }
 
-std::size_t stringtofloat(std::string string)
+/**
+ * @brief Convert a string representation of float to float.
+ *
+ * @param string String representation of float.
+ * @return float Converted float value.
+ */
+float stringtofloat(const std::string &string)
 {
-	std::size_t value;
+	float value;
 	if (std::any_of(string.begin(), string.end(), ::isdigit))
 	{
-		std::stringstream(string) >> value;
+		value = std::atol(string.c_str());
 		return value;
 	}
 	else
@@ -82,12 +97,14 @@ std::size_t stringtofloat(std::string string)
 		std::ostringstream message;
 		message << "Expected float val. Received: " << string;
 		resetOrInitializeConfig(false, message.str());
-		std::stringstream(string) >> value;
+		value = std::atol(string.c_str());
 		return value;
 	}
 }
 
-// Function to parse and set values from config file
+/**
+ * @brief Parse and set values from the config file.
+ */
 void setValForConfig()
 {
 	std::ifstream configFile("config/config.cfg");
@@ -101,7 +118,7 @@ void setValForConfig()
 	while (std::getline(configFile, line))
 	{
 		// Parse each line from config file
-		if (line.empty() || line[0] == ';')
+		if (line.empty() or line[0] == ';')
 		{
 			continue; // Skip empty lines and comments
 		}
@@ -176,6 +193,7 @@ void setValForConfig()
 			{
 				std::ostringstream message;
 				message << "Unknown key in config file: " << key << "Do you want to reset the config?";
+				logHandler("setValForConfig", message.str(), Log::Level::Warn);
 				resetOrInitializeConfig(false, message.str());
 			}
 		}
@@ -189,9 +207,17 @@ void setValForConfig()
 	configFile.close();
 }
 
-// Function to parse config file and initialize variables
+/**
+ * @brief Parse config file and initialize variables.
+ */
 void configParser()
 {
+	std::ostringstream message;
+	message << "Version: " << VERSION << " | Build date: " << BUILD_DATE;
+	logHandler("main", message.str(), Log::Level::Info);
+	clearScreen(true, true);
+	Controller1.Screen.print("Starting up...");
+	drivercontrollogo = 0;
 	if (Brain.SDcard.isInserted())
 	{
 		if (Brain.SDcard.exists("config/config.cfg"))
@@ -200,15 +226,11 @@ void configParser()
 		}
 		else
 		{
-			if (Brain.SDcard.exists("readme.md"))
-			{
-				resetOrInitializeConfig(false, "Missing config file. Create it?");
-				setValForConfig();
-			}
-			else
+			resetOrInitializeConfig(false, "Missing config file. Create it?");
+			setValForConfig();
+			if (!Brain.SDcard.exists("readme.txt"))
 			{
 				resetOrInitializeConfig(true, "Missing readme. Create it?");
-				setValForConfig();
 			}
 		}
 	}
@@ -216,11 +238,16 @@ void configParser()
 	{
 		POLLINGRATE = 1;
 		PRINTLOGO = false;
-		CTRLR2ENABLE = true;
+		CTRLR2ENABLE = false;
 		VISIONENABLE = false;
 		MAXOPTIONSSIZE = 4;
 		CTRLR1POLLINGRATE = 25;
 		LOCALLOGO = false;
 		logHandler("configParser", "No SD card installed. Using default values.", Log::Level::Info);
 	}
+	vex::task gifplay(gifplayer);
+	calibrategiro();
+	Drivetrain.setStopping(vex::brakeType::coast);
+	ClawMotor.setStopping(vex::brakeType::coast);
+	return;
 }

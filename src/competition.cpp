@@ -5,12 +5,12 @@
  * @date 4/10/24
  * @brief Handler for L1 button press on controller.
  */
-void controller_L1_Pressed()
+void controllerL1Pressed()
 {
 	ClawMotor.spin(vex::forward, 12, vex::voltageUnits::volt);
 	while (Controller1.ButtonL1.pressing())
 	{
-		vex::this_thread::sleep_for(POLLINGRATE); // Does not benefit from faster polling.
+		vex::this_thread::sleep_for(POLLINGRATE);
 	}
 	ClawMotor.stop();
 }
@@ -20,7 +20,7 @@ void controller_L1_Pressed()
  * @date 4/10/24
  * @brief Handler for L2 button press on controller.
  */
-void controller_L2_Pressed()
+void controllerL2Pressed()
 {
 	ClawMotor.spin(vex::reverse, 12, vex::voltageUnits::volt);
 	while (Controller1.ButtonL2.pressing())
@@ -35,7 +35,7 @@ void controller_L2_Pressed()
  * @date 4/10/24
  * @brief Handler for R1 button press on controller.
  */
-void controller_R1_Pressed()
+void controllerR1Pressed()
 {
 	ArmMotor.spin(vex::reverse, ARMVOLTAGE, vex::voltageUnits::volt);
 	while (Controller1.ButtonR1.pressing())
@@ -50,7 +50,7 @@ void controller_R1_Pressed()
  * @date 4/10/24
  * @brief Handler for R2 button press on controller.
  */
-void controller_R2_Pressed()
+void controllerR2Pressed()
 {
 	ArmMotor.spin(vex::forward, ARMVOLTAGE, vex::voltageUnits::volt);
 	while (Controller1.ButtonR2.pressing())
@@ -71,7 +71,7 @@ void autonomous()
 	Drivetrain.setDriveVelocity(60, vex::percent); // Best speed for stability.
 	Drivetrain.setTurnVelocity(60, vex::percent);  // Best speed for stability.
 	Drivetrain.setStopping(vex::brake);			   // To make sure robot stops in same place every time.
-	drivercontrollogo = 0;
+	drivercontrollogo = 2;
 	Drivetrain.driveFor(vex::reverse, 20.0, vex::inches, true);
 	Drivetrain.driveFor(vex::forward, 20.0, vex::inches, true); // Estimated time to finish ~3 seconds.
 	vex::this_thread::sleep_for(2000);
@@ -94,10 +94,10 @@ void userControl()
 		logHandler("drivetrain_main", "Ctrl1 is NOT in command mode!", Log::Level::Fatal);
 	}
 
-	Controller1.ButtonL1.pressed(controller_L1_Pressed);
-	Controller1.ButtonL2.pressed(controller_L2_Pressed);
-	Controller1.ButtonR1.pressed(controller_R1_Pressed);
-	Controller1.ButtonR2.pressed(controller_R2_Pressed);
+	Controller1.ButtonL1.pressed(controllerL1Pressed);
+	Controller1.ButtonL2.pressed(controllerL2Pressed);
+	Controller1.ButtonR1.pressed(controllerR1Pressed);
+	Controller1.ButtonR2.pressed(controllerR2Pressed);
 	vex::this_thread::sleep_for(30); // Wait for callbacks to load.
 
 	vex::task motortemp(motorTempMonitor);

@@ -1,6 +1,13 @@
 #include "vex.h"
 
-const char *LogToString(Log::Level str)
+/**
+ * @brief Convert a Log::Level enum value to its string representation.
+ * 
+ * @param str Log::Level enum value.
+ * @return const char* String representation of the Log::Level enum.
+ */
+
+const char *LogToString(const Log::Level &str)
 {
 	switch (str)
 	{
@@ -16,6 +23,8 @@ const char *LogToString(Log::Level str)
 		return "Error";
 	case Log::Level::Fatal:
 		return "Fatal";
+	default:
+		return "Error";
 	}
 }
 
@@ -159,19 +168,19 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 		return options[1]; // Return default, as you have to have at least one option for it to compile.
 	}
 
+	std::ostringstream optmessage;
+	optmessage << "Options: ";
+	for (auto optionIterator = options.begin(); optionIterator != options.end(); ++optionIterator)
 	{
-		std::ostringstream optmessage;
-		optmessage << "Options: ";
-		for (auto optionIterator = options.begin(); optionIterator != options.end(); ++optionIterator)
+		if (optionIterator != options.begin())
 		{
-			if (optionIterator != options.begin())
-			{
-				optmessage << ", "; // Separate options with a comma and space (except for the first option)
-			}
-			optmessage << *optionIterator;
+			optmessage << ", "; // Separate options with a comma and space (except for the first option)
 		}
-		logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
+		optmessage << *optionIterator;
 	}
+
+	logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
+	optmessage.str(std::string());
 
 	std::size_t wrongAttemptCount = 0;
 	const std::size_t maxWrongAttempts = 3;
@@ -182,46 +191,20 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 	std::size_t Index = options.size(); // Invalid selection by default
 	int offset = 0;
 
+	const std::vector<std::string> &buttons = {"A", "X", "Y", "B"};
+	const std::vector<std::string> &scrollButtons = {"DOWN", "UP"};
+
 	while (!CONTROLLER1COMMAND)
 	{
 		buttonString.clear();
 		clearScreen(false, true);
-		Controller1.Screen.print("%s", settingName.c_str());
-
-		for (int i = 0; i < 2; ++i) // Checks for option size, and allows for options.
+		Controller1.Screen.print(settingName.c_str());
+		int i = 0;
+		for (; i < 2; ++i) // Checks for option size, and allows for options.
 		{
-			char button;
-			if (offset == -1)
-			{
-				button = 'X';
-				if (i == 1)
-				{
-					button = 'Y';
-				}
-			}
-
-			else if (offset == -2)
-			{
-				button = 'Y';
-				if (i == 1)
-				{
-					button = 'B';
-				}
-			}
-
-			else
-			{
-				button = 'A';
-				if (i == 1)
-				{
-					button = 'X';
-				}
-			}
-
 			Controller1.Screen.newLine();
-			Controller1.Screen.print("%c: %s", button, options[i - offset].c_str());
-
-			buttonString += button;
+			Controller1.Screen.print("%s: %s", buttons[i - offset].c_str(), options[i - offset].c_str());
+			buttonString += buttons[i - offset];
 			if (i != 1) // Add comma if not the last button
 			{
 				buttonString += ", ";
@@ -239,12 +222,12 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 			Controller1.Screen.print("^");
 		}
 
-		{
-			std::ostringstream bttnMessage;
-			bttnMessage << "Available buttons for current visible options: " << buttonString; // Append button string to message.
-			logHandler("getUserOption", bttnMessage.str(), Log::Level::Debug);
-		}
+		optmessage << "Available buttons for current visible options: " << buttonString; // Append button string to message.
+		logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
+		optmessage.str(std::string());
+
 		const std::string &buttonPressed = ctrl1BttnPressed(); // Get user input
+
 		if (buttonPressed == "A")
 		{
 			Index = 0;
@@ -261,34 +244,33 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 		{
 			Index = 3;
 		}
-		else if (buttonPressed == "DOWN" and options.size() >= 3)
+
+		if (Index < options.size())
 		{
-			if ((options.size() == 3 and offset != -1) or (options.size() == 4 and offset != -2))
+			optmessage << "[Valid Selection] Index = " << Index << " | Offset = " << offset;
+			logHandler("get_User_Option", optmessage.str(), Log::Level::Debug);
+			break;
+		}
+
+		// Don't even ask what this does
+		else if (end(scrollButtons) != std::find(begin(scrollButtons), end(scrollButtons), buttonPressed))
+		{
+			if (buttonPressed == "DOWN" and ((options.size() == 3 and offset != -1) or (options.size() == 4 and offset != -2)))
 			{
 				--offset;
 			}
-		}
-		// If the wrong button is pressed, its index will = the options size, so I know if they get it wrong.
-		std::ostringstream IndexMessage;
-
-		if (Index < options.size() or offset < 0 or (buttonPressed == "UP" and options.size() >= 3 and offset != 0))
-		{
-			IndexMessage << "[Valid Selection] Index = " << Index << " | Offset = " << offset; // Append int to string
-			logHandler("get_User_Option", IndexMessage.str(), Log::Level::Debug);
-			if (buttonPressed == "UP" and offset != 0)
+			else if (buttonPressed == "UP" and offset != 0)
 			{
 				++offset;
 			}
-			if (Index < options.size())
-			{
-				break;
-			}
+			optmessage << "[Valid Selection] Index = " << Index << " | Offset = " << offset;
+			logHandler("get_User_Option", optmessage.str(), Log::Level::Debug);
 		}
 
 		else
 		{
-			IndexMessage << "[Invalid Selection] Index = " << Index << " | Offset = " << offset; // Append int to string
-			logHandler("getUserOption", IndexMessage.str(), Log::Level::Debug);
+			optmessage << "[Invalid Selection] Index = " << Index << " | Offset = " << offset;
+			logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
 			// Display message
 			if (wrongAttemptCount < maxWrongAttempts)
 			{
@@ -296,7 +278,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 				Controller1.Screen.print(wrongMessages[wrongAttemptCount].c_str());
 				++wrongAttemptCount; // Increment wrong attempt count
 				std::ostringstream failattemptdebug;
-				failattemptdebug << "wrongAttemptCount: " << wrongAttemptCount; // Append int to string
+				failattemptdebug << "wrongAttemptCount: " << wrongAttemptCount;
 				logHandler("getUserOption", failattemptdebug.str(), Log::Level::Debug);
 				vex::this_thread::sleep_for(2000);
 			}
@@ -306,11 +288,17 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 				logHandler("getUserOption", "Your half arsed.", Log::Level::Fatal);
 			}
 		}
+		optmessage.str(std::string());
 	}
 	clearScreen(false, true);
 	return options[Index];
 }
 
+/**
+ * @brief Monitor motor temperatures and battery voltage for potential overheating and low voltage conditions.
+ *
+ * @return int Always returns 0.
+ */
 int motorTempMonitor()
 {
 	logHandler("motorTempMonitor", "motorTempMonitor is starting up...", Log::Level::Trace);
@@ -332,30 +320,35 @@ int motorTempMonitor()
 		rightDriveTemp = RightDriveSmart.temperature(vex::temperatureUnits::celsius);
 
 		// Check for overheat conditions for each motor
-		if (clawTemp >= 60)
+		if (clawTemp >= 55)
 		{
 			motorTemps << "CM overheat: " << clawTemp << "°";
 			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn);
 		}
-		if (armTemp >= 60)
+		if (armTemp >= 55)
 		{
 			motorTemps << "AM overheat: " << armTemp << "°";
 			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn);
 		}
-		if (leftDriveTemp >= 60)
+		if (leftDriveTemp >= 55)
 		{
 			motorTemps << "LM overheat: " << leftDriveTemp << "°";
 			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn);
 		}
-		if (rightDriveTemp >= 60)
+		if (rightDriveTemp >= 55)
 		{
 			motorTemps << "RM overheat: " << rightDriveTemp << "°";
 			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn);
 		}
+		if (Brain.Battery.voltage() < 12)
+		{
+			logHandler("motorTempMonitor", "Brain voltage at a critical level! performance will be reduced!", Log::Level::Warn);
+		}
+
 		// Log motor temperatures
 		motorTemps << "\n | LeftTemp: " << leftDriveTemp << "°\n | RightTemp: " << rightDriveTemp << "°\n | ArmTemp: " << armTemp << "°\n | ClawTemp: " << clawTemp << "°\n | Battery Voltage: " << Brain.Battery.voltage() << "V\n";
 		logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Info);
-		dataBuffer << "\nX Axis: " << Inertial.acceleration(vex::axisType::xaxis) << "\nY Axis: " << Inertial.acceleration(vex::axisType::yaxis) << "\nZ Axis: " << Inertial.acceleration(vex::axisType::zaxis);
+		dataBuffer << "\nX Axis: " << Inertial.pitch(vex::rotationUnits::deg) << "\nY Axis: " << Inertial.roll(vex::rotationUnits::deg) << "\nZ Axis: " << Inertial.yaw(vex::rotationUnits::deg);
 		logHandler("motorTempMonitor", dataBuffer.str(), Log::Level::Info);
 		clearScreen(false, true);
 		Controller1.Screen.print("LM: %d° | RM: %d°", leftDriveTemp, rightDriveTemp);
@@ -368,38 +361,55 @@ int motorTempMonitor()
 	return 0;
 }
 
+/**
+ * @brief Display GIF animations based on the value of drivercontrollogo.
+ *
+ * @return int Always returns 0.
+ */
 int gifplayer()
 {
-	if (drivercontrollogo == 1)
-	{
-		vex::Gif gif("assets/drivercontrol.gif", 0, 0, true);
 
-		while (LOCALLOGO)
-		{
-			Brain.Screen.printAt(5, 230, "frame %3d", gif.getFrameIndex());
-		}
-	}
-	else if (drivercontrollogo == 0)
-	{
-		vex::Gif gif("assets/autonomous.gif", 0, 0, true);
-
-		while (LOCALLOGO)
-		{
-			Brain.Screen.printAt(5, 230, "frame %3d", gif.getFrameIndex());
-		}
-	}
-	else
+	if (drivercontrollogo == 0)
 	{
 		vex::Gif gif("assets/loading.gif", 0, 0, true);
 
-		while (LOCALLOGO)
+		while (LOCALLOGO and drivercontrollogo == 00)
 		{
-			Brain.Screen.printAt(5, 230, "frame %3d", gif.getFrameIndex());
+			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
 		}
+		gif.~Gif();
+		clearScreen(true, false);
+	}
+	if (drivercontrollogo == 2)
+	{
+		vex::Gif gif("assets/auto.gif", 0, 0, true);
+
+		while (LOCALLOGO and drivercontrollogo == 2)
+		{
+			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
+		}
+		gif.~Gif();
+		clearScreen(true, false);
+	}
+	if (drivercontrollogo == 1)
+	{
+		vex::Gif gif("assets/user.gif", 0, 0, true);
+
+		while (LOCALLOGO and drivercontrollogo == 1)
+		{
+			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
+		}
+		gif.~Gif();
+		clearScreen(true, false);
 	}
 	return 0;
 }
 
+/**
+ * @brief Calibrate the Inertial Gyro.
+ *
+ * @return int Always returns 1.
+ */
 int calibrategiro()
 {
 	logHandler("calibrateDrivetrain", "Calibrating Inertial Gyro...", Log::Level::Info);
