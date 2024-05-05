@@ -7,6 +7,10 @@
 #include <fstream>	 ///< Requried for using std::getline, and making and reading files.
 #include <algorithm> ///< Requried for using ::isdigit and std::any_of
 
+#include <fcntl.h>
+#include <unistd.h>
+
+
 #include <stdlib.h>	 ///< Required for standard library definitions
 #include <stdbool.h> ///< Required for standard boolean definitions
 #include <math.h>	 ///< Required for mathematical functions
@@ -15,7 +19,7 @@
 
 #include "v5_cpp.h" ///< Required for VEX V5 definitions
 
-#include "gifclass.h" ///< For vex::Gif class.
+#include "gifclass.h"
 
 /**
  * @author @DVT7125
@@ -45,8 +49,8 @@ extern bool VISIONENABLE;
 extern bool CTRLR2ENABLE;
 extern bool BETAENABLED;
 extern bool LOGTOFILE;
-extern std::string VERSION;
-extern std::string BUILD_DATE;
+extern const std::string &VERSION;
+extern const std::string &BUILD_DATE;
 extern std::size_t MAXOPTIONSSIZE;
 extern std::size_t CTRLR1POLLINGRATE;
 extern std::size_t ARMVOLTAGE; // Voltage setting for arm motor.

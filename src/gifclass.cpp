@@ -589,7 +589,7 @@ int vex::Gif::render_task(void *arg)
 			delay -= delta;
 			if (delay > 0)
 			{
-				this_thread::sleep_for(delay);
+				vex::this_thread::sleep_for(delay);
 			}
 
 			// for next loop
@@ -673,7 +673,7 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 			else
 			{
 				// create thread to handle this gif
-				_t1 = thread(render_task, static_cast<void *>(this));
+				_t1 = vex::thread(render_task, static_cast<void *>(this));
 			}
 		}
 	}

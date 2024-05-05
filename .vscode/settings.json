@@ -40,6 +40,8 @@
 		"typeinfo": "cpp",
 		"iostream": "cpp",
 		"string": "cpp",
-		"random": "cpp"
+		"random": "cpp",
+		"gifclass.h": "c",
+		"unistd.h": "c"
 	}
 }

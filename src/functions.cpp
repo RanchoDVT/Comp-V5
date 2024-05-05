@@ -190,8 +190,8 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 		buttonString.clear();
 		clearScreen(false, true);
 		Controller1.Screen.print(settingName.c_str());
-
-		for (int i = 0; i < 2; ++i) // Checks for option size, and allows for options.
+		int i = 0;
+		for (; i < 2; ++i) // Checks for option size, and allows for options.
 		{
 			Controller1.Screen.newLine();
 			Controller1.Screen.print("%s: %s", buttons[i - offset].c_str(), options[i - offset].c_str());
@@ -219,7 +219,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 
 		const std::string &buttonPressed = ctrl1BttnPressed(); // Get user input
 
-		if (buttonPressed == "A")
+		if (buttonPressed == buttons[i - offset])
 		{
 			Index = 0;
 		}
@@ -236,14 +236,13 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 			Index = 3;
 		}
 
-		
 		if (Index < options.size())
 		{
-			optmessage << "[Valid Selection] Index = " << Index << " | Offset = " << offset; // Append int to string
+			optmessage << "[Valid Selection] Index = " << Index << " | Offset = " << offset;
 			logHandler("get_User_Option", optmessage.str(), Log::Level::Debug);
 			break;
 		}
-		
+
 		// Don't even ask what this does
 		else if (end(scrollButtons) != std::find(begin(scrollButtons), end(scrollButtons), buttonPressed))
 		{
@@ -255,13 +254,13 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 			{
 				++offset;
 			}
-			optmessage << "[Valid Selection] Index = " << Index << " | Offset = " << offset; // Append int to string
+			optmessage << "[Valid Selection] Index = " << Index << " | Offset = " << offset;
 			logHandler("get_User_Option", optmessage.str(), Log::Level::Debug);
 		}
 
 		else
 		{
-			optmessage << "[Invalid Selection] Index = " << Index << " | Offset = " << offset; // Append int to string
+			optmessage << "[Invalid Selection] Index = " << Index << " | Offset = " << offset;
 			logHandler("getUserOption", optmessage.str(), Log::Level::Debug);
 			// Display message
 			if (wrongAttemptCount < maxWrongAttempts)
@@ -270,7 +269,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 				Controller1.Screen.print(wrongMessages[wrongAttemptCount].c_str());
 				++wrongAttemptCount; // Increment wrong attempt count
 				std::ostringstream failattemptdebug;
-				failattemptdebug << "wrongAttemptCount: " << wrongAttemptCount; // Append int to string
+				failattemptdebug << "wrongAttemptCount: " << wrongAttemptCount;
 				logHandler("getUserOption", failattemptdebug.str(), Log::Level::Debug);
 				vex::this_thread::sleep_for(2000);
 			}

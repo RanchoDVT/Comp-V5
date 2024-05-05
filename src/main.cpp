@@ -22,8 +22,8 @@ bool VISIONENABLE;
 bool CTRLR2ENABLE;
 bool BETAENABLED;
 bool LOGTOFILE;
-std::string VERSION = "2.0pr2";
-std::string BUILD_DATE = "4/25/24";
+const std::string &VERSION = "2.0pr3";
+const std::string &BUILD_DATE = "5/4/24";
 bool CONTROLLER1COMMAND = false;
 int drivercontrollogo;
 

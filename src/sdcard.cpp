@@ -1,7 +1,7 @@
 #include "vex.h"
 
 // Function to reset or initialize config file
-void resetOrInitializeConfig(bool resetreadme, std::string message)
+void resetOrInitializeConfig(const bool &resetreadme, const std::string &message)
 {
 	std::string resetcfg = getUserOption(message.c_str(), {"Yes", "No"});
 	if (resetcfg == "Yes")
@@ -45,7 +45,7 @@ void resetOrInitializeConfig(bool resetreadme, std::string message)
 	}
 }
 
-bool stringtobool(std::string &string)
+bool stringtobool(const std::string &string)
 {
 	if (string.find("True") or string.find("On") or string.find("true") or string.find("1") or string.find("on"))
 	{
@@ -65,7 +65,7 @@ bool stringtobool(std::string &string)
 	}
 }
 
-float stringtofloat(std::string string)
+float stringtofloat(const std::string string)
 {
 	float value;
 	if (std::any_of(string.begin(), string.end(), ::isdigit))
@@ -202,12 +202,10 @@ void configParser()
 		}
 		else
 		{
-			if (Brain.SDcard.exists("readme.md"))
-			{
-				resetOrInitializeConfig(false, "Missing config file. Create it?");
-				setValForConfig();
-			}
-			else
+
+			resetOrInitializeConfig(false, "Missing config file. Create it?");
+			setValForConfig();
+			if (!Brain.SDcard.exists("readme.txt"))
 			{
 				resetOrInitializeConfig(true, "Missing readme. Create it?");
 				setValForConfig();
