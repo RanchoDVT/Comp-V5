@@ -12,15 +12,22 @@ void logHandler(const std::string &module, const std::string &message, const Log
 {
 	std::ofstream LogFile("log.txt", std::ios_base::out | std::ios_base::app);
 	std::string logEntry;
+
+	// Write to log file
 	if (LOGTOFILE)
 	{
 		if (!LogFile)
 		{
-			logHandler("logHandler", "Could not create logfile.", Log::Level::Warn);
 			LOGTOFILE = false; // Prevent looping :)
+			logHandler("logHandler", "Could not create logfile.", Log::Level::Warn);
+		};
+		if (LogFile.badbit > 0)
+		{
+			LOGTOFILE = false; // Prevent looping :)
+			logHandler("logHandler", "Warning, bad byte detected.", Log::Level::Warn);
 		}
-
 		LogFile << "[" << LogToString(level) << "] > Time: " << Brain.Timer.time(vex::timeUnits::sec) << " > Module: " << module << " > " << message << "\n";
+		LogFile.close();
 	}
 
 	switch (level)

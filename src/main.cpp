@@ -12,19 +12,46 @@
 
 #include "vex.h" /// Header file
 
+// Maximum size of options
 std::size_t MAXOPTIONSSIZE;
+
+// Polling rate for controller 1
 std::size_t CTRLR1POLLINGRATE;
-std::size_t ARMVOLTAGE; // Voltage setting for arm motor.
-float POLLINGRATE;		// In MS. | 20ms (Default) = 50Hz | 10ms (PID for motors) = 100Hz | 2ms = 500Hz (10X faster) | 1ms = 1000Hz (20X faster) | 0.125ms = 8000Hz (160X faster)
+
+// Voltage of the ARM
+std::size_t ARMVOLTAGE;
+
+// Polling rate
+float POLLINGRATE;
+
+// Flag to determine whether to print logo
 bool PRINTLOGO;
+
+// Flag to determine whether to use local logo
 bool LOCALLOGO;
+
+// Flag to enable vision
 bool VISIONENABLE;
+
+// Flag to enable controller 2
 bool CTRLR2ENABLE;
+
+// Flag to determine whether beta features are enabled
 bool BETAENABLED;
+
+// Flag to determine whether to log to file
 bool LOGTOFILE;
+
+// Version string
 const std::string &VERSION = "2.0pr3";
+
+// Build date string
 const std::string &BUILD_DATE = "5/4/24";
+
+// Flag to determine whether controller 1 commands are enabled
 bool CONTROLLER1COMMAND = false;
+
+// Driver control logo variable
 int drivercontrollogo;
 
 /* Stall Torque (with 36:1 gears)	2.1 Nm			*/
@@ -48,7 +75,7 @@ vex::vision::signature PURPLECUBE = vex::vision::signature(1, 1755, 3073, 2414, 
 vex::vision::signature GREENCUBE = vex::vision::signature(2, -7943, -4519, -6231, -4025, -2043, -3034, 2.7, 0);
 vex::vision::signature ORANGECUBE = vex::vision::signature(3, 8099, 9043, 8571, -1895, -1371, -1633, 2.5, 0);
 vex::vision Vision7 = vex::vision(vex::PORT7, 50, PURPLECUBE, GREENCUBE, ORANGECUBE);
-/*vex-vision-config:end*/	
+/*vex-vision-config:end*/
 
 /**
  * @author @DVT7125
@@ -62,7 +89,6 @@ void startup()
 
 	std::ostringstream message;
 
-	Controller1.Screen.print("Starting up...");
 	logHandler("startup", "Starting GUI startup...", Log::Level::Info);
 
 	if (CONTROLLER1COMMAND)

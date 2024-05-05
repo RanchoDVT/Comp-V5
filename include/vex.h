@@ -7,10 +7,6 @@
 #include <fstream>	 ///< Requried for using std::getline, and making and reading files.
 #include <algorithm> ///< Requried for using ::isdigit and std::any_of
 
-#include <fcntl.h>
-#include <unistd.h>
-
-
 #include <stdlib.h>	 ///< Required for standard library definitions
 #include <stdbool.h> ///< Required for standard boolean definitions
 #include <math.h>	 ///< Required for mathematical functions
@@ -19,7 +15,7 @@
 
 #include "v5_cpp.h" ///< Required for VEX V5 definitions
 
-#include "gifclass.h"
+#include "gifclass.h" ///< For vex::Gif class.
 
 /**
  * @author @DVT7125
@@ -53,7 +49,7 @@ extern const std::string &VERSION;
 extern const std::string &BUILD_DATE;
 extern std::size_t MAXOPTIONSSIZE;
 extern std::size_t CTRLR1POLLINGRATE;
-extern std::size_t ARMVOLTAGE; // Voltage setting for arm motor.
+extern std::size_t ARMVOLTAGE;
 extern int drivercontrollogo;
 
 extern vex::brain Brain;
@@ -72,21 +68,12 @@ extern vex::vision::signature ORANGECUBE;
 extern vex::vision Vision7;
 
 int calibrategiro();
-
-// Function to parse config file and initialize variables
 void configParser();
-
-const char *LogToString(Log::Level str);
+const char *LogToString(const Log::Level &str);
 void clearScreen(const bool &brainClear, const bool &controller1Clear);
 void logHandler(const std::string &module, const std::string &message, const Log::Level &level);
 std::string getUserOption(const std::string &settingName, const std::vector<std::string> &options);
-
-/// @brief A module that records motor temps.
 int motorTempMonitor();
-
-/// @brief A module that plays a gif on the brain.
-/// @param drivercontrollogo
 int gifplayer();
-
 void userControl();
 void autonomous();

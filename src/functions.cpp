@@ -1,6 +1,13 @@
 #include "vex.h"
 
-const char *LogToString(Log::Level str)
+/**
+ * @brief Convert a Log::Level enum value to its string representation.
+ * 
+ * @param str Log::Level enum value.
+ * @return const char* String representation of the Log::Level enum.
+ */
+
+const char *LogToString(const Log::Level &str)
 {
 	switch (str)
 	{
@@ -184,8 +191,8 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 	std::size_t Index = options.size(); // Invalid selection by default
 	int offset = 0;
 
-	const std::vector<std::string> buttons = {"A", "X", "Y", "B"};
-	const std::vector<std::string> scrollButtons = {"DOWN", "UP"};
+	const std::vector<std::string> &buttons = {"A", "X", "Y", "B"};
+	const std::vector<std::string> &scrollButtons = {"DOWN", "UP"};
 
 	while (!CONTROLLER1COMMAND)
 	{
@@ -221,7 +228,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 
 		const std::string &buttonPressed = ctrl1BttnPressed(); // Get user input
 
-		if (buttonPressed == buttons[i - offset])
+		if (buttonPressed == "A")
 		{
 			Index = 0;
 		}
@@ -287,6 +294,11 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 	return options[Index];
 }
 
+/**
+ * @brief Monitor motor temperatures and battery voltage for potential overheating and low voltage conditions.
+ *
+ * @return int Always returns 0.
+ */
 int motorTempMonitor()
 {
 	logHandler("motorTempMonitor", "motorTempMonitor is starting up...", Log::Level::Trace);
@@ -349,6 +361,11 @@ int motorTempMonitor()
 	return 0;
 }
 
+/**
+ * @brief Display GIF animations based on the value of drivercontrollogo.
+ *
+ * @return int Always returns 0.
+ */
 int gifplayer()
 {
 
@@ -388,6 +405,11 @@ int gifplayer()
 	return 0;
 }
 
+/**
+ * @brief Calibrate the Inertial Gyro.
+ *
+ * @return int Always returns 1.
+ */
 int calibrategiro()
 {
 	logHandler("calibrateDrivetrain", "Calibrating Inertial Gyro...", Log::Level::Info);

@@ -10,7 +10,7 @@ void controllerL1Pressed()
 	ClawMotor.spin(vex::forward, 12, vex::voltageUnits::volt);
 	while (Controller1.ButtonL1.pressing())
 	{
-		vex::this_thread::sleep_for(POLLINGRATE); // Does not benefit from faster polling.
+		vex::this_thread::sleep_for(POLLINGRATE);
 	}
 	ClawMotor.stop();
 }

@@ -643,6 +643,12 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 		// using memory, then reopen file
 		if (_gifmem != NULL)
 		{
+			// close the existing file pointer if it's open
+			if (fp != NULL)
+			{
+				fclose(fp);
+				fp = NULL;
+			}
 			// create a FILE from memory buffer
 			fp = fmemopen(_gifmem, len, "rb");
 		}
@@ -658,7 +664,6 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 			{
 				return;
 			}
-
 			// memory for rendering frame
 			_buffer = static_cast<uint32_t *>(malloc(_gif->width * _gif->height * sizeof(uint32_t)));
 			if (_buffer == NULL)
