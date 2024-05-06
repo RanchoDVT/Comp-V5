@@ -21,7 +21,7 @@ void logHandler(const std::string &module, const std::string &message, const Log
 			LOGTOFILE = false; // Prevent looping :)
 			logHandler("logHandler", "Could not create logfile.", Log::Level::Warn);
 		};
-		if (!(LogFile.badbit == 1L))
+		if (LogFile.badbit != 1L)
 		{
 			LOGTOFILE = false; // Prevent looping :)
 			logHandler("logHandler", "Warning, bad byte detected.", Log::Level::Warn);
