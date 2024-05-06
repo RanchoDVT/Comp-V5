@@ -14,43 +14,30 @@
 
 // Maximum size of options
 std::size_t MAXOPTIONSSIZE;
-
 // Polling rate for controller 1
 std::size_t CTRLR1POLLINGRATE;
-
 // Voltage of the ARM
 std::size_t ARMVOLTAGE;
-
 // Polling rate
 float POLLINGRATE;
-
 // Flag to determine whether to print logo
 bool PRINTLOGO;
-
 // Flag to determine whether to use local logo
 bool LOCALLOGO;
-
 // Flag to enable vision
 bool VISIONENABLE;
-
 // Flag to enable controller 2
 bool CTRLR2ENABLE;
-
 // Flag to determine whether beta features are enabled
 bool BETAENABLED;
-
 // Flag to determine whether to log to file
 bool LOGTOFILE;
-
 // Version string
 const std::string &VERSION = "2.0pr3";
-
 // Build date string
-const std::string &BUILD_DATE = "5/4/24";
-
+const std::string &BUILD_DATE = "5/5/24";
 // Flag to determine whether controller 1 commands are enabled
 bool CONTROLLER1COMMAND = false;
-
 // Driver control logo variable
 int drivercontrollogo;
 

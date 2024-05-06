@@ -8,41 +8,46 @@
  */
 void resetOrInitializeConfig(const bool &resetreadme, const std::string &message)
 {
-	MAXOPTIONSSIZE=4;
+	MAXOPTIONSSIZE = 4;
 	std::string resetcfg = getUserOption(message, {"Yes", "No"});
 	if (resetcfg == "Yes")
 	{
 		Controller1.Screen.print("Reseting config file...");
-		std::ofstream configFile("config/config.cfg");
-		std::ofstream helpfile("readme.md");
-		if (!configFile)
-		{
-			logHandler("resetOrInitializeConfig", "Could not create config.", Log::Level::Warn);
-			return;
-		}
-		if (!helpfile)
-		{
-			logHandler("resetOrInitializeConfig", "Could not create readme.", Log::Level::Warn);
-			return;
-		}
 
-		// Write default configuration to the file
-		configFile << ";Config File:" << "\n";
-		configFile << "POLLINGRATE=1" << "\n";
-		configFile << "PRINTLOGO=true" << "\n";
-		configFile << "CTRLR2ENABLE=false" << "\n";
-		configFile << "LOGTOFILE=true" << "\n";
-		configFile << "VISIONENABLE=false" << "\n";
-		configFile << "MAXOPTIONSSIZE=4" << "\n";
-		configFile << "CTRLR1POLLINGRATE=25" << "\n";
-		configFile << "LOCALLOGO=false" << "\n";
-		configFile << "VERSION=" << VERSION << "\n";
-		configFile << "betacode=uF58FlLhU431q28cj599w47Ax5NRi" << "\n";
+		if (resetreadme)
+		{
+			std::ofstream helpfile("readme.md");
+			if (!helpfile)
+			{
+				logHandler("resetOrInitializeConfig", "Could not create readme.", Log::Level::Warn);
+				return;
+			}
+			helpfile.close();
+		}
+		if (!resetreadme)
+		{
+			std::ofstream configFile("config/config.cfg");
+			if (!configFile)
+			{
+				logHandler("resetOrInitializeConfig", "Could not create config.", Log::Level::Warn);
+				return;
+			}
+			// Write default configuration to the file
+			configFile << ";Config File:" << "\n";
+			configFile << "POLLINGRATE=1" << "\n";
+			configFile << "PRINTLOGO=true" << "\n";
+			configFile << "CTRLR2ENABLE=false" << "\n";
+			configFile << "LOGTOFILE=true" << "\n";
+			configFile << "VISIONENABLE=false" << "\n";
+			configFile << "MAXOPTIONSSIZE=4" << "\n";
+			configFile << "CTRLR1POLLINGRATE=25" << "\n";
+			configFile << "LOCALLOGO=false" << "\n";
+			configFile << "VERSION=" << VERSION << "\n";
+			configFile << "betacode=uF58FlLhU431q28cj599w47Ax5NRi" << "\n";
+			configFile.close();
+		}
 
 		logHandler("resetConfig", "Successfully reset config file.", Log::Level::Debug);
-
-		configFile.close();
-		helpfile.close();
 		return;
 	}
 	else
@@ -245,7 +250,7 @@ void configParser()
 		LOCALLOGO = false;
 		logHandler("configParser", "No SD card installed. Using default values.", Log::Level::Info);
 	}
-	vex::task gifplay(gifplayer);
+	vex::thread gifplay(gifplayer);
 	calibrategiro();
 	Drivetrain.setStopping(vex::brakeType::coast);
 	ClawMotor.setStopping(vex::brakeType::coast);

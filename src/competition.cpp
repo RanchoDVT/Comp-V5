@@ -100,7 +100,7 @@ void userControl()
 	Controller1.ButtonR2.pressed(controllerR2Pressed);
 	vex::this_thread::sleep_for(30); // Wait for callbacks to load.
 
-	vex::task motortemp(motorTempMonitor);
+	vex::thread motortemp(motorTempMonitor);
 	// Variables
 	float turnVolts;
 	float forwardVolts;

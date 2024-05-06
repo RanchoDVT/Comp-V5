@@ -2,7 +2,7 @@
 
 /**
  * @brief Convert a Log::Level enum value to its string representation.
- * 
+ *
  * @param str Log::Level enum value.
  * @return const char* String representation of the Log::Level enum.
  */
@@ -299,7 +299,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
  *
  * @return int Always returns 0.
  */
-int motorTempMonitor()
+void motorTempMonitor()
 {
 	logHandler("motorTempMonitor", "motorTempMonitor is starting up...", Log::Level::Trace);
 	int clawTemp;
@@ -358,7 +358,7 @@ int motorTempMonitor()
 		Controller1.Screen.print("Battery: %.1fV", Brain.Battery.voltage());
 		vex::this_thread::sleep_for(5000);
 	}
-	return 0;
+	return;
 }
 
 /**
@@ -366,7 +366,7 @@ int motorTempMonitor()
  *
  * @return int Always returns 0.
  */
-int gifplayer()
+void gifplayer()
 {
 
 	if (drivercontrollogo == 0)
@@ -402,7 +402,7 @@ int gifplayer()
 		gif.~Gif();
 		clearScreen(true, false);
 	}
-	return 0;
+	return;
 }
 
 /**
@@ -410,7 +410,7 @@ int gifplayer()
  *
  * @return int Always returns 1.
  */
-int calibrategiro()
+void calibrategiro()
 {
 	logHandler("calibrateDrivetrain", "Calibrating Inertial Gyro...", Log::Level::Info);
 	Inertial.calibrate();
@@ -420,5 +420,5 @@ int calibrategiro()
 		vex::this_thread::sleep_for(25);
 	}
 	logHandler("calibrateDrivetrain", "Finished Calibrating Inertial Gyro.", Log::Level::Info);
-	return 1;
+	return;
 }

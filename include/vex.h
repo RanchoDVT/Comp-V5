@@ -67,13 +67,13 @@ extern vex::vision::signature GREENCUBE;
 extern vex::vision::signature ORANGECUBE;
 extern vex::vision Vision7;
 
-int calibrategiro();
+void calibrategiro();
 void configParser();
 const char *LogToString(const Log::Level &str);
 void clearScreen(const bool &brainClear, const bool &controller1Clear);
 void logHandler(const std::string &module, const std::string &message, const Log::Level &level);
 std::string getUserOption(const std::string &settingName, const std::vector<std::string> &options);
-int motorTempMonitor();
-int gifplayer();
+void motorTempMonitor();
+void gifplayer();
 void userControl();
 void autonomous();
