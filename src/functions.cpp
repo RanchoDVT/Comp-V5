@@ -165,7 +165,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 	if (options.size() > MAXOPTIONSSIZE or options.size() < 2)
 	{
 		logHandler("getUserOption", "`options` size error!", Log::Level::Error);
-		return options[1]; // Return default, as you have to have at least one option for it to compile.
+		return options[0]; // Return default, as you have to have at least one option for it to compile.
 	}
 
 	std::ostringstream optmessage;

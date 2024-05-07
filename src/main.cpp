@@ -99,7 +99,7 @@ void startup()
 	std::string armSetting = getUserOption("Arm Mode:", {"Hold", "Coast"});
 	if (armSetting == "Hold")
 	{
-		ArmMotor.setStopping(vex::brakeType::coast);
+		ArmMotor.setStopping(vex::brakeType::hold);
 	}
 	else if (armSetting == "Coast")
 	{
