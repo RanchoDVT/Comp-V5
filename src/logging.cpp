@@ -89,7 +89,6 @@ void logHandler(const std::string &module, const std::string &message, const Log
 		wait(2, vex::seconds); // Prevent other tasks from running and let user read message.
 		clearScreen(false, true);
 		printf("%s > Time: %.3f > Module: %s > %s \033[0m\n", logEntry.c_str(), Brain.Timer.time(vex::timeUnits::sec), module.c_str(), message.c_str());
-		wait(2, vex::seconds);
 		vexSystemExitRequest(); // Exit program
 		wait(10, vex::seconds);
 	}
