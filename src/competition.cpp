@@ -77,7 +77,7 @@ void autonomous()
 	vex::this_thread::sleep_for(2000);
 	Drivetrain.driveFor(vex::directionType::rev, 20.0, vex::distanceUnits::in, true);
 	Drivetrain.driveFor(vex::directionType::fwd, 20.0, vex::distanceUnits::in, true); // Estimated current time ~8 seconds.
-	ArmMotor.spinFor(2, vex::seconds);
+	ArmMotor.spinFor(2, vex::timeUnits::sec);
 	return;
 }
 
