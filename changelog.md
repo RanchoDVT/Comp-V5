@@ -4,48 +4,27 @@
 
 Build size: 367KB
 
-### Added
+### New 🎉
 
-- Added a new function `resetOrInitializeConfig` to reset or initialize the configuration file based on user input.
-- Added a new function `stringtobool` to convert a string representation of boolean values to a bool.
-- Added a new function `stringtofloat` to convert a string representation of a float to a float value.
-- Added a new function `configParser` to parse the configuration file and initialize variables.
-- Added error handling for file operations to ensure robustness.
-- Added missing include directives for necessary headers.
+- New support for reading a cfg file on a SD card is here!
+- New support for different gif's for each mode (Loading, Auto, Drivercontrol).
+- Redesigned `getUserOption`, for faster execution time!
+ Old:
+ Print to display: 0.6S.
 
-### Modified
+ New:
+ Print to display in: 0.2S.
 
-- Modified the existing function `setValForConfig` to handle unknown keys in the configuration file by either resetting the config or ignoring them.
-- Modified the existing code to ensure consistent naming conventions throughout the file.
-- Modified the `resetOrInitializeConfig` function to accept boolean parameters by reference for improved performance.
-- Modified the `stringtobool` function to use the `std::string::find` method for more accurate boolean conversion.
-- Modified the `stringtofloat` function to handle non-numeric input by resetting the config.
-- Modified the `configParser` function to handle the absence of the readme file and reset the config accordingly.
+- Added new functions `resetOrInitializeConfig`, `stringtobool`, `stringtobool`, `configParser`.
+
+### Fixed / Improved 🛠️
+
+- In the function `setValForConfig`, Handling unknown keys in the configuration file by either resetting the config or ignoring them.
 - Modified variable initialization for improved readability and consistency.
-
-### Removed
-
-- Removed redundant code and replaced it with more efficient alternatives.
-- Removed unnecessary sleep commands to improve code execution speed.
-- Removed unused variables and function parameters.
-
-### Fixed
-
 - Fixed a bug in the `stringtobool` function where the logical OR operator was incorrectly used.
 - Fixed a bug in the `configParser` function where the existence of the readme file was not properly checked.
-- Fixed minor syntax errors and typos throughout the code.
-
-### Optimized
-
-- Optimized the code for better performance and readability.
-- Optimized file handling operations to reduce redundancy and improve efficiency.
-- Optimized boolean value parsing for improved accuracy and reliability.
-
-### Documented
-
-- Documented each function with brief descriptions and parameter details.
-- Documented the change log to provide a summary of the modifications made to the code.
-- Added comments to clarify the purpose and functionality of each code section.
+- Optimized lots of functions to use by reference, and threaded.
+- Fixed minor typos throughout the code.
 
 ## Version 2.0pr2 4/14/24
 
