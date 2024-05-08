@@ -1,6 +1,18 @@
 # Version history 📕
 
-## Version 2.0rc2 4/14/24 (Newest)
+## Version 2.0pr3.3 | 5/7/24 (Newest)
+
+Build size: 367KB
+
+### New: 🎉
+
+WIP!
+
+### Fixed / Updated: 🛠️
+
+WIP!
+
+## Version 2.0pr2 4/14/24
 
 Build size: 325KB
 
