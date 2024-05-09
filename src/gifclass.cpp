@@ -307,14 +307,13 @@ static int add_entry(Table **tablep, uint16_t length, uint16_t prefix, uint8_t s
 static uint16_t get_key(gd_GIF *gif, int key_size, uint8_t *sub_len, uint8_t *shift, uint8_t *byte)
 {
 	int bits_read;
-	int rpad;
 	int frag_size;
 	uint16_t key;
 
 	key = 0;
 	for (bits_read = 0; bits_read < key_size; bits_read += frag_size)
 	{
-		rpad = (*shift + bits_read) % 8;
+		int rpad = (*shift + bits_read) % 8;
 		if (rpad == 0)
 		{
 			/* Update byte. */

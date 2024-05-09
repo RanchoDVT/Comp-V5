@@ -6,7 +6,7 @@
 #include <cmath>	 ///< Required for using std::abs with an int
 #include <fstream>	 ///< Requried for using std::getline, and making and reading files.
 #include <algorithm> ///< Requried for using ::isdigit and std::any_of
-#include <filesystem>
+#include <filesystem> ///< Requried for using ::isdigit and std::any_of
 
 #include <stdlib.h>	 ///< Required for standard library definitions
 #include <stdbool.h> ///< Required for standard boolean definitions

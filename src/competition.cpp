@@ -116,13 +116,11 @@ void userControl()
 
 	vex::thread motortemp(motorTempMonitor);
 	// Variables
-	float turnVolts;
-	float forwardVolts;
 
 	while (CONTROLLER1COMMAND)
 	{
-		turnVolts = Controller1.Axis1.position() * 0.12; // -12 to 12
-		forwardVolts = Controller1.Axis3.position() * 0.12 * (1 - (std::abs(turnVolts) / 12) * 0.5);
+		float turnVolts = Controller1.Axis1.position() * 0.12; // -12 to 12
+		float forwardVolts = Controller1.Axis3.position() * 0.12 * (1 - (std::abs(turnVolts) / 12) * 0.5);
 		LeftDriveSmart.spin(vex::directionType::fwd, forwardVolts + turnVolts, vex::voltageUnits::volt);
 		RightDriveSmart.spin(vex::directionType::fwd, forwardVolts - turnVolts, vex::voltageUnits::volt);
 		vex::this_thread::sleep_for(POLLINGRATE);

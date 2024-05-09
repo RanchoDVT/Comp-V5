@@ -1,21 +1,21 @@
 # Version history 📕
 
-## Version 2.0pr3.3 | 5/7/24 (Newest)
+## Version 2.0pr3.3 | 5/9/24 (Newest)
 
-Build size: 367KB
+Build size: 1,185KB
 
 ### New 🎉
 
-- New support for reading a cfg file on a SD card is here!
-- New support for different gif's for each mode (Loading, Auto, Drivercontrol).
-- Redesigned `getUserOption`, for faster execution time!
- Old:
- Print to display: 0.6S.
+- New support for reading a cfg file on a SD card is here!  
+- New support for different gif's for each mode (Loading, Auto, Drivercontrol).  
+- Redesigned `getUserOption`, and is blazing fast!  
+  - Old -> Print to display: 0.6S.  
+  - New -> Print to display in: 0.2S.  
 
- New:
- Print to display in: 0.2S.
+- Added new functions `resetOrInitializeConfig`, `stringtobool`, `stringtofloat`, `configParser`.
 
-- Added new functions `resetOrInitializeConfig`, `stringtobool`, `stringtobool`, `configParser`.
+- Ability to create folders is here :)
+- Custom PID!
 
 ### Fixed / Improved 🛠️
 

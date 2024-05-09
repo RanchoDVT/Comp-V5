@@ -197,7 +197,12 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 	const std::vector<std::string> &buttons = {"A", "X", "Y", "B"};
 	const std::vector<std::string> &scrollButtons = {"DOWN", "UP"};
 
-	while (!CONTROLLER1COMMAND)
+	while (!Controller1.installed())
+	{
+		vex::this_thread::sleep_for(CTRLR1POLLINGRATE);
+	}
+
+	while (!CONTROLLER1COMMAND and Controller1.installed())
 	{
 		buttonString.clear();
 		clearScreen(false, true, true);
@@ -305,10 +310,6 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 void motorTempMonitor()
 {
 	logHandler("motorTempMonitor", "motorTempMonitor is starting up...", Log::Level::Trace);
-	int clawTemp;
-	int armTemp;
-	int leftDriveTemp;
-	int rightDriveTemp;
 	std::ostringstream motorTemps;
 	std::ostringstream dataBuffer;
 
@@ -317,10 +318,10 @@ void motorTempMonitor()
 		motorTemps.str(std::string());
 		dataBuffer.str(std::string());
 
-		clawTemp = ClawMotor.temperature(vex::temperatureUnits::celsius);
-		armTemp = ArmMotor.temperature(vex::temperatureUnits::celsius);
-		leftDriveTemp = LeftDriveSmart.temperature(vex::temperatureUnits::celsius);
-		rightDriveTemp = RightDriveSmart.temperature(vex::temperatureUnits::celsius);
+		int clawTemp = ClawMotor.temperature(vex::temperatureUnits::celsius);
+		int armTemp = ArmMotor.temperature(vex::temperatureUnits::celsius);
+		int leftDriveTemp = LeftDriveSmart.temperature(vex::temperatureUnits::celsius);
+		int rightDriveTemp = RightDriveSmart.temperature(vex::temperatureUnits::celsius);
 
 		// Check for overheat conditions for each motor
 		if (clawTemp >= 55)

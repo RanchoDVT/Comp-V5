@@ -1,4 +1,4 @@
-# VEXcode mkenv.mk 2022_06_26_01
+# VsCode mkenv.mk 2024/05/09
 
 # macros to help with paths that include spaces
 sp = $() $()
@@ -92,7 +92,7 @@ TOOL_LIB  = -L"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/lib/gcc\arm-none-eabi\13.2.1"
 CFLAGS_CL = -target thumbv7-none-eabi -fshort-enums -Wno-unknown-attributes -U__INT32_TYPE__ -U__UINT32_TYPE__ -D__INT32_TYPE__=long -D__UINT32_TYPE__='unsigned long' 
 CFLAGS_V7 = -march=armv7-a -mfpu=neon -mfloat-abi=softfp
 CFLAGS    = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Wextra -Werror=return-type -ansi -std=gnu23 $(DEFINES)
-CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Wextra -Werror=return-type -fno-rtti -fno-threadsafe-statics -fPIC -fno-exceptions -std=gnu++26 -ffunction-sections -fdata-sections $(DEFINES)
+CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Wextra -Wshadow -Werror=return-type -fno-rtti -fno-threadsafe-statics -fPIC -fno-exceptions -std=gnu++26 -ffunction-sections -fdata-sections $(DEFINES)
 
 # linker flags
 LNK_FLAGS = -nostdlib -T "$(VEX_SDK_PATH)/$(PLATFORM)/lscript.ld" -z noexecstack --no-warn-rwx-segments -R "$(VEX_SDK_PATH)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(VEX_SDK_PATH)/$(PLATFORM)" ${TOOL_LIB}

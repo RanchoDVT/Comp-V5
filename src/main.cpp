@@ -33,7 +33,7 @@ bool BETAENABLED;
 // Flag to determine whether to log to file
 bool LOGTOFILE;
 // Version string
-const std::string &VERSION = "2.0pr4";
+const std::string &VERSION = "2.0pr3.3";
 // Build date string
 const std::string &BUILD_DATE = "5/9/24";
 // Flag to determine whether controller 1 commands are enabled
@@ -149,7 +149,7 @@ void startup()
  */
 int main()
 {
-	printf("\033[2J\033[1;1H\033[0m"); // Clears console and Sets color to grey.
+	printf("\033[2J\033[0m\n"); // Clears console and Sets color to grey.
 	Competition.autonomous(autonomous);
 	startup();
 	Competition.drivercontrol(userControl);
