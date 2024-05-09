@@ -54,11 +54,11 @@ static gd_GIF *gd_open_gif(FILE *fp)
 	uint16_t width, height, depth;
 	uint8_t fdsz, bgidx, aspect;
 	int gct_sz;
-	gd_GIF *gif = NULL;
+	gd_GIF *gif = _NULL;
 
 	// Check if file pointer is valid
-	if (fp == NULL)
-		return NULL;
+	if (fp == _NULL)
+		return _NULL;
 	/* Header */
 	fread(sigver, 1, 3, fp);
 	if (memcmp(sigver, "GIF", 3) != 0)
@@ -68,7 +68,7 @@ static gd_GIF *gd_open_gif(FILE *fp)
 		message << stderr << "Invalid GIF signature";
 		logHandler("gd_open_gif", message.str(), Log::Level::Error);
 		fclose(fp); // Close file pointer
-		return NULL;
+		return _NULL;
 	}
 	/* Version */
 	fread(sigver, 1, 3, fp);
@@ -79,7 +79,7 @@ static gd_GIF *gd_open_gif(FILE *fp)
 		message << stderr << "Invalid GIF version";
 		logHandler("gd_open_gif", message.str(), Log::Level::Error);
 		fclose(fp); // Close file pointer
-		return NULL;
+		return _NULL;
 	}
 	/* Width x Height */
 	width = read_num(fp);
@@ -94,7 +94,7 @@ static gd_GIF *gd_open_gif(FILE *fp)
 		message << stderr << "Invalid GIF global color table.";
 		logHandler("gd_open_gif", message.str(), Log::Level::Error);
 		fclose(fp); // Close file pointer
-		return NULL;
+		return _NULL;
 	}
 	/* Color Space's Depth */
 	depth = ((fdsz >> 4) & 7) + 1;
@@ -110,7 +110,7 @@ static gd_GIF *gd_open_gif(FILE *fp)
 	if (!gif)
 	{
 		fclose(fp); // Close file pointer
-		return NULL;
+		return _NULL;
 	}
 	gif->fp = fp;
 	gif->width = width;
@@ -266,11 +266,11 @@ static void read_ext(gd_GIF *gif)
 static Table *
 new_table(int key_size)
 {
-	int key;
 	int init_bulk = MAX(1 << (key_size + 1), 0x100);
 	Table *table = reinterpret_cast<Table *>(malloc(sizeof(*table) + sizeof(Entry) * init_bulk));
 	if (table)
 	{
+		int key;
 		table->bulk = init_bulk;
 		table->nentries = (1 << key_size) + 2;
 		table->entries = reinterpret_cast<Entry *>(&table[1]);
@@ -380,7 +380,7 @@ static int read_image_data(gd_GIF *gif, int interlace)
 	clear = 1 << key_size;
 	stop = clear + 1;
 	table = new_table(key_size);
-	if (table == NULL)
+	if (table == _NULL)
 		return -1;
 	key_size++;
 	init_key_size = key_size;

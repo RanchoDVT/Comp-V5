@@ -86,23 +86,23 @@ endif
 
 # toolchain include and lib locations
 TOOL_INC  = -I"$(VEX_SDK_PATH)/$(PLATFORM)/clang/$(HEADERS)/include" -I"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/include/c++/13.2.1"  -I"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/include/c++/13.2.1/arm-none-eabi/thumb/v7/nofp" -I"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/include"
-TOOL_LIB  = -L"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/libs"
+TOOL_LIB  = -L"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/lib/gcc\arm-none-eabi\13.2.1"
 
 # compiler flags
 CFLAGS_CL = -target thumbv7-none-eabi -fshort-enums -Wno-unknown-attributes -U__INT32_TYPE__ -U__UINT32_TYPE__ -D__INT32_TYPE__=long -D__UINT32_TYPE__='unsigned long' 
 CFLAGS_V7 = -march=armv7-a -mfpu=neon -mfloat-abi=softfp
 CFLAGS    = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Wextra -Werror=return-type -ansi -std=gnu23 $(DEFINES)
-CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Wextra -Werror=return-type -fno-rtti -fno-threadsafe-statics -fno-exceptions -std=gnu++2c -ffunction-sections -fdata-sections $(DEFINES)
+CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Wextra -Werror=return-type -fno-rtti -fno-threadsafe-statics -fPIC -fno-exceptions -std=gnu++26 -ffunction-sections -fdata-sections $(DEFINES)
 
 # linker flags
-LNK_FLAGS = --defsym _HEAP_SIZE=0x800000 -nostdlib -z noexecstack --no-warn-rwx-segments -T "$(VEX_SDK_PATH)/$(PLATFORM)/lscript.ld" -R "$(VEX_SDK_PATH)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(VEX_SDK_PATH)/$(PLATFORM)" ${TOOL_LIB}
+LNK_FLAGS = -nostdlib -T "$(VEX_SDK_PATH)/$(PLATFORM)/lscript.ld" -z noexecstack --no-warn-rwx-segments -R "$(VEX_SDK_PATH)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(VEX_SDK_PATH)/$(PLATFORM)" ${TOOL_LIB}
 
 # future statuc library
 PROJECTLIB = lib$(PROJECT)
 ARCH_FLAGS = rcs
 
 # libraries
-LIBS =  --start-group --sysroot -lv5rt -lstdc++ -lc -lm -lgcc --end-group
+LIBS =  --start-group -shared -lstdc++exp -fopenmp -lstdc++ -lv5rt -lstdc++ -lc -lm -lgcc --end-group
 
 # include file paths
 INC += $(addprefix -I, ${INC_F})

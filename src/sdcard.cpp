@@ -65,12 +65,12 @@ void resetOrInitializeConfig(const bool &resetreadme, const std::string &message
  */
 bool stringtobool(const std::string &string)
 {
-	if (string.find("True") or string.find("On") or string.find("true") or string.find("1") or string.find("on"))
+	if (string.starts_with("True") or string.starts_with("On") or string.starts_with("true") or string.starts_with("1") or string.starts_with("on"))  // Requires custom SDK.
 	{
 		return true;
 	}
 
-	else if (string.find("False") or string.find("false") or string.find("off") or string.find("0") or string.find("Off"))
+	else if (string.starts_with("False") or string.starts_with("false") or string.starts_with("off") or string.starts_with("0") or string.starts_with("Off"))  // Requires custom SDK.
 	{
 		return false;
 	}
@@ -94,7 +94,7 @@ float stringtofloat(const std::string &string)
 	float value;
 	if (std::any_of(string.begin(), string.end(), ::isdigit))
 	{
-		value = std::atol(string.c_str());
+		value = std::stol(string.c_str());  // Requires custom SDK.
 		return value;
 	}
 	else
@@ -102,7 +102,7 @@ float stringtofloat(const std::string &string)
 		std::ostringstream message;
 		message << "Expected float val. Received: " << string;
 		resetOrInitializeConfig(false, message.str());
-		value = std::atol(string.c_str());
+		value = std::stol(string.c_str());  // Requires custom SDK.
 		return value;
 	}
 }
@@ -231,6 +231,7 @@ void configParser()
 		}
 		else
 		{
+			std::filesystem::create_directory("./config"); // Requires custom SDK.
 			resetOrInitializeConfig(false, "Missing config file. Create it?");
 			setValForConfig();
 			if (!Brain.SDcard.exists("readme.txt"))

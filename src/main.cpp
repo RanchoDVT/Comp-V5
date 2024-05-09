@@ -114,7 +114,7 @@ void startup()
 	message.str(std::string());
 
 	std::string ArmVolts = getUserOption("Arm Volts:", {"9", "6", "12"});
-	ARMVOLTAGE = std::atol(ArmVolts.c_str());
+	ARMVOLTAGE = std::stoi(ArmVolts.c_str());   // Requires custom SDK.
 
 	message << "Arm set to " << ARMVOLTAGE << " volts.";
 	logHandler("startup", message.str(), Log::Level::Trace);
