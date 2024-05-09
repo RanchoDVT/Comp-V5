@@ -43,5 +43,6 @@
 		"random": "cpp",
 		"gifclass.h": "c",
 		"unistd.h": "c"
-	}
+	},
+	"C_Cpp.default.compilerPath": "c:\\Users\\Dominic\\AppData\\Roaming\\Code - Insiders\\User\\globalStorage\\vexrobotics.vexcode\\tools\\cpp\\toolchain_win32\\clang\\bin\\clang"
 }
