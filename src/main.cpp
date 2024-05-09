@@ -33,9 +33,9 @@ bool BETAENABLED;
 // Flag to determine whether to log to file
 bool LOGTOFILE;
 // Version string
-const std::string &VERSION = "2.0pr3";
+const std::string &VERSION = "2.0pr4";
 // Build date string
-const std::string &BUILD_DATE = "5/5/24";
+const std::string &BUILD_DATE = "5/9/24";
 // Flag to determine whether controller 1 commands are enabled
 bool CONTROLLER1COMMAND = false;
 // Driver control logo variable
@@ -138,7 +138,7 @@ void startup()
 	}
 	CONTROLLER1COMMAND = true;
 	drivercontrollogo = 1;
-	clearScreen(false, true);
+	clearScreen(false, true, true);
 }
 
 /**

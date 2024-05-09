@@ -71,10 +71,17 @@ extern vex::vision Vision7;
 void calibrategiro();
 void configParser();
 const char *LogToString(const Log::Level &str);
-void clearScreen(const bool &brainClear, const bool &controller1Clear);
+void clearScreen(const bool &brainClear, const bool &controller1Clear, const bool &controller2Clear);
 void logHandler(const std::string &module, const std::string &message, const Log::Level &level);
 std::string getUserOption(const std::string &settingName, const std::vector<std::string> &options);
 void motorTempMonitor();
 void gifplayer();
 void userControl();
 void autonomous();
+void drivePID();
+
+extern int desiredValue;
+extern int desiredTurnValue;
+
+extern bool resetDriveSensors;
+extern bool enableDrivePID;

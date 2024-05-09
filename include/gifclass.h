@@ -67,11 +67,11 @@ namespace vex
 	class Gif
 	{
 	private:
-		gd_GIF *_gif = NULL;
+		gd_GIF *_gif = 0;
 		int _sx;
 		int _sy;
-		void *_gifmem = NULL;
-		void *_buffer = NULL;
+		void *_gifmem = 0;
+		void *_buffer = 0;
 		int _frame = 0;
 
 		vex::timer _timer;
@@ -82,7 +82,7 @@ namespace vex
 		void cleanup();
 
 	public:
-		Gif(const char *fname, int sx, int sy, bool bMemoryBuffer = true);
+		Gif(const char *fname, const int &sx, const int &sy, const bool &bMemoryBuffer = true);
 		~Gif();
 		int getFrameIndex();
 	};

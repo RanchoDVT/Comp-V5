@@ -26,6 +26,7 @@ void resetOrInitializeConfig(const bool &resetreadme, const std::string &message
 		}
 		if (!resetreadme)
 		{
+			
 			std::ofstream configFile("config/config.cfg");
 			if (!configFile)
 			{
@@ -43,7 +44,6 @@ void resetOrInitializeConfig(const bool &resetreadme, const std::string &message
 			configFile << "CTRLR1POLLINGRATE=25" << "\n";
 			configFile << "LOCALLOGO=false" << "\n";
 			configFile << "VERSION=" << VERSION << "\n";
-			configFile << "betacode=uF58FlLhU431q28cj599w47Ax5NRi" << "\n";
 			configFile.close();
 		}
 
@@ -65,12 +65,12 @@ void resetOrInitializeConfig(const bool &resetreadme, const std::string &message
  */
 bool stringtobool(const std::string &string)
 {
-	if (string.starts_with("True") or string.starts_with("On") or string.starts_with("true") or string.starts_with("1") or string.starts_with("on"))  // Requires custom SDK.
+	if (string.starts_with("True") or string.starts_with("On") or string.starts_with("true") or string.starts_with("1") or string.starts_with("on")) // Requires custom SDK.
 	{
 		return true;
 	}
 
-	else if (string.starts_with("False") or string.starts_with("false") or string.starts_with("off") or string.starts_with("0") or string.starts_with("Off"))  // Requires custom SDK.
+	else if (string.starts_with("False") or string.starts_with("false") or string.starts_with("off") or string.starts_with("0") or string.starts_with("Off")) // Requires custom SDK.
 	{
 		return false;
 	}
@@ -94,7 +94,7 @@ float stringtofloat(const std::string &string)
 	float value;
 	if (std::any_of(string.begin(), string.end(), ::isdigit))
 	{
-		value = std::stol(string.c_str());  // Requires custom SDK.
+		value = std::stol(string.c_str()); // Requires custom SDK.
 		return value;
 	}
 	else
@@ -102,7 +102,7 @@ float stringtofloat(const std::string &string)
 		std::ostringstream message;
 		message << "Expected float val. Received: " << string;
 		resetOrInitializeConfig(false, message.str());
-		value = std::stol(string.c_str());  // Requires custom SDK.
+		value = std::stol(string.c_str()); // Requires custom SDK.
 		return value;
 	}
 }
@@ -123,7 +123,7 @@ void setValForConfig()
 	while (std::getline(configFile, line))
 	{
 		// Parse each line from config file
-		if (line.empty() or line[0] == ';')
+		if (line.empty() or line[0] == ';' or line[0] == '#')
 		{
 			continue; // Skip empty lines and comments
 		}
@@ -181,18 +181,6 @@ void setValForConfig()
 					resetOrInitializeConfig(false, message.str());
 				}
 			}
-			else if (key == "betacode")
-			{
-				if (value == "uF58FlLhU431q28cj599w47Ax5NRi")
-				{
-					BETAENABLED = true;
-					logHandler("setValForConfig", "Beta code valid.", Log::Level::Info);
-				}
-				else
-				{
-					logHandler("setValForConfig", "Invalid beta code!", Log::Level::Warn);
-				}
-			}
 
 			else
 			{
@@ -220,7 +208,7 @@ void configParser()
 	std::ostringstream message;
 	message << "Version: " << VERSION << " | Build date: " << BUILD_DATE;
 	logHandler("main", message.str(), Log::Level::Info);
-	clearScreen(true, true);
+	clearScreen(true, true, true);
 	Controller1.Screen.print("Starting up...");
 	drivercontrollogo = 0;
 	if (Brain.SDcard.isInserted())

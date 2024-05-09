@@ -68,15 +68,29 @@ void controllerR2Pressed()
  */
 void autonomous()
 {
-	Drivetrain.setDriveVelocity(60, vex::percentUnits::pct); // Best speed for stability.
-	Drivetrain.setTurnVelocity(60, vex::percentUnits::pct);  // Best speed for stability.
-	Drivetrain.setStopping(vex::brake);			   // To make sure robot stops in same place every time.
+
 	drivercontrollogo = 2;
-	Drivetrain.driveFor(vex::directionType::rev, 20.0, vex::distanceUnits::in, true);
-	Drivetrain.driveFor(vex::directionType::fwd, 20.0, vex::distanceUnits::in, true); // Estimated time to finish ~3 seconds.
+	vex::thread drivepid(drivePID);
+
+	resetDriveSensors = true;
+	desiredValue = 28;
+	desiredTurnValue = 0;
+
 	vex::this_thread::sleep_for(2000);
-	Drivetrain.driveFor(vex::directionType::rev, 20.0, vex::distanceUnits::in, true);
-	Drivetrain.driveFor(vex::directionType::fwd, 20.0, vex::distanceUnits::in, true); // Estimated current time ~8 seconds.
+	resetDriveSensors = true;
+	desiredValue = -28;
+	desiredTurnValue = 0;
+
+	vex::this_thread::sleep_for(2000);
+	resetDriveSensors = true;
+	desiredValue = 28;
+	desiredTurnValue = 0;
+
+	vex::this_thread::sleep_for(2000);
+	resetDriveSensors = true;
+	desiredValue = -28;
+	desiredTurnValue = 90;
+
 	ArmMotor.spinFor(2, vex::timeUnits::sec);
 	return;
 }

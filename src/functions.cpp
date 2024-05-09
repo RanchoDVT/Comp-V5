@@ -2,11 +2,9 @@
 
 /**
  * @brief Convert a Log::Level enum value to its string representation.
- *
  * @param str Log::Level enum value.
  * @return const char* String representation of the Log::Level enum.
  */
-
 const char *LogToString(const Log::Level &str)
 {
 	switch (str)
@@ -35,7 +33,7 @@ const char *LogToString(const Log::Level &str)
  * @param brainClear Wither to clear the brain (`true`) or not (`false`).
  * @param controller1Clear Wither to clear controller1 (`true`) or not (`false`).
  */
-void clearScreen(const bool &brainClear, const bool &controller1Clear)
+void clearScreen(const bool &brainClear, const bool &controller1Clear, const bool &controller2Clear)
 {
 	if (brainClear)
 	{
@@ -46,6 +44,11 @@ void clearScreen(const bool &brainClear, const bool &controller1Clear)
 	{
 		Controller1.Screen.clearScreen();
 		Controller1.Screen.setCursor(1, 1);
+	}
+	if (controller2Clear)
+	{
+		Controller2.Screen.clearScreen();
+		Controller2.Screen.setCursor(1, 1);
 	}
 	logHandler("clearScreen", "Finished clearScreen", Log::Level::Trace);
 	return;
@@ -197,10 +200,10 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 	while (!CONTROLLER1COMMAND)
 	{
 		buttonString.clear();
-		clearScreen(false, true);
+		clearScreen(false, true, true);
 		Controller1.Screen.print(settingName.c_str());
-		int i = 0;
-		for (; i < 2; ++i) // Checks for option size, and allows for options.
+		
+		for (int i = 0; i < 2; ++i) // Checks for option size, and allows for options.
 		{
 			Controller1.Screen.newLine();
 			Controller1.Screen.print("%s: %s", buttons[i - offset].c_str(), options[i - offset].c_str());
@@ -274,7 +277,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 			// Display message
 			if (wrongAttemptCount < maxWrongAttempts)
 			{
-				clearScreen(false, true);
+				clearScreen(false, true, true);
 				Controller1.Screen.print(wrongMessages[wrongAttemptCount].c_str());
 				++wrongAttemptCount; // Increment wrong attempt count
 				std::ostringstream failattemptdebug;
@@ -290,7 +293,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 		}
 		optmessage.str(std::string());
 	}
-	clearScreen(false, true);
+	clearScreen(false, true, true);
 	return options[Index];
 }
 
@@ -350,7 +353,7 @@ void motorTempMonitor()
 		logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Info);
 		dataBuffer << "\nX Axis: " << Inertial.pitch(vex::rotationUnits::deg) << "\nY Axis: " << Inertial.roll(vex::rotationUnits::deg) << "\nZ Axis: " << Inertial.yaw(vex::rotationUnits::deg);
 		logHandler("motorTempMonitor", dataBuffer.str(), Log::Level::Info);
-		clearScreen(false, true);
+		clearScreen(false, true, true);
 		Controller1.Screen.print("LM: %d° | RM: %d°", leftDriveTemp, rightDriveTemp);
 		Controller1.Screen.newLine();
 		Controller1.Screen.print("AM: %d° | CM: %d°", armTemp, clawTemp);
@@ -378,7 +381,7 @@ void gifplayer()
 			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
 		}
 		gif.~Gif();
-		clearScreen(true, false);
+		clearScreen(true, false, false);
 	}
 	if (drivercontrollogo == 2)
 	{
@@ -389,7 +392,7 @@ void gifplayer()
 			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
 		}
 		gif.~Gif();
-		clearScreen(true, false);
+		clearScreen(true, false, false);
 	}
 	if (drivercontrollogo == 1)
 	{
@@ -400,7 +403,7 @@ void gifplayer()
 			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
 		}
 		gif.~Gif();
-		clearScreen(true, false);
+		clearScreen(true, false, false);
 	}
 	return;
 }

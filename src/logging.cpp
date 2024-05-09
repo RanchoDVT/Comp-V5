@@ -52,42 +52,42 @@ void logHandler(const std::string &module, const std::string &message, const Log
 
 	case Log::Level::Warn:
 	{
-		clearScreen(false, true);
+		clearScreen(false, true, true);
 		Controller1.Screen.print(message.c_str());
 		Controller1.Screen.newLine();
 		Controller1.Screen.print("Check logs.");
 		Controller1.Screen.newLine();
 		Controller1.Screen.print(("Module: " + module).c_str());
 		wait(2, vex::seconds); // Prevent other tasks from running and let user read message.
-		clearScreen(false, true);
+		clearScreen(false, true, true);
 		logEntry = "\033[38;5;216m[Warn] ";
 		break;
 	}
 
 	case Log::Level::Error:
 	{
-		clearScreen(false, true);
+		clearScreen(false, true, true);
 		Controller1.Screen.print(message.c_str());
 		Controller1.Screen.newLine();
 		Controller1.Screen.print("Check logs.");
 		Controller1.Screen.newLine();
 		Controller1.Screen.print(("Module: " + module).c_str());
 		wait(2, vex::seconds); // Prevent other tasks from running and let user read message.
-		clearScreen(false, true);
+		clearScreen(false, true, true);
 		logEntry = "\033[31m[Error]";
 		break;
 	}
 
 	case Log::Level::Fatal:
 	{
-		clearScreen(false, true);
+		clearScreen(false, true, true);
 		Controller1.Screen.print(message.c_str());
 		Controller1.Screen.newLine();
 		Controller1.Screen.print("Check logs.");
 		Controller1.Screen.newLine();
 		Controller1.Screen.print(("Module: " + module).c_str());
 		wait(2, vex::seconds); // Prevent other tasks from running and let user read message.
-		clearScreen(false, true);
+		clearScreen(false, true, true);
 		printf("%s > Time: %.3f > Module: %s > %s \033[0m\n", logEntry.c_str(), Brain.Timer.time(vex::timeUnits::sec), module.c_str(), message.c_str());
 		vexSystemExitRequest(); // Exit program
 		wait(10, vex::seconds);

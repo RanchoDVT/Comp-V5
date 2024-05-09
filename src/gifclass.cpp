@@ -54,11 +54,11 @@ static gd_GIF *gd_open_gif(FILE *fp)
 	uint16_t width, height, depth;
 	uint8_t fdsz, bgidx, aspect;
 	int gct_sz;
-	gd_GIF *gif = _NULL;
+	gd_GIF *gif = 0;
 
 	// Check if file pointer is valid
-	if (fp == _NULL)
-		return _NULL;
+	if (fp == 0)
+		return 0;
 	/* Header */
 	fread(sigver, 1, 3, fp);
 	if (memcmp(sigver, "GIF", 3) != 0)
@@ -68,7 +68,7 @@ static gd_GIF *gd_open_gif(FILE *fp)
 		message << stderr << "Invalid GIF signature";
 		logHandler("gd_open_gif", message.str(), Log::Level::Error);
 		fclose(fp); // Close file pointer
-		return _NULL;
+		return 0;
 	}
 	/* Version */
 	fread(sigver, 1, 3, fp);
@@ -79,7 +79,7 @@ static gd_GIF *gd_open_gif(FILE *fp)
 		message << stderr << "Invalid GIF version";
 		logHandler("gd_open_gif", message.str(), Log::Level::Error);
 		fclose(fp); // Close file pointer
-		return _NULL;
+		return 0;
 	}
 	/* Width x Height */
 	width = read_num(fp);
@@ -94,7 +94,7 @@ static gd_GIF *gd_open_gif(FILE *fp)
 		message << stderr << "Invalid GIF global color table.";
 		logHandler("gd_open_gif", message.str(), Log::Level::Error);
 		fclose(fp); // Close file pointer
-		return _NULL;
+		return 0;
 	}
 	/* Color Space's Depth */
 	depth = ((fdsz >> 4) & 7) + 1;
@@ -110,7 +110,7 @@ static gd_GIF *gd_open_gif(FILE *fp)
 	if (!gif)
 	{
 		fclose(fp); // Close file pointer
-		return _NULL;
+		return 0;
 	}
 	gif->fp = fp;
 	gif->width = width;
@@ -187,7 +187,6 @@ static void read_graphic_control_ext(gd_GIF *gif)
 	/* Skip block terminator. */
 	fseek(gif->fp, 1, SEEK_CUR);
 }
-
 
 // Function to read comment extension from GIF file
 static void read_comment_ext(gd_GIF *gif)
@@ -380,7 +379,7 @@ static int read_image_data(gd_GIF *gif, int interlace)
 	clear = 1 << key_size;
 	stop = clear + 1;
 	table = new_table(key_size);
-	if (table == _NULL)
+	if (table == 0)
 		return -1;
 	key_size++;
 	init_key_size = key_size;
@@ -593,7 +592,7 @@ static void gd_close_gif(gd_GIF *gif)
 //
 int vex::Gif::render_task(void *arg)
 {
-	if (arg == NULL)
+	if (arg == 0)
 		return (0);
 
 	Gif *instance = static_cast<Gif *>(arg);
@@ -646,13 +645,13 @@ int vex::Gif::render_task(void *arg)
 	return (0);
 }
 
-vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
+vex::Gif::Gif(const char *fname, const int &sx, const int &sy, const bool &bMemoryBuffer)
 {
 	_sx = sx;
 	_sy = sy;
 	FILE *fp = fopen(fname, "rb");
 
-	if (fp != NULL)
+	if (fp != 0)
 	{
 		// get file length
 		fseek(fp, 0, SEEK_END);
@@ -663,42 +662,42 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 		if (bMemoryBuffer)
 		{
 			_gifmem = malloc(len);
-			if (_gifmem != NULL)
+			if (_gifmem != 0)
 			{
 				int nRead = fread(_gifmem, 1, len, fp);
 				(void)nRead;
 			}
 			fclose(fp);
-			fp = NULL;
+			fp = 0;
 		}
 
 		// using memory, then reopen file
-		if (_gifmem != NULL)
+		if (_gifmem != 0)
 		{
 			// close the existing file pointer if it's open
-			if (fp != NULL)
+			if (fp != 0)
 			{
 				fclose(fp);
-				fp = NULL;
+				fp = 0;
 			}
 			// create a FILE from memory buffer
 			fp = fmemopen(_gifmem, len, "rb");
 		}
 
 		// good file ?
-		if (fp != NULL)
+		if (fp != 0)
 		{
 			// open gif file
 			// will allocate memory for background and one animation
 			// frame.
 			_gif = gd_open_gif(fp);
-			if (_gif == NULL)
+			if (_gif == 0)
 			{
 				return;
 			}
 			// memory for rendering frame
 			_buffer = static_cast<uint32_t *>(malloc(_gif->width * _gif->height * sizeof(uint32_t)));
-			if (_buffer == NULL)
+			if (_buffer == 0)
 			{
 				// out of memory
 				gd_close_gif(_gif);
@@ -732,19 +731,19 @@ void vex::Gif::cleanup()
 	if (_buffer)
 	{
 		free(_buffer);
-		_buffer = NULL;
+		_buffer = 0;
 	}
 
 	if (_gif)
 	{
 		gd_close_gif(_gif);
-		_gif = NULL;
+		_gif = 0;
 	}
 
 	if (_gifmem)
 	{
 		free(_gifmem);
-		_gifmem = NULL;
+		_gifmem = 0;
 	}
 }
 
