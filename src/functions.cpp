@@ -328,25 +328,29 @@ void motorTempMonitor()
 		{
 			motorTemps << "CM overheat: " << clawTemp << "°";
 			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn);
+			motorTemps.str(std::string());
 		}
 		if (armTemp >= 55)
 		{
 			motorTemps << "AM overheat: " << armTemp << "°";
 			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn);
+			motorTemps.str(std::string());
 		}
 		if (leftDriveTemp >= 55)
 		{
 			motorTemps << "LM overheat: " << leftDriveTemp << "°";
 			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn);
+			motorTemps.str(std::string());
 		}
 		if (rightDriveTemp >= 55)
 		{
 			motorTemps << "RM overheat: " << rightDriveTemp << "°";
 			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn);
+			motorTemps.str(std::string());
 		}
 		if (Brain.Battery.voltage() < 12)
 		{
-			logHandler("motorTempMonitor", "Brain voltage at a critical level! performance will be reduced!", Log::Level::Warn);
+			logHandler("motorTempMonitor", "Brain voltage at a critical level! Performance will be reduced!", Log::Level::Warn);
 		}
 
 		// Log motor temperatures
