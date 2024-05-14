@@ -26,7 +26,6 @@ void resetOrInitializeConfig(const bool &resetreadme, const std::string &message
 		}
 		if (!resetreadme)
 		{
-			
 			std::ofstream configFile("config/config.cfg");
 			if (!configFile)
 			{
