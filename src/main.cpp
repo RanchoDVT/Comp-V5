@@ -33,9 +33,9 @@ bool BETAENABLED;
 // Flag to determine whether to log to file
 bool LOGTOFILE;
 // Version string
-const std::string &VERSION = "2.0pr3.3";
+const std::string &VERSION = "2.0pr4";
 // Build date string
-const std::string &BUILD_DATE = "5/9/24";
+const std::string &BUILD_DATE = "5/15/24";
 // Flag to determine whether controller 1 commands are enabled
 bool CONTROLLER1COMMAND = false;
 // Driver control logo variable
@@ -114,7 +114,7 @@ void startup()
 	message.str(std::string());
 
 	std::string ArmVolts = getUserOption("Arm Volts:", {"9", "6", "12"});
-	ARMVOLTAGE = std::atoi(ArmVolts.c_str());   // Requires custom SDK.
+	ARMVOLTAGE = std::stoi(ArmVolts.c_str());   // Requires custom SDK.
 
 	message << "Arm set to " << ARMVOLTAGE << " volts.";
 	logHandler("startup", message.str(), Log::Level::Trace);

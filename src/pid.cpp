@@ -120,7 +120,7 @@ void drivePID()
 
 		prevError = error;
 		turnPrevError = turnError;
-		vex::task::sleep(20);
+		vex::this_thread::sleep_for(POLLINGRATE);
 	}
 	return;
 }

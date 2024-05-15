@@ -2,7 +2,6 @@
 
 /**
  * @brief Reset or initialize the config file based on user input.
- *
  * @param resetreadme Flag to reset readme file.
  * @param message Message to display to the user.
  */
@@ -58,7 +57,6 @@ void resetOrInitializeConfig(const bool &resetreadme, const std::string &message
 
 /**
  * @brief Convert a string representation of boolean to bool.
- *
  * @param string String representation of boolean.
  * @return bool Converted boolean value.
  */
@@ -84,7 +82,6 @@ bool stringtobool(const std::string &string)
 
 /**
  * @brief Convert a string representation of float to float.
- *
  * @param string String representation of float.
  * @return float Converted float value.
  */
@@ -131,7 +128,6 @@ void setValForConfig()
 		std::string key, value;
 		if (std::getline(iss, key, '=') && std::getline(iss, value))
 		{
-			printf("%s\n", key.c_str());
 			if (key == "PRINTLOGO")
 			{
 				bool boolval = stringtobool(value);
