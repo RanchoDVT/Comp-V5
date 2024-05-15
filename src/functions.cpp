@@ -380,8 +380,7 @@ void gifplayer()
 	if (drivercontrollogo == 0)
 	{
 		vex::Gif gif("assets/loading.gif", 0, 0, true);
-
-		while (LOCALLOGO and drivercontrollogo == 00)
+		while (LOCALLOGO and drivercontrollogo == 0)
 		{
 			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
 		}

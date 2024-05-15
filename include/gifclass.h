@@ -82,7 +82,7 @@ namespace vex
 		void cleanup();
 
 	public:
-		Gif(const char *fname, const int &sx, const int &sy, const bool &bMemoryBuffer = true);
+		Gif(const char *fname, int sx, const int sy, bool bMemoryBuffer = true);
 		~Gif();
 		int getFrameIndex();
 	};

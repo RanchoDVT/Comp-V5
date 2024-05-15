@@ -47,8 +47,8 @@ int drivercontrollogo;
 /* Encoder	900 ticks/rev with 18:1 gears			*/
 
 vex::brain Brain;
-vex::motor LeftDriveSmart = vex::motor(vex::PORT1, vex::gearSetting::ratio36_1, false);
-vex::motor RightDriveSmart = vex::motor(vex::PORT10, vex::gearSetting::ratio36_1, true);
+vex::motor LeftDriveSmart = vex::motor(vex::PORT1, vex::gearSetting::ratio6_1, false);
+vex::motor RightDriveSmart = vex::motor(vex::PORT10, vex::gearSetting::ratio6_1, true);
 vex::inertial Inertial = vex::inertial(vex::PORT2);
 vex::smartdrive Drivetrain = vex::smartdrive(LeftDriveSmart, RightDriveSmart, Inertial, 320, 320, 40, vex::distanceUnits::mm, 1);
 vex::motor ClawMotor = vex::motor(vex::PORT3, vex::gearSetting::ratio36_1, false);
@@ -149,7 +149,7 @@ void startup()
  */
 int main()
 {
-	printf("\033[2J\033[0m\n"); // Clears console and Sets color to grey.
+	printf("\033[2J\033[1;1H\033[0m"); // Clears console and Sets color to grey.
 	Competition.autonomous(autonomous);
 	startup();
 	Competition.drivercontrol(userControl);

@@ -115,7 +115,7 @@ void userControl()
 	vex::this_thread::sleep_for(30); // Wait for callbacks to load.
 
 	vex::thread motortemp(motorTempMonitor);
-	// Variables
+	Drivetrain.setStopping(vex::brakeType::coast);
 
 	while (CONTROLLER1COMMAND)
 	{
