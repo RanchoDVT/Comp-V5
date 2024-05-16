@@ -70,7 +70,7 @@ vex::vision Vision7 = vex::vision(vex::PORT7, 50, PURPLECUBE, GREENCUBE, ORANGEC
  * @brief Pre-autonomous setup.
  * @bug `brainBattery << "Battery is at: " << (Brain.Battery.capacity())) << "%%";` prints %% to console rather than %
  */
-void startup()
+static void startup()
 {
 	configParser();
 
@@ -145,7 +145,6 @@ void startup()
  * @author @DVT7125
  * @date 4/10/24
  * @brief Main function.
- * @return 0
  */
 int main()
 {

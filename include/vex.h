@@ -1,12 +1,7 @@
 #pragma once
 
 #include <string>	 ///< Required for using string objects
-#include <sstream>	 ///< Required for using stringstream objects
-#include <vector>	 ///< Required for using vector containers
-#include <cmath>	 ///< Required for using std::abs with an int
 #include <fstream>	 ///< Requried for using std::getline, and making and reading files.
-#include <algorithm> ///< Requried for using ::isdigit and std::any_of
-#include <filesystem>
 
 #include <stdlib.h>	 ///< Required for standard library definitions
 #include <stdbool.h> ///< Required for standard boolean definitions
@@ -79,6 +74,9 @@ void gifplayer();
 void userControl();
 void autonomous();
 void drivePID();
+std::string ctrl1BttnPressed();
+bool stringtobool(const std::string &string);
+unsigned long long stringtoull(const std::string &string);
 
 extern int desiredValue;
 extern int desiredTurnValue;

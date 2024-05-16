@@ -31,7 +31,7 @@ bool resetDriveSensors = false;
 bool enableDrivePID = true;
 
 // Pasted from a C++ resource
-double signnum_c(double x)
+static double signnum_c(double x)
 {
 	if (x > 0.0)
 		return 1.0;

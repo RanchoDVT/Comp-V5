@@ -5,7 +5,7 @@
  * @param resetreadme Flag to reset readme file.
  * @param message Message to display to the user.
  */
-void resetOrInitializeConfig(const bool &resetreadme, const std::string &message)
+static void resetOrInitializeConfig(const bool &resetreadme, const std::string &message)
 {
 	MAXOPTIONSSIZE = 4;
 	std::string resetcfg = getUserOption(message, {"Yes", "No"});
@@ -15,15 +15,15 @@ void resetOrInitializeConfig(const bool &resetreadme, const std::string &message
 
 		if (resetreadme)
 		{
-			std::ofstream helpfile("readme.md");
-			if (!helpfile)
+			std::ofstream readmefile("readme.md");
+			if (!readmefile)
 			{
 				logHandler("resetOrInitializeConfig", "Could not create readme.", Log::Level::Warn);
 				return;
 			}
-			helpfile.close();
+			readmefile.close();
 		}
-		if (!resetreadme)
+		else
 		{
 			std::ofstream configFile("config/config.cfg");
 			if (!configFile)
@@ -32,15 +32,24 @@ void resetOrInitializeConfig(const bool &resetreadme, const std::string &message
 				return;
 			}
 			// Write default configuration to the file
-			configFile << ";Config File:" << "\n";
-			configFile << "POLLINGRATE=1" << "\n";
-			configFile << "PRINTLOGO=true" << "\n";
-			configFile << "CTRLR2ENABLE=false" << "\n";
-			configFile << "LOGTOFILE=true" << "\n";
-			configFile << "VISIONENABLE=false" << "\n";
-			configFile << "MAXOPTIONSSIZE=4" << "\n";
-			configFile << "CTRLR1POLLINGRATE=25" << "\n";
-			configFile << "LOCALLOGO=false" << "\n";
+			configFile << ";Config File:"
+					   << "\n";
+			configFile << "POLLINGRATE=1"
+					   << "\n";
+			configFile << "PRINTLOGO=true"
+					   << "\n";
+			configFile << "CTRLR2ENABLE=false"
+					   << "\n";
+			configFile << "LOGTOFILE=true"
+					   << "\n";
+			configFile << "VISIONENABLE=false"
+					   << "\n";
+			configFile << "MAXOPTIONSSIZE=4"
+					   << "\n";
+			configFile << "CTRLR1POLLINGRATE=25"
+					   << "\n";
+			configFile << "LOCALLOGO=false"
+					   << "\n";
 			configFile << "VERSION=" << VERSION << "\n";
 			configFile.close();
 		}
@@ -66,7 +75,6 @@ bool stringtobool(const std::string &string)
 	{
 		return true;
 	}
-
 	else if (string.starts_with("False") or string.starts_with("false") or string.starts_with("off") or string.starts_with("0") or string.starts_with("Off")) // Requires custom SDK.
 	{
 		return false;
@@ -81,24 +89,24 @@ bool stringtobool(const std::string &string)
 }
 
 /**
- * @brief Convert a string representation of float to float.
- * @param string String representation of float.
- * @return float Converted float value.
+ * @brief Convert a string to a ull.
+ * @param string String of from ui to ull.
+ * @return string Converted to ull value.
  */
-float stringtofloat(const std::string &string)
+unsigned long long stringtoull(const std::string &string)
 {
-	float value;
-	if (std::any_of(string.begin(), string.end(), ::isdigit))
+	unsigned long long value;
+	try
 	{
-		value = std::stof(string.c_str()); // Requires custom SDK.
+		value = std::stoull(string); // Requires custom SDK.
 		return value;
 	}
-	else
+	catch (...)
 	{
 		std::ostringstream message;
 		message << "Expected float val. Received: " << string;
 		resetOrInitializeConfig(false, message.str());
-		value = std::stof(string.c_str()); // Requires custom SDK.
+		value = std::stoull(string); // Requires custom SDK.
 		return value;
 	}
 }
@@ -106,7 +114,7 @@ float stringtofloat(const std::string &string)
 /**
  * @brief Parse and set values from the config file.
  */
-void setValForConfig()
+static void setValForConfig()
 {
 	std::ifstream configFile("config/config.cfg");
 	if (!configFile)
@@ -155,17 +163,17 @@ void setValForConfig()
 			}
 			else if (key == "MAXOPTIONSSIZE")
 			{
-				std::size_t intval = stringtofloat(value);
+				std::size_t intval = stringtoull(value);
 				MAXOPTIONSSIZE = intval;
 			}
 			else if (key == "POLLINGRATE")
 			{
-				std::size_t intval = stringtofloat(value);
+				std::size_t intval = stringtoull(value);
 				POLLINGRATE = intval;
 			}
 			else if (key == "CTRLR1POLLINGRATE")
 			{
-				std::size_t intval = stringtofloat(value);
+				std::size_t intval = stringtoull(value);
 				CTRLR1POLLINGRATE = intval;
 			}
 			else if (key == "VERSION")

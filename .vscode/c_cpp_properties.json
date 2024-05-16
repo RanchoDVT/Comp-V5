@@ -7,7 +7,7 @@
 			"${vex_sdkPath}/clang/18/include/**",
 			"${vex_gcc}/**",
 			"${vex_gcc}/arm-none-eabi/thumb/v7-a+fp/softfp",
-			"${vex_sdkPath}/gcc/include/**",
+			"${vex_sdkPath}/gcc/include",
 			"${vex_sdkPath}/include/**",
 			"${workspaceFolder}/include/**",
 			"${workspaceFolder}/src/**"

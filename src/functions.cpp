@@ -304,8 +304,6 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 
 /**
  * @brief Monitor motor temperatures and battery voltage for potential overheating and low voltage conditions.
- *
- * @return int Always returns 0.
  */
 void motorTempMonitor()
 {
@@ -371,8 +369,6 @@ void motorTempMonitor()
 
 /**
  * @brief Display GIF animations based on the value of drivercontrollogo.
- *
- * @return int Always returns 0.
  */
 void gifplayer()
 {

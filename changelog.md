@@ -1,8 +1,8 @@
 # Version history 📕
 
-## Version 2.0pr3.3 | 5/9/24 (Newest)
+## Version 2.0pr4 | 5/15/24 (Newest)
 
-Build size: 1,185KB
+Build size: 354KB
 
 ### New 🎉
 
@@ -32,12 +32,10 @@ Build size: 325KB
 
 ### New: 🎉
 
-- Updated from C++11 to C++ 20.
 - New class: `Log::Level`
 - New armVol for controlling the arm voltage setting.
 - New scrolling support for `get_User_Option`.
 - New function `motorTempMonitor` that shows motor temps and battery voltage on the controller screen.
-- Utilization of the bummerA.
 
 ### Fixed / Updated: 🛠️
 
