@@ -170,7 +170,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 		logHandler("getUserOption", "`options` size error!", Log::Level::Error);
 		return "DEFAULT";
 	}
-	
+
 	std::ostringstream optmessage;
 	optmessage << "Options: ";
 	for (auto optionIterator = options.begin(); optionIterator != options.end(); ++optionIterator)
@@ -207,7 +207,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 		buttonString.clear();
 		clearScreen(false, true, true);
 		Controller1.Screen.print(settingName.c_str());
-		
+
 		for (int i = 0; i < 2; ++i) // Checks for option size, and allows for options.
 		{
 			Controller1.Screen.newLine();
@@ -372,38 +372,12 @@ void motorTempMonitor()
  */
 void gifplayer()
 {
-
-	if (drivercontrollogo == 0)
+	printf("%s\n", Brain.SDcard.exists("world.gif") ? "true" : "false");
+	vex::Gif gif("user.gif", 120, 0);
+	
+	while (true)
 	{
-		vex::Gif gif("assets/loading.gif", 0, 0, true);
-		while (LOCALLOGO and drivercontrollogo == 0)
-		{
-			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
-		}
-		gif.~Gif();
-		clearScreen(true, false, false);
-	}
-	if (drivercontrollogo == 2)
-	{
-		vex::Gif gif("assets/auto.gif", 0, 0, true);
-
-		while (LOCALLOGO and drivercontrollogo == 2)
-		{
-			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
-		}
-		gif.~Gif();
-		clearScreen(true, false, false);
-	}
-	if (drivercontrollogo == 1)
-	{
-		vex::Gif gif("assets/user.gif", 0, 0, true);
-
-		while (LOCALLOGO and drivercontrollogo == 1)
-		{
-			Brain.Screen.printAt(5, 300, "frame %3d", gif.getFrameIndex());
-		}
-		gif.~Gif();
-		clearScreen(true, false, false);
+		Brain.Screen.printAt(5, 200, "frame %3d", gif.getFrameIndex());
 	}
 	return;
 }

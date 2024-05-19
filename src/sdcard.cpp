@@ -71,11 +71,11 @@ static void resetOrInitializeConfig(const bool &resetreadme, const std::string &
  */
 bool stringtobool(const std::string &string)
 {
-	if (string.starts_with("True") or string.starts_with("On") or string.starts_with("true") or string.starts_with("1") or string.starts_with("on")) // Requires custom SDK.
+	if (string.find("True") or string.find("On") or string.find("true") or string.find("1") or string.find("on")) // Requires custom SDK.
 	{
 		return true;
 	}
-	else if (string.starts_with("False") or string.starts_with("false") or string.starts_with("off") or string.starts_with("0") or string.starts_with("Off")) // Requires custom SDK.
+	else if (string.find("False") or string.find("false") or string.find("off") or string.find("0") or string.find("Off")) // Requires custom SDK.
 	{
 		return false;
 	}
@@ -93,20 +93,20 @@ bool stringtobool(const std::string &string)
  * @param string String of from ui to ull.
  * @return string Converted to ull value.
  */
-unsigned long long stringtoull(const std::string &string)
+long stringtol(const std::string &string)
 {
-	unsigned long long value;
-	try
+	long value;
+	if (std::any_of(string.begin(), string.end(), ::isdigit))
 	{
-		value = std::stoull(string); // Requires custom SDK.
+		value = std::atol(string.c_str()); // Requires custom SDK.
 		return value;
 	}
-	catch (...)
+	else
 	{
 		std::ostringstream message;
 		message << "Expected float val. Received: " << string;
 		resetOrInitializeConfig(false, message.str());
-		value = std::stoull(string); // Requires custom SDK.
+		value = std::atol(string.c_str()); // Requires custom SDK.
 		return value;
 	}
 }
@@ -163,17 +163,17 @@ static void setValForConfig()
 			}
 			else if (key == "MAXOPTIONSSIZE")
 			{
-				std::size_t intval = stringtoull(value);
+				std::size_t intval = stringtol(value);
 				MAXOPTIONSSIZE = intval;
 			}
 			else if (key == "POLLINGRATE")
 			{
-				std::size_t intval = stringtoull(value);
+				std::size_t intval = stringtol(value);
 				POLLINGRATE = intval;
 			}
 			else if (key == "CTRLR1POLLINGRATE")
 			{
-				std::size_t intval = stringtoull(value);
+				std::size_t intval = stringtol(value);
 				CTRLR1POLLINGRATE = intval;
 			}
 			else if (key == "VERSION")

@@ -6,7 +6,6 @@
 /*    Description:  C++ wrapper for gif decode                                */
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
-
 #include "vex.h"
 
 /*----------------------------------------------------------------------------*/
@@ -50,10 +49,10 @@ gd_open_gif(FILE *fp)
 	uint16_t width, height, depth;
 	uint8_t fdsz, bgidx, aspect;
 	int gct_sz;
-	gd_GIF *gif = nullptr;
+	gd_GIF *gif = NULL;
 
-	if (fp == nullptr)
-		return nullptr;
+	if (fp == NULL)
+		return NULL;
 	/* Header */
 	fread(sigver, 1, 3, fp);
 	if (memcmp(sigver, "GIF", 3) != 0)
@@ -89,7 +88,7 @@ gd_open_gif(FILE *fp)
 	/* Aspect Ratio */
 	fread(&aspect, 1, 1, fp);
 	/* Create gd_GIF Structure. */
-	gif = static_cast<gd_GIF *>(calloc(1, sizeof(*gif) + (BYTES_PER_PIXEL + 1) * width * height));
+	gif = (gd_GIF *)calloc(1, sizeof(*gif) + (BYTES_PER_PIXEL + 1) * width * height);
 	if (!gif)
 		goto fail;
 	gif->fp = fp;
@@ -101,7 +100,7 @@ gd_open_gif(FILE *fp)
 	fread(gif->gct.colors, 1, 3 * gif->gct.size, fp);
 	gif->palette = &gif->gct;
 	gif->bgindex = bgidx;
-	gif->canvas = reinterpret_cast<uint8_t *>(&gif[1]);
+	gif->canvas = (uint8_t *)&gif[1];
 	gif->frame = &gif->canvas[BYTES_PER_PIXEL * width * height];
 	if (gif->bgindex)
 		memset(gif->frame, gif->bgindex, gif->width * gif->height);
@@ -246,15 +245,14 @@ read_ext(gd_GIF *gif)
 static Table *
 new_table(int key_size)
 {
-
+	int key;
 	int init_bulk = MAX(1 << (key_size + 1), 0x100);
-	Table *table = reinterpret_cast<Table *>(malloc(sizeof(*table) + sizeof(Entry) * init_bulk));
+	Table *table = (Table *)malloc(sizeof(*table) + sizeof(Entry) * init_bulk);
 	if (table)
 	{
-		int key;
 		table->bulk = init_bulk;
 		table->nentries = (1 << key_size) + 2;
-		table->entries = reinterpret_cast<Entry *>(&table[1]);
+		table->entries = (Entry *)&table[1];
 		for (key = 0; key < (1 << key_size); key++)
 			table->entries[key] = (Entry){1, 0xFFF, (uint8_t)key};
 	}
@@ -272,10 +270,10 @@ add_entry(Table **tablep, uint16_t length, uint16_t prefix, uint8_t suffix)
 	if (table->nentries == table->bulk)
 	{
 		table->bulk *= 2;
-		table = static_cast<Table *>(realloc(table, sizeof(*table) + sizeof(Entry) * table->bulk));
+		table = (Table *)realloc(table, sizeof(*table) + sizeof(Entry) * table->bulk);
 		if (!table)
 			return -1;
-		table->entries = reinterpret_cast<Entry *>(&table[1]);
+		table->entries = (Entry *)&table[1];
 		*tablep = table;
 	}
 	table->entries[table->nentries] = (Entry){length, prefix, suffix};
@@ -289,13 +287,14 @@ static uint16_t
 get_key(gd_GIF *gif, int key_size, uint8_t *sub_len, uint8_t *shift, uint8_t *byte)
 {
 	int bits_read;
+	int rpad;
 	int frag_size;
 	uint16_t key;
 
 	key = 0;
 	for (bits_read = 0; bits_read < key_size; bits_read += frag_size)
 	{
-		int rpad = (*shift + bits_read) % 8;
+		rpad = (*shift + bits_read) % 8;
 		if (rpad == 0)
 		{
 			/* Update byte. */
@@ -358,7 +357,7 @@ read_image_data(gd_GIF *gif, int interlace)
 	clear = 1 << key_size;
 	stop = clear + 1;
 	table = new_table(key_size);
-	if (table == nullptr)
+	if (table == NULL)
 		goto fail;
 	key_size++;
 	init_key_size = key_size;
@@ -561,7 +560,7 @@ gd_close_gif(gd_GIF *gif)
 //
 int vex::Gif::render_task(void *arg)
 {
-	if (arg == nullptr)
+	if (arg == NULL)
 		return (0);
 
 	Gif *instance = static_cast<Gif *>(arg);
@@ -576,9 +575,9 @@ int vex::Gif::render_task(void *arg)
 
 		while ((err = gd_get_frame(gif)) > 0)
 		{
-			gd_render_frame(gif, static_cast<uint8_t *>(instance->_buffer));
+			gd_render_frame(gif, (uint8_t *)instance->_buffer);
 
-			instance->_lcd.drawImageFromBuffer(reinterpret_cast<uint32_t *>(instance->_buffer), instance->_sx, instance->_sy, gif->width, gif->height);
+			instance->_lcd.drawImageFromBuffer((uint32_t *)instance->_buffer, instance->_sx, instance->_sy, gif->width, gif->height);
 			instance->_frame++;
 
 			// how long to get, render and draw to screen
@@ -620,7 +619,7 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 	_sy = sy;
 	FILE *fp = fopen(fname, "rb");
 
-	if (fp != nullptr)
+	if (fp != NULL)
 	{
 		// get file length
 		fseek(fp, 0, SEEK_END);
@@ -631,43 +630,38 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 		if (bMemoryBuffer)
 		{
 			_gifmem = malloc(len);
-			if (_gifmem != nullptr)
+			if (_gifmem != NULL)
 			{
 				int nRead = fread(_gifmem, 1, len, fp);
 				(void)nRead;
 			}
 			fclose(fp);
-			fp = nullptr;
+			fp = NULL;
 		}
 
 		// using memory, then reopen file
-		if (_gifmem != nullptr)
+		if (_gifmem != NULL)
 		{
-			// close the existing file pointer if it's open
-			if (fp != 0)
-			{
-				fclose(fp);
-				fp = 0;
-			}
 			// create a FILE from memory buffer
 			fp = fmemopen(_gifmem, len, "rb");
 		}
 
 		// good file ?
-		if (fp != nullptr)
+		if (fp != NULL)
 		{
 			// open gif file
 			// will allocate memory for background and one animation
 			// frame.
 			_gif = gd_open_gif(fp);
-			if (_gif == nullptr)
+			if (_gif == NULL)
 			{
+				printf("what..");
 				return;
 			}
 
 			// memory for rendering frame
-			_buffer = static_cast<uint32_t *>(malloc(_gif->width * _gif->height * sizeof(uint32_t)));
-			if (_buffer == nullptr)
+			_buffer = (uint32_t *)malloc(_gif->width * _gif->height * sizeof(uint32_t));
+			if (_buffer == NULL)
 			{
 				// out of memory
 				gd_close_gif(_gif);
@@ -675,6 +669,7 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 				{
 					free(_gifmem);
 				}
+				printf("ram error");
 			}
 			else
 			{
@@ -701,19 +696,19 @@ void vex::Gif::cleanup()
 	if (_buffer)
 	{
 		free(_buffer);
-		_buffer = nullptr;
+		_buffer = NULL;
 	}
 
 	if (_gif)
 	{
 		gd_close_gif(_gif);
-		_gif = nullptr;
+		_gif = NULL;
 	}
 
 	if (_gifmem)
 	{
 		free(_gifmem);
-		_gifmem = nullptr;
+		_gifmem = NULL;
 	}
 }
 

@@ -2,11 +2,11 @@
 	"env": {
 		"vex_compilerPath": "${config:vexrobotics.vexcode.Cpp.Toolchain.Path}\\clang\\bin\\clang",
 		"vex_sdkPath": "${config:vexrobotics.vexcode.Cpp.Sdk.Home}\\V5\\V5_20240223_11_00_00\\vexv5",
-		"vex_gcc": "${vex_sdkPath}/gcc/include/c++/13.2.1",
+		"vex_gcc": "${vex_sdkPath}/gcc/include/c++/4.9.3",
 		"vex_sdkIncludes": [
-			"${vex_sdkPath}/clang/18/include/**",
+			"${vex_sdkPath}/clang/8.0.0/include/**",
 			"${vex_gcc}/**",
-			"${vex_gcc}/arm-none-eabi/thumb/v7-a+fp/softfp",
+			"${vex_gcc}/arm-none-eabi/armv7-ar/thumb",
 			"${vex_sdkPath}/gcc/include",
 			"${vex_sdkPath}/include/**",
 			"${workspaceFolder}/include/**",
@@ -20,8 +20,8 @@
 				"${vex_sdkIncludes}"
 			],
 			"compilerPath": "${vex_compilerPath}",
-			"cStandard": "gnu23",
-			"cppStandard": "gnu++23",
+			"cStandard": "gnu99",
+			"cppStandard": "gnu++11",
 			"intelliSenseMode": "windows-clang-x86",
 			"configurationProvider": "ms-vscode.makefile-tools"
 		},
@@ -31,8 +31,8 @@
 				"${vex_sdkIncludes}"
 			],
 			"compilerPath": "${vex_compilerPath}",
-			"cStandard": "gnu23",
-			"cppStandard": "gnu++23",
+			"cStandard": "gnu99",
+			"cppStandard": "gnu++11",
 			"intelliSenseMode": "macos-clang-x86"
 		},
 		{
@@ -41,8 +41,8 @@
 				"${vex_sdkIncludes}"
 			],
 			"compilerPath": "${vex_compilerPath}",
-			"cStandard": "gnu23",
-			"cppStandard": "gnu++23",
+			"cStandard": "gnu99",
+			"cppStandard": "gnu++11",
 			"intelliSenseMode": "linux-clang-x86"
 		}
 	],

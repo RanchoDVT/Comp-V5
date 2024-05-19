@@ -67,11 +67,11 @@ namespace vex
 	class Gif
 	{
 	private:
-		gd_GIF *_gif = nullptr;
+		gd_GIF *_gif = NULL;
 		int _sx;
 		int _sy;
-		void *_gifmem = nullptr;
-		void *_buffer = nullptr;
+		void *_gifmem = NULL;
+		void *_buffer = NULL;
 		int _frame = 0;
 
 		vex::timer _timer;
