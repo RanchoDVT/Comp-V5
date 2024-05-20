@@ -619,7 +619,7 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 	_sy = sy;
 	FILE *fp = fopen(fname, "rb");
 
-	if (fp != NULL)
+	if (fp != nullptr)
 	{
 		// get file length
 		fseek(fp, 0, SEEK_END);
@@ -655,7 +655,6 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 			_gif = gd_open_gif(fp);
 			if (_gif == NULL)
 			{
-				printf("what..");
 				return;
 			}
 
@@ -669,7 +668,6 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 				{
 					free(_gifmem);
 				}
-				printf("ram error");
 			}
 			else
 			{

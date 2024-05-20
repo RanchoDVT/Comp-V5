@@ -223,6 +223,7 @@ void configParser()
 		}
 		else
 		{
+			std::filesystem::create
 			resetOrInitializeConfig(false, "Missing config file. Create it?");
 			setValForConfig();
 			if (!Brain.SDcard.exists("readme.txt"))
@@ -239,7 +240,7 @@ void configParser()
 		VISIONENABLE = false;
 		MAXOPTIONSSIZE = 4;
 		CTRLR1POLLINGRATE = 25;
-		LOCALLOGO = false;
+		LOCALLOGO = true;
 		logHandler("configParser", "No SD card installed. Using default values.", Log::Level::Info);
 	}
 	vex::thread gifplay(gifplayer);

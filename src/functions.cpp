@@ -372,10 +372,9 @@ void motorTempMonitor()
  */
 void gifplayer()
 {
-	printf("%s\n", Brain.SDcard.exists("world.gif") ? "true" : "false");
-	vex::Gif gif("user.gif", 120, 0);
+	vex::Gif gif("assets/warp.gif", 0, 0);
 	
-	while (true)
+	while (LOCALLOGO)
 	{
 		Brain.Screen.printAt(5, 200, "frame %3d", gif.getFrameIndex());
 	}
