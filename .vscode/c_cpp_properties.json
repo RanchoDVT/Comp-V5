@@ -6,7 +6,7 @@
 		"vex_sdkIncludes": [
 			"${vex_sdkPath}/clang/8.0.0/include/**",
 			"${vex_gcc}/**",
-			"${vex_gcc}/arm-none-eabi/armv7-arm/thumb",
+			"${vex_gcc}/arm-none-eabi/armv7-ar/thumb",
 			"${vex_sdkPath}/gcc/include",
 			"${vex_sdkPath}/include/**",
 			"${workspaceFolder}/include/**",
@@ -20,8 +20,8 @@
 				"${vex_sdkIncludes}"
 			],
 			"compilerPath": "${vex_compilerPath}",
-			"cStandard": "gnu23",
-			"cppStandard": "gnu++23",
+			"cStandard": "gnu99",
+			"cppStandard": "gnu++11",
 			"intelliSenseMode": "windows-clang-x86",
 			"configurationProvider": "ms-vscode.makefile-tools"
 		},
