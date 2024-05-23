@@ -20,8 +20,8 @@
 				"${vex_sdkIncludes}"
 			],
 			"compilerPath": "${vex_compilerPath}",
-			"cStandard": "gnu99",
-			"cppStandard": "gnu++11",
+			"cStandard": "gnu17",
+			"cppStandard": "gnu++20",
 			"intelliSenseMode": "windows-clang-x86",
 			"configurationProvider": "ms-vscode.makefile-tools"
 		},
@@ -31,8 +31,8 @@
 				"${vex_sdkIncludes}"
 			],
 			"compilerPath": "${vex_compilerPath}",
-			"cStandard": "gnu99",
-			"cppStandard": "gnu++11",
+			"cStandard": "gnu17",
+			"cppStandard": "gnu++20",
 			"intelliSenseMode": "macos-clang-x86",
 			"configurationProvider": "ms-vscode.makefile-tools"
 		},
@@ -42,8 +42,8 @@
 				"${vex_sdkIncludes}"
 			],
 			"compilerPath": "${vex_compilerPath}",
-			"cStandard": "gnu99",
-			"cppStandard": "gnu++11",
+			"cStandard": "gnu17",
+			"cppStandard": "gnu++20",
 			"intelliSenseMode": "linux-clang-x86",
 			"configurationProvider": "ms-vscode.makefile-tools"
 		}

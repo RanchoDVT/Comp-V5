@@ -89,9 +89,9 @@ bool stringtobool(const std::string &string)
 }
 
 /**
- * @brief Convert a string to a ull.
- * @param string String of from ui to ull.
- * @return string Converted to ull value.
+ * @brief Convert a string to a l.
+ * @param string String to l.
+ * @return string Converted to l value.
  */
 long stringtol(const std::string &string)
 {
@@ -138,43 +138,35 @@ static void setValForConfig()
 		{
 			if (key == "PRINTLOGO")
 			{
-				bool boolval = stringtobool(value);
-				PRINTLOGO = boolval;
+				PRINTLOGO = stringtobool(value);
 			}
 			else if (key == "LOCALLOGO")
 			{
-				bool boolval = stringtobool(value);
-				LOCALLOGO = boolval;
+				LOCALLOGO = stringtobool(value);
 			}
 			else if (key == "VISIONENABLE")
 			{
-				bool boolval = stringtobool(value);
-				VISIONENABLE = boolval;
+				VISIONENABLE = stringtobool(value);
 			}
 			else if (key == "CTRLR2ENABLE")
 			{
-				bool boolval = stringtobool(value);
-				CTRLR2ENABLE = boolval;
+				CTRLR2ENABLE = stringtobool(value);
 			}
 			else if (key == "LOGTOFILE")
 			{
-				bool boolval = stringtobool(value);
-				LOGTOFILE = boolval;
+				LOGTOFILE = stringtobool(value);
 			}
 			else if (key == "MAXOPTIONSSIZE")
 			{
-				std::size_t intval = stringtol(value);
-				MAXOPTIONSSIZE = intval;
+				MAXOPTIONSSIZE = stringtol(value);
 			}
 			else if (key == "POLLINGRATE")
 			{
-				std::size_t intval = stringtol(value);
-				POLLINGRATE = intval;
+				POLLINGRATE = stringtol(value);
 			}
 			else if (key == "CTRLR1POLLINGRATE")
 			{
-				std::size_t intval = stringtol(value);
-				CTRLR1POLLINGRATE = intval;
+				CTRLR1POLLINGRATE = stringtol(value);
 			}
 			else if (key == "VERSION")
 			{
