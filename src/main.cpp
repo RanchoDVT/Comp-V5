@@ -148,12 +148,6 @@ static void startup()
  */
 int main()
 {
-	printf("\033[2J\033[1;1H\033[0m");
-	printf("SDK Version: %lu\n" PRIu32, (unsigned long)vexSdkVersion);
-	printf("StdLib Version: %lu\n" PRIu32, (unsigned long)vexStdlibVersion);
-	printf("Linked StdLib Version: %lu\n" PRIu32, (unsigned long)vexStdlibVersionLinked);
-	printf("Vex OS Version: %lu\n" PRIu32, (unsigned long)vexSystemVersion);
-	printf("Valid StdLib: %d\n", (bool)vexStdlibVersionVerify);
 	Competition.autonomous(autonomous);
 	startup();
 	Competition.drivercontrol(userControl);

@@ -373,10 +373,9 @@ void motorTempMonitor()
 void gifplayer()
 {
 	vex::Gif gif("assets/warp.gif", 0, 0);
-	
 	while (LOCALLOGO)
 	{
-		Brain.Screen.printAt(5, 200, "frame %3d", gif.getFrameIndex());
+		Brain.Screen.print("");
 	}
 	return;
 }

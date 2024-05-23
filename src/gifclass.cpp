@@ -18,8 +18,6 @@
 #define MIN(A, B) ((A) < (B) ? (A) : (B))
 #define MAX(A, B) ((A) > (B) ? (A) : (B))
 
-#define BYTES_PER_PIXEL 4
-
 typedef struct Entry
 {
 	uint16_t length;
@@ -117,29 +115,21 @@ gd_open_gif(FILE *fp)
 		for (i = 0; i < gif->width * gif->height; i++)
 			memcpy(&gif->canvas[i * 3], bgcolor, 3);
 	gif->anim_start = ftell(fp);
-	goto ok;
+	return gif;
 fail:
 	fclose(fp);
 	return 0;
-ok:
-	return gif;
 }
 
 static void
 discard_sub_blocks(gd_GIF *gif)
 {
-	uint8_t first_try = 1;
-	uint8_t seek_pos = 0;
 	uint8_t size;
 
 	do
 	{
 		fread(&size, 1, 1, gif->fp);
-		if (!first_try && size == seek_pos) // To prevent infinite loop
-			break;
 		fseek(gif->fp, size, SEEK_CUR);
-		seek_pos = size;
-		first_try = 0;
 	} while (size);
 }
 
@@ -273,8 +263,8 @@ new_table(int key_size)
 		table->bulk = init_bulk;
 		table->nentries = (1 << key_size) + 2;
 		table->entries = reinterpret_cast<Entry *>(&table[1]);
-		for (uint8_t key = 0; key < (1 << key_size); key++)
-			table->entries[key] = (Entry){1, 0xFFF, key};
+		for (int key = 0; key < (1 << key_size); key++)
+			table->entries[key] = (Entry){1, 0xFFF, (uint8_t)key};
 	}
 	return table;
 }
@@ -319,7 +309,11 @@ get_key(gd_GIF *gif, int key_size, uint8_t *sub_len, uint8_t *shift, uint8_t *by
 		{
 			/* Update byte. */
 			if (*sub_len == 0)
+			{
 				fread(sub_len, 1, 1, gif->fp); /* Must be nonzero! */
+				if (*sub_len == 0)
+					return 0x1000;
+			}
 			fread(byte, 1, 1, gif->fp);
 			(*sub_len)--;
 		}
@@ -499,7 +493,7 @@ render_frame_rect(gd_GIF *gif, uint8_t *buffer)
 			color = &gif->palette->colors[index * 3];
 			if (!gif->gce.transparency || index != gif->gce.tindex)
 			{
-				int offset = (i + k) * BYTES_PER_PIXEL;
+				int offset = (i + k) * 4;
 				buffer[offset + 2] = *(color + 0);
 				buffer[offset + 1] = *(color + 1);
 				buffer[offset + 0] = *(color + 2);
@@ -507,6 +501,11 @@ render_frame_rect(gd_GIF *gif, uint8_t *buffer)
 		}
 		i += gif->width;
 	}
+}
+
+int gd_is_bgcolor(gd_GIF *gif, uint8_t color[3])
+{
+	return !memcmp(&gif->palette->colors[gif->bgindex * 3], color, 3);
 }
 
 static void
@@ -523,7 +522,7 @@ dispose(gd_GIF *gif)
 		{
 			for (k = 0; k < gif->fw; k++)
 			{
-				int offset = (i + k) * BYTES_PER_PIXEL;
+				int offset = (i + k) * 4;
 				gif->canvas[offset + 2] = *(bgcolor + 0);
 				gif->canvas[offset + 1] = *(bgcolor + 1);
 				gif->canvas[offset + 0] = *(bgcolor + 2);
@@ -565,7 +564,7 @@ gd_get_frame(gd_GIF *gif)
 static void
 gd_render_frame(gd_GIF *gif, uint8_t *buffer)
 {
-	memcpy(buffer, gif->canvas, gif->width * gif->height * BYTES_PER_PIXEL);
+	memcpy(buffer, gif->canvas, gif->width * gif->height * 4);
 	render_frame_rect(gif, buffer);
 }
 
@@ -609,7 +608,6 @@ int vex::Gif::render_task(void *arg)
 		while ((err = gd_get_frame(gif)) > 0)
 		{
 			gd_render_frame(gif, static_cast<uint8_t *>(instance->_buffer));
-
 			instance->_lcd.drawImageFromBuffer(reinterpret_cast<uint32_t *>(instance->_buffer), instance->_sx, instance->_sy, gif->width, gif->height);
 			instance->_frame++;
 
@@ -721,7 +719,7 @@ vex::Gif::~Gif()
 	cleanup();
 };
 
-// cleanup memory when gif finishs
+// cleanup memory when gif finishes
 //
 
 void vex::Gif::cleanup()
