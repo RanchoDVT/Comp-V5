@@ -71,11 +71,11 @@ static void resetOrInitializeConfig(const bool &resetreadme, const std::string &
  */
 bool stringtobool(const std::string &string)
 {
-	if (string.find("True") or string.find("On") or string.find("true") or string.find("1") or string.find("on")) // Requires custom SDK.
+	if (string.find("True") or string.find("On") or string.find("true") or string.find("1") or string.find("on"))
 	{
 		return true;
 	}
-	else if (string.find("False") or string.find("false") or string.find("off") or string.find("0") or string.find("Off")) // Requires custom SDK.
+	else if (string.find("False") or string.find("false") or string.find("off") or string.find("0") or string.find("Off"))
 	{
 		return false;
 	}
@@ -98,7 +98,7 @@ long stringtol(const std::string &string)
 	long value;
 	if (std::any_of(string.begin(), string.end(), ::isdigit))
 	{
-		value = std::atol(string.c_str()); // Requires custom SDK.
+		value = std::atol(string.c_str());
 		return value;
 	}
 	else
@@ -106,7 +106,7 @@ long stringtol(const std::string &string)
 		std::ostringstream message;
 		message << "Expected float val. Received: " << string;
 		resetOrInitializeConfig(false, message.str());
-		value = std::atol(string.c_str()); // Requires custom SDK.
+		value = std::atol(string.c_str());
 		return value;
 	}
 }
@@ -223,7 +223,6 @@ void configParser()
 		}
 		else
 		{
-			std::filesystem::create
 			resetOrInitializeConfig(false, "Missing config file. Create it?");
 			setValForConfig();
 			if (!Brain.SDcard.exists("readme.txt"))

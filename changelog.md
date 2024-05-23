@@ -2,7 +2,7 @@
 
 ## Version 2.0pr4 | 5/15/24 (Newest)
 
-Build size: 354KB
+Build size: 339KB
 
 ### New 🎉
 

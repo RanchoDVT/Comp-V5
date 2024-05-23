@@ -2,13 +2,13 @@
 /*                                                                            */
 /*    Module:       gifclass.h                                                */
 /*    Author:       James                                                     */
-/*    Created:      Thu Mar 21 2019                                           */
 /*    Description:  C++ wrapper for gif decode                                */
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------*/
 // originally in giddec.h
+// (Updated to newest version)
 //
 
 typedef struct gd_Palette
@@ -30,34 +30,21 @@ typedef struct gd_GIF
 {
 	FILE *fp;
 	off_t anim_start;
-	uint16_t width;
-	uint16_t height;
+	uint16_t width, height;
 	uint16_t depth;
 	uint16_t loop_count;
 	gd_GCE gce;
 	gd_Palette *palette;
-	gd_Palette lct;
-	gd_Palette gct;
-
+	gd_Palette lct, gct;
 	void (*plain_text)(
-		struct gd_GIF *gif,
-		uint16_t tx,
-		uint16_t ty,
-		uint16_t tw,
-		uint16_t th,
-		uint8_t cw,
-		uint8_t ch,
-		uint8_t fg,
-		uint8_t bg);
-
+		struct gd_GIF *gif, uint16_t tx, uint16_t ty,
+		uint16_t tw, uint16_t th, uint8_t cw, uint8_t ch,
+		uint8_t fg, uint8_t bg);
 	void (*comment)(struct gd_GIF *gif);
-
 	void (*application)(struct gd_GIF *gif, char id[8], char auth[3]);
-
 	uint16_t fx, fy, fw, fh;
 	uint8_t bgindex;
-	uint8_t *canvas;
-	uint8_t *frame;
+	uint8_t *canvas, *frame;
 } gd_GIF;
 
 /*----------------------------------------------------------------------------*/

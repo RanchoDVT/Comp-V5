@@ -2,7 +2,6 @@
 /*                                                                            */
 /*    Module:       gifclass.cpp                                              */
 /*    Author:       James                                                     */
-/*    Created:      Thu Mar 21 2019                                           */
 /*    Description:  C++ wrapper for gif decode                                */
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
@@ -13,6 +12,7 @@
 // The following code was originally in a file gifdec.c
 // by Marcel Rodrigues from this github repo.
 // https://github.com/lecram/gifdec
+// (Updated to newer version, AND patched for C++ and security fixes.)
 //
 
 #define MIN(A, B) ((A) < (B) ? (A) : (B))
@@ -49,6 +49,8 @@ gd_open_gif(FILE *fp)
 	uint8_t sigver[3];
 	uint16_t width, height, depth;
 	uint8_t fdsz, bgidx, aspect;
+	size_t i;
+	const uint8_t *bgcolor;
 	int gct_sz;
 	gd_GIF *gif = NULL;
 
@@ -89,7 +91,7 @@ gd_open_gif(FILE *fp)
 	/* Aspect Ratio */
 	fread(&aspect, 1, 1, fp);
 	/* Create gd_GIF Structure. */
-	gif = static_cast<gd_GIF *>(calloc(1, sizeof(*gif) + (BYTES_PER_PIXEL + 1) * width * height));
+	gif = static_cast<gd_GIF *>(calloc(1, sizeof(*gif)));
 	if (!gif)
 		goto fail;
 	gif->fp = fp;
@@ -101,14 +103,24 @@ gd_open_gif(FILE *fp)
 	fread(gif->gct.colors, 1, 3 * gif->gct.size, fp);
 	gif->palette = &gif->gct;
 	gif->bgindex = bgidx;
-	gif->canvas = reinterpret_cast<uint8_t *>(&gif[1]);
-	gif->frame = &gif->canvas[BYTES_PER_PIXEL * width * height];
+	gif->frame = reinterpret_cast<uint8_t *>(calloc(4, width * height));
+	if (!gif->frame)
+	{
+		free(gif);
+		goto fail;
+	}
+	gif->canvas = &gif->frame[width * height];
 	if (gif->bgindex)
 		memset(gif->frame, gif->bgindex, gif->width * gif->height);
+	bgcolor = &gif->palette->colors[gif->bgindex * 3];
+	if (bgcolor[0] || bgcolor[1] || bgcolor[2])
+		for (i = 0; i < gif->width * gif->height; i++)
+			memcpy(&gif->canvas[i * 3], bgcolor, 3);
 	gif->anim_start = ftell(fp);
 	goto ok;
 fail:
 	fclose(fp);
+	return 0;
 ok:
 	return gif;
 }
@@ -116,12 +128,18 @@ ok:
 static void
 discard_sub_blocks(gd_GIF *gif)
 {
+	uint8_t first_try = 1;
+	uint8_t seek_pos = 0;
 	uint8_t size;
 
 	do
 	{
 		fread(&size, 1, 1, gif->fp);
+		if (!first_try && size == seek_pos) // To prevent infinite loop
+			break;
 		fseek(gif->fp, size, SEEK_CUR);
+		seek_pos = size;
+		first_try = 0;
 	} while (size);
 }
 
@@ -223,7 +241,9 @@ read_ext(gd_GIF *gif)
 {
 	uint8_t label;
 
-	fread(&label, 1, 1, gif->fp);
+	if (fread(&label, 1, 1, gif->fp) < 1)
+		return;
+
 	switch (label)
 	{
 	case 0x01:
@@ -246,7 +266,6 @@ read_ext(gd_GIF *gif)
 static Table *
 new_table(int key_size)
 {
-	int key;
 	int init_bulk = MAX(1 << (key_size + 1), 0x100);
 	Table *table = reinterpret_cast<Table *>(malloc(sizeof(*table) + sizeof(Entry) * init_bulk));
 	if (table)
@@ -254,8 +273,8 @@ new_table(int key_size)
 		table->bulk = init_bulk;
 		table->nentries = (1 << key_size) + 2;
 		table->entries = reinterpret_cast<Entry *>(&table[1]);
-		for (key = 0; key < (1 << key_size); key++)
-			table->entries[key] = (Entry){1, 0xFFF, (uint8_t)key};
+		for (uint8_t key = 0; key < (1 << key_size); key++)
+			table->entries[key] = (Entry){1, 0xFFF, key};
 	}
 	return table;
 }
@@ -341,16 +360,18 @@ static int
 read_image_data(gd_GIF *gif, int interlace)
 {
 	uint8_t sub_len, shift, byte;
-	int init_key_size, key_size, table_is_full;
-	int frm_off, str_len, p, x, y;
+	int init_key_size, key_size, table_is_full = 0;
+	int frm_off, frm_size, str_len = 0, i, p, x, y;
 	uint16_t key, clear, stop;
 	int ret;
 	Table *table;
-	Entry entry;
+	Entry entry = {0, 0, 0};
 	off_t start, end;
 
 	fread(&byte, 1, 1, gif->fp);
 	key_size = (int)byte;
+	if (key_size < 2 || key_size > 8)
+		return -1;
 	start = ftell(gif->fp);
 	discard_sub_blocks(gif);
 	end = ftell(gif->fp);
@@ -359,7 +380,7 @@ read_image_data(gd_GIF *gif, int interlace)
 	stop = clear + 1;
 	table = new_table(key_size);
 	if (table == NULL)
-		goto fail;
+		return -1;
 	key_size++;
 	init_key_size = key_size;
 	sub_len = shift = 0;
@@ -368,7 +389,8 @@ read_image_data(gd_GIF *gif, int interlace)
 	ret = 0;
 	table_is_full = 0;
 	str_len = 0;
-	while (1)
+	frm_size = gif->fw * gif->fh;
+	while (frm_off < frm_size)
 	{
 		if (key == clear)
 		{
@@ -393,13 +415,15 @@ read_image_data(gd_GIF *gif, int interlace)
 		key = get_key(gif, key_size, &sub_len, &shift, &byte);
 		if (key == clear)
 			continue;
-		if (key == stop)
+		if (key == stop || key == 0x1000)
+			break;
+		if (key >= table->nentries)
 			break;
 		if (ret == 1)
 			key_size++;
 		entry = table->entries[key];
 		str_len = entry.length;
-		while (1)
+		for (i = 0; i < str_len; i++)
 		{
 			p = frm_off + entry.length - 1;
 			x = p % gif->fw;
@@ -407,7 +431,7 @@ read_image_data(gd_GIF *gif, int interlace)
 			if (interlace)
 				y = interlaced_line_index((int)gif->fh, y);
 			gif->frame[(gif->fy + y) * gif->width + gif->fx + x] = entry.suffix;
-			if (entry.prefix == 0xFFF)
+			if (entry.prefix == 0xFFF || entry.prefix >= table->nentries)
 				break;
 			else
 				entry = table->entries[entry.prefix];
@@ -417,11 +441,10 @@ read_image_data(gd_GIF *gif, int interlace)
 			table->entries[table->nentries - 1].suffix = entry.suffix;
 	}
 	free(table);
-	fread(&sub_len, 1, 1, gif->fp); /* Must be zero! */
+	if (key == stop)
+		fread(&sub_len, 1, 1, gif->fp); /* Must be zero! */
 	fseek(gif->fp, end, SEEK_SET);
 	return 0;
-fail:
-	return -1;
 }
 
 /* Read image.
@@ -435,8 +458,16 @@ read_image(gd_GIF *gif)
 	/* Image Descriptor. */
 	gif->fx = read_num(gif->fp);
 	gif->fy = read_num(gif->fp);
+
+	if (gif->fx >= gif->width || gif->fy >= gif->height)
+		return -1;
+
 	gif->fw = read_num(gif->fp);
 	gif->fh = read_num(gif->fp);
+
+	gif->fw = MIN(gif->fw, gif->width - gif->fx);
+	gif->fh = MIN(gif->fh, gif->height - gif->fy);
+
 	fread(&fisrz, 1, 1, gif->fp);
 	interlace = fisrz & 0x40;
 	/* Ignore Sort Flag. */
@@ -513,7 +544,6 @@ static int
 gd_get_frame(gd_GIF *gif)
 {
 	char sep;
-
 	dispose(gif);
 	fread(&sep, 1, 1, gif->fp);
 	while (sep != ',')
@@ -524,7 +554,8 @@ gd_get_frame(gd_GIF *gif)
 			read_ext(gif);
 		else
 			return -1;
-		fread(&sep, 1, 1, gif->fp);
+		if (fread(&sep, 1, 1, gif->fp) < 1)
+			return -1;
 	}
 	if (read_image(gif) == -1)
 		return -1;
@@ -548,6 +579,7 @@ static void
 gd_close_gif(gd_GIF *gif)
 {
 	fclose(gif->fp);
+	free(gif->frame);
 	free(gif);
 }
 

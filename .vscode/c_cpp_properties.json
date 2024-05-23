@@ -31,9 +31,10 @@
 				"${vex_sdkIncludes}"
 			],
 			"compilerPath": "${vex_compilerPath}",
-			"cStandard": "gnu23",
-			"cppStandard": "gnu++23",
-			"intelliSenseMode": "macos-clang-x86"
+			"cStandard": "gnu99",
+			"cppStandard": "gnu++11",
+			"intelliSenseMode": "macos-clang-x86",
+			"configurationProvider": "ms-vscode.makefile-tools"
 		},
 		{
 			"name": "Linux",
@@ -41,9 +42,10 @@
 				"${vex_sdkIncludes}"
 			],
 			"compilerPath": "${vex_compilerPath}",
-			"cStandard": "gnu23",
-			"cppStandard": "gnu++23",
-			"intelliSenseMode": "linux-clang-x86"
+			"cStandard": "gnu99",
+			"cppStandard": "gnu++11",
+			"intelliSenseMode": "linux-clang-x86",
+			"configurationProvider": "ms-vscode.makefile-tools"
 		}
 	],
 	"version": 4

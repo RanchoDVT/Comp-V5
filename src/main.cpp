@@ -114,7 +114,7 @@ static void startup()
 	message.str(std::string());
 
 	std::string ArmVolts = getUserOption("Arm Volts:", {"9", "6", "12"});
-	ARMVOLTAGE = std::atoi(ArmVolts.c_str());   // Requires custom SDK.
+	ARMVOLTAGE = std::atoi(ArmVolts.c_str());
 
 	message << "Arm set to " << ARMVOLTAGE << " volts.";
 	logHandler("startup", message.str(), Log::Level::Trace);
@@ -148,7 +148,12 @@ static void startup()
  */
 int main()
 {
-	printf("\033[2J\033[1;1H\033[0m"); // Clears console and Sets color to grey.
+	printf("\033[2J\033[1;1H\033[0m");
+	printf("SDK Version: %lu\n" PRIu32, (unsigned long)vexSdkVersion);
+	printf("StdLib Version: %lu\n" PRIu32, (unsigned long)vexStdlibVersion);
+	printf("Linked StdLib Version: %lu\n" PRIu32, (unsigned long)vexStdlibVersionLinked);
+	printf("Vex OS Version: %lu\n" PRIu32, (unsigned long)vexSystemVersion);
+	printf("Valid StdLib: %d\n", (bool)vexStdlibVersionVerify);
 	Competition.autonomous(autonomous);
 	startup();
 	Competition.drivercontrol(userControl);

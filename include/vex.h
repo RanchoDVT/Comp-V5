@@ -6,6 +6,7 @@
 #include <cmath>	 ///< Required for using std::abs with an int
 #include <algorithm> ///< Requried for using ::isdigit and std::any_of
 #include <sstream>
+#include <inttypes.h>
 
 #include <stdlib.h>	 ///< Required for standard library definitions
 #include <stdbool.h> ///< Required for standard boolean definitions
