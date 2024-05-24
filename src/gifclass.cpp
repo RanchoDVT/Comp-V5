@@ -50,10 +50,10 @@ gd_open_gif(FILE *fp)
 	size_t i;
 	const uint8_t *bgcolor;
 	int gct_sz;
-	gd_GIF *gif = NULL;
+	gd_GIF *gif = nullptr;
 
-	if (fp == NULL)
-		return NULL;
+	if (fp == nullptr)
+		return nullptr;
 	/* Header */
 	fread(sigver, 1, 3, fp);
 	if (memcmp(sigver, "GIF", 3) != 0)
@@ -373,7 +373,7 @@ read_image_data(gd_GIF *gif, int interlace)
 	clear = 1 << key_size;
 	stop = clear + 1;
 	table = new_table(key_size);
-	if (table == NULL)
+	if (table == nullptr)
 		return -1;
 	key_size++;
 	init_key_size = key_size;
@@ -503,7 +503,7 @@ render_frame_rect(gd_GIF *gif, uint8_t *buffer)
 	}
 }
 
-int gd_is_bgcolor(gd_GIF *gif, uint8_t color[3])
+int gd_is_bgcolor(const gd_GIF *gif, const uint8_t color[3])
 {
 	return !memcmp(&gif->palette->colors[gif->bgindex * 3], color, 3);
 }
@@ -592,7 +592,7 @@ gd_close_gif(gd_GIF *gif)
 //
 int vex::Gif::render_task(void *arg)
 {
-	if (arg == NULL)
+	if (arg == nullptr)
 		return (0);
 
 	Gif *instance = static_cast<Gif *>(arg);
@@ -650,7 +650,7 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 	_sy = sy;
 	FILE *fp = fopen(fname, "rb");
 
-	if (fp != NULL)
+	if (fp != nullptr)
 	{
 		// get file length
 		fseek(fp, 0, SEEK_END);
@@ -661,42 +661,42 @@ vex::Gif::Gif(const char *fname, int sx, int sy, bool bMemoryBuffer)
 		if (bMemoryBuffer)
 		{
 			_gifmem = malloc(len);
-			if (_gifmem != NULL)
+			if (_gifmem != nullptr)
 			{
 				int nRead = fread(_gifmem, 1, len, fp);
 				(void)nRead;
 			}
 			fclose(fp);
-			fp = NULL;
+			fp = nullptr;
 		}
 
 		// using memory, then reopen file
-		if (_gifmem != NULL)
+		if (_gifmem != nullptr)
 		{
 			// close the existing file pointer if it's open
-			if (fp != NULL)
+			if (fp != nullptr)
 			{
 				fclose(fp);
-				fp = NULL;
+				fp = nullptr;
 			}
 			// create a FILE from memory buffer
 			fp = fmemopen(_gifmem, len, "rb");
 		}
 
 		// good file ?
-		if (fp != NULL)
+		if (fp != nullptr)
 		{
 			// open gif file
 			// will allocate memory for background and one animation
 			// frame.
 			_gif = gd_open_gif(fp);
-			if (_gif == NULL)
+			if (_gif == nullptr)
 			{
 				return;
 			}
 			// memory for rendering frame
 			_buffer = static_cast<uint32_t *>(malloc(_gif->width * _gif->height * sizeof(uint32_t)));
-			if (_buffer == NULL)
+			if (_buffer == nullptr)
 			{
 				// out of memory
 				gd_close_gif(_gif);
@@ -730,19 +730,19 @@ void vex::Gif::cleanup()
 	if (_buffer)
 	{
 		free(_buffer);
-		_buffer = NULL;
+		_buffer = nullptr;
 	}
 
 	if (_gif)
 	{
 		gd_close_gif(_gif);
-		_gif = NULL;
+		_gif = nullptr;
 	}
 
 	if (_gifmem)
 	{
 		free(_gifmem);
-		_gifmem = NULL;
+		_gifmem = nullptr;
 	}
 }
 

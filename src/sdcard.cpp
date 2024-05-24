@@ -71,11 +71,11 @@ static void resetOrInitializeConfig(const bool &resetreadme, const std::string &
  */
 bool stringtobool(const std::string &string)
 {
-	if (string.find("True") or string.find("On") or string.find("true") or string.find("1") or string.find("on"))
+	if (string.starts_with("True") or string.starts_with("On") or string.starts_with("true") or string.starts_with("1") or string.starts_with("on"))
 	{
 		return true;
 	}
-	else if (string.find("False") or string.find("false") or string.find("off") or string.find("0") or string.find("Off"))
+	else if (string.starts_with("False") or string.starts_with("false") or string.starts_with("off") or string.starts_with("0") or string.starts_with("Off"))
 	{
 		return false;
 	}
@@ -98,7 +98,7 @@ long stringtol(const std::string &string)
 	long value;
 	if (std::any_of(string.begin(), string.end(), ::isdigit))
 	{
-		value = std::atol(string.c_str());
+		value = std::stol(string);
 		return value;
 	}
 	else
@@ -106,7 +106,7 @@ long stringtol(const std::string &string)
 		std::ostringstream message;
 		message << "Expected float val. Received: " << string;
 		resetOrInitializeConfig(false, message.str());
-		value = std::atol(string.c_str());
+		value = std::stol(string.c_str());
 		return value;
 	}
 }

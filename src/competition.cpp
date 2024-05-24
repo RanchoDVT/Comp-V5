@@ -75,23 +75,20 @@ void autonomous()
 	resetDriveSensors = true;
 	desiredValue = 28;
 	desiredTurnValue = 0;
+	
+	Drivetrain.driveFor(vex::reverse, 20.0, vex::inches, true);
+	Drivetrain.driveFor(vex::forward, 20.0, vex::inches, true); // Estimated time to finish ~3 seconds.
 
 	vex::this_thread::sleep_for(2000);
 	resetDriveSensors = true;
 	desiredValue = -28;
 	desiredTurnValue = 0;
 
-	vex::this_thread::sleep_for(2000);
-	resetDriveSensors = true;
-	desiredValue = 28;
-	desiredTurnValue = 0;
-
-	vex::this_thread::sleep_for(2000);
-	resetDriveSensors = true;
-	desiredValue = -28;
-	desiredTurnValue = 90;
+	Drivetrain.driveFor(vex::reverse, 20.0, vex::inches, true);
+	Drivetrain.driveFor(vex::forward, 20.0, vex::inches, true); // Estimated current time ~8 seconds.
 
 	ArmMotor.spinFor(2, vex::timeUnits::sec);
+	drivepid.interrupt();
 	return;
 }
 
