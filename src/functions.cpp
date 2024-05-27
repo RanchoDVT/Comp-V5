@@ -368,19 +368,6 @@ void motorTempMonitor()
 }
 
 /**
- * @brief Display GIF animations based on the value of drivercontrollogo.
- */
-void gifplayer()
-{
-	vex::Gif gif("assets/warp.gif", 0, 0);
-	while (LOCALLOGO)
-	{
-		Brain.Screen.print("");
-	}
-	return;
-}
-
-/**
  * @brief Calibrate the Inertial Gyro.
  *
  * @return int Always returns 1.

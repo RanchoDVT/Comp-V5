@@ -2,6 +2,7 @@
 
 #include <string>  ///< Required for using string objects
 #include <fstream> ///< Requried for using std::getline, and making and reading files.
+#include <filesystem>
 
 #include <stdlib.h>	 ///< Required for standard library definitions
 #include <stdbool.h> ///< Required for standard boolean definitions
@@ -9,9 +10,9 @@
 #include <string.h>	 ///< Required for string manipulation functions
 #include <stdio.h>	 ///< Required for standard input/output definitions
 
-#include "v5_cpp.h" ///< Required for VEX V5 definitions
+#include "sys/stat.h"
 
-#include "gifclass.h" ///< For vex::Gif class.
+#include "v5_cpp.h" ///< Required for VEX V5 definitions
 
 /**
  * @author @DVT7125

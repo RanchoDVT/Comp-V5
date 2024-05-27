@@ -1,5 +1,10 @@
 #include "vex.h"
 
+int _stat(
+   const char *path,
+   struct _stat *buffer
+);
+
 /**
  * @brief Reset or initialize the config file based on user input.
  * @param resetreadme Flag to reset readme file.
@@ -7,6 +12,7 @@
  */
 static void resetOrInitializeConfig(const bool &resetreadme, const std::string &message)
 {
+	std::filesystem::create_directory("sandbox/1/2/b");
 	MAXOPTIONSSIZE = 4;
 	std::string resetcfg = getUserOption(message, {"Yes", "No"});
 	if (resetcfg == "Yes")
@@ -96,19 +102,15 @@ bool stringtobool(const std::string &string)
 long stringtol(const std::string &string)
 {
 	long value;
-	if (std::any_of(string.begin(), string.end(), ::isdigit))
-	{
+	
+
 		value = std::stol(string);
 		return value;
-	}
-	else
-	{
 		std::ostringstream message;
 		message << "Expected float val. Received: " << string;
 		resetOrInitializeConfig(false, message.str());
 		value = std::stol(string.c_str());
 		return value;
-	}
 }
 
 /**
@@ -215,6 +217,7 @@ void configParser()
 		}
 		else
 		{
+			std::filesystem::create_directory("/config");
 			resetOrInitializeConfig(false, "Missing config file. Create it?");
 			setValForConfig();
 			if (!Brain.SDcard.exists("readme.txt"))
@@ -234,7 +237,6 @@ void configParser()
 		LOCALLOGO = true;
 		logHandler("configParser", "No SD card installed. Using default values.", Log::Level::Info);
 	}
-	vex::thread gifplay(gifplayer);
 	calibrategiro();
 	Drivetrain.setStopping(vex::brakeType::coast);
 	ClawMotor.setStopping(vex::brakeType::coast);
