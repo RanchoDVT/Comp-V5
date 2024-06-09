@@ -12,7 +12,7 @@ Happy coding! =)
 
     2.0pr4:
 
-    1. Ability to create folders to SD card (Needs custom SDK)
+    1. Ability to create folders to SD card ❌
 
     2. Custom motor configs with config file.
 
