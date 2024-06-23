@@ -1,18 +1,6 @@
-#pragma once
+#include <stdlib.h>
 
-#include <string>  ///< Required for using string objects
-#include <fstream> ///< Requried for using std::getline, and making and reading files.
-#include <filesystem>
-
-#include <stdlib.h>	 ///< Required for standard library definitions
-#include <stdbool.h> ///< Required for standard boolean definitions
-#include <math.h>	 ///< Required for mathematical functions
-#include <string.h>	 ///< Required for string manipulation functions
-#include <stdio.h>	 ///< Required for standard input/output definitions
-
-#include "sys/stat.h"
-
-#include "v5_cpp.h" ///< Required for VEX V5 definitions
+#include "v5_cpp.h"
 
 /**
  * @author @DVT7125
@@ -23,64 +11,54 @@
 class Log
 {
 public:
-	enum class Level
-	{
-		Trace,
-		Debug,
-		Info,
-		Warn,
-		Error,
-		Fatal
-	};
+    enum class Level
+    {
+        Trace,
+        Debug,
+        Info,
+        Warn,
+        Error,
+        Fatal
+    };
 };
 
-extern bool CONTROLLER1COMMAND;
-extern float POLLINGRATE;
-extern bool PRINTLOGO;
-extern bool LOCALLOGO;
-extern bool VISIONENABLE;
-extern bool CTRLR2ENABLE;
-extern bool BETAENABLED;
-extern bool LOGTOFILE;
-extern const std::string &VERSION;
-extern const std::string &BUILD_DATE;
-extern std::size_t MAXOPTIONSSIZE;
-extern std::size_t CTRLR1POLLINGRATE;
-extern std::size_t ARMVOLTAGE;
-extern int drivercontrollogo;
+/// @brief 
+extern std::string Version;
+/// @brief 
+extern std::string BuildDate;
 
-extern vex::brain Brain;
-extern vex::motor LeftDriveSmart;
-extern vex::motor RightDriveSmart;
-extern vex::inertial Inertial;
-extern vex::smartdrive Drivetrain;
-extern vex::motor ClawMotor;
-extern vex::motor ArmMotor;
-extern vex::bumper RearBumper;
-extern vex::controller Controller1;
-extern vex::controller Controller2;
-extern vex::vision::signature PURPLECUBE;
-extern vex::vision::signature GREENCUBE;
-extern vex::vision::signature ORANGECUBE;
-extern vex::vision Vision7;
-
-void calibrategiro();
-void configParser();
+/// @brief Handles logging, to sd card if supported, to user if warn and higher, and outputs it in the console.
+/// @param funtionName Name of funtion that you want to log.
+/// @param message The message! (Ig you can't understand this, you don't deserve a computer)
+/// @param level The log level (from the class Log::Level)
+void logHandler(const std::string &funtionName, const std::string &message, const Log::Level level);
 const char *LogToString(const Log::Level &str);
-void clearScreen(const bool &brainClear, const bool &controller1Clear, const bool &controller2Clear);
-void logHandler(const std::string &module, const std::string &message, const Log::Level &level);
+/// @brief GUI for settting options
+/// @param settingName The name for what you want to change (duh)
+/// @param options The options you want (duh), in a vector like this: {"Opt1", "Opt2"}
+/// @return a string output of what got selected.
 std::string getUserOption(const std::string &settingName, const std::vector<std::string> &options);
-void motorTempMonitor();
-void gifplayer();
-void userControl();
+/// @brief Helper cmd for clearing screens on one line of code.
+/// @param brainClear Weither to clear the screen on the V5 Brain
+/// @param primaryControllerClear Weither to clear the screen on the 1st controller
+/// @param partnerControllerClear Weither to clear the screen on the 2nd controller
+void clearScreen(const bool &brainClear, const bool &primaryControllerClear, const bool &partnerControllerClear);
+/// @brief Funtion to calabrate Gyro
+void calibrateGyro();
+/// @brief Caller for autonomous code
 void autonomous();
-void drivePID();
-std::string ctrl1BttnPressed();
-bool stringtobool(const std::string &string);
-long stringtol(const std::string &string);
+/// @brief 
+void motorTempMonitor();
+/// @brief
+void userControl();
+/// @brief Gets input from the controller, NO GUI.
+/// @return Time of button held (int), and what button got pressed (string)
+std::pair<std::string, int> ctrl1BttnPressed();
 
-extern int desiredValue;
-extern int desiredTurnValue;
+#include "config/robot-config.h"
 
-extern bool resetDriveSensors;
-extern bool enableDrivePID;
+#include "config/extern/configManager.h"
+
+extern configManager ConfigManager;
+
+#include "display/gifdec.h"

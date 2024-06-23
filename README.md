@@ -8,14 +8,13 @@
 
 Happy coding! =)  
 
-## Next version: ⏭️
+## Rewrite (3.0)
 
-    2.0pr4:
+Here we go! This is a rewritten version of Comp_V2 (with some exceptions).
+We are at a0, we will be in beta when all fetures are from V2. I don't Vex V5 Hardware to test with, as school is over.
+When high school starts for me, I *will* be in a robotics class, and then I can start testing.
 
-    1. Ability to create folders to SD card ❌
+3.0b2:
 
-    2. Custom motor configs with config file.
-
-    3. Have time holding and more than one button pressed for ctrl1BttnPressed
-
-    4. Improve getUserOption performance and readability. ✅  
+1: Readd the gif player using the newest version of gifdec ✅
+2: WIP!
