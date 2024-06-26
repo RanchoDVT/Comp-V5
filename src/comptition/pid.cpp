@@ -4,9 +4,9 @@
 double kP = 0.0;
 double kI = 0.0;
 double kD = 0.0;
-double turnkP = 0.0;
-double turnkI = 0.0;
-double turnkD = 0.0;
+double turnKp = 0.0;
+double turnKi = 0.0;
+double turnKd = 0.0;
 int maxTurnIntegral = 300; // These cap the integrals
 int maxIntegral = 300;
 int integralBound = 3; // If error is outside the bounds, then apply the integral. This is a buffer with +-integralBound degrees
@@ -112,7 +112,7 @@ int drivePID()
         // This would cap the integral
         turnTotalError = abs(turnTotalError) > maxIntegral ? signnum_c(turnTotalError) * maxIntegral : turnTotalError;
 
-        double turnMotorPower = turnError * turnkP + turnDerivative * turnkD + turnTotalError * turnkI;
+        double turnMotorPower = turnError * turnKp + turnDerivative * turnKd + turnTotalError * turnKi;
         /////////////////////////////////////////////////////////////////////
 
         LeftDriveSmart.spin(vex::directionType::fwd, lateralMotorPower + turnMotorPower, vex::voltageUnits::volt);

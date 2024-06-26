@@ -5,16 +5,16 @@
 1: Install VScode  
 2: Download and install these extensions:  
 ([VEX Robotics](https://marketplace.visualstudio.com/items?itemName=VEXRobotics.vexcode), [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools), [Makefile Tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.makefile-tools))  
+3: Install my [Custom SDK](https://github.com/RanchoDVT/Vex-SDK)
 
 Happy coding! =)  
 
 ## Rewrite (3.0)
 
 Here we go! This is a rewritten version of Comp_V2 (with some exceptions).
-We are at a0, we will be in beta when all fetures are from V2. I don't Vex V5 Hardware to test with, as school is over.
+We are at a0, we will be in beta when all features are from V2. I don't Vex V5 Hardware to test with, as school is over.
 When high school starts for me, I *will* be in a robotics class, and then I can start testing.
 
 3.0b2:
 
 1: Readd the gif player using the newest version of gifdec ✅
-2: WIP!

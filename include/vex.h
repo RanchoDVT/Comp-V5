@@ -28,10 +28,10 @@ extern std::string Version;
 extern std::string BuildDate;
 
 /// @brief Handles logging, to sd card if supported, to user if warn and higher, and outputs it in the console.
-/// @param funtionName Name of funtion that you want to log.
+/// @param functionName Name of function that you want to log.
 /// @param message The message! (Ig you can't understand this, you don't deserve a computer)
 /// @param level The log level (from the class Log::Level)
-void logHandler(const std::string &funtionName, const std::string &message, const Log::Level level);
+void logHandler(const std::string &functionName, const std::string &message, const Log::Level level);
 const char *LogToString(const Log::Level &str);
 /// @brief GUI for settting options
 /// @param settingName The name for what you want to change (duh)
@@ -39,11 +39,11 @@ const char *LogToString(const Log::Level &str);
 /// @return a string output of what got selected.
 std::string getUserOption(const std::string &settingName, const std::vector<std::string> &options);
 /// @brief Helper cmd for clearing screens on one line of code.
-/// @param brainClear Weither to clear the screen on the V5 Brain
-/// @param primaryControllerClear Weither to clear the screen on the 1st controller
-/// @param partnerControllerClear Weither to clear the screen on the 2nd controller
+/// @param brainClear Wither to clear the screen on the V5 Brain
+/// @param primaryControllerClear Wither to clear the screen on the 1st controller
+/// @param partnerControllerClear Wither to clear the screen on the 2nd controller
 void clearScreen(const bool &brainClear, const bool &primaryControllerClear, const bool &partnerControllerClear);
-/// @brief Funtion to calabrate Gyro
+/// @brief Function to calibrate Gyro
 void calibrateGyro();
 /// @brief Caller for autonomous code
 void autonomous();
@@ -54,6 +54,8 @@ void userControl();
 /// @brief Gets input from the controller, NO GUI.
 /// @return Time of button held (int), and what button got pressed (string)
 std::pair<std::string, int> ctrl1BttnPressed();
+void gifplayer();
+const char *LogToColor(const Log::Level &str);
 
 #include "config/robot-config.h"
 

@@ -26,14 +26,54 @@ const char *LogToString(const Log::Level &str)
 	}
 }
 
+const char *LogToColor(const Log::Level &str)
+{
+	switch (str)
+	{
+	case Log::Level::Trace:
+	{
+		return "\033[92m[Trace]";
+	}
+
+	case Log::Level::Debug:
+	{
+		return "\033[93m[Debug]";
+	}
+
+	case Log::Level::Info:
+	{
+		return "\033[94m[Info]";
+	}
+
+	case Log::Level::Warn:
+	{
+		return " \033[38;5;216m[Warn]";
+	}
+
+	case Log::Level::Error:
+	{
+		return "\033[31m[Error]";
+	}
+
+	case Log::Level::Fatal:
+	{
+		return "\033[31m[Error]";
+	}
+	default:
+	{
+		return "\033[31m[Error]";
+	}
+	}
+}
+
 void calibrateGyro()
 {
-	InertalGyro.calibrate();
-	while (InertalGyro.isCalibrating())
+	InertialGyro.calibrate();
+	while (InertialGyro.isCalibrating())
 	{
 		vex::this_thread::sleep_for(20);
 	}
-	logHandler("calibrategiro", "Finished calabrating Inertal Giro.", Log::Level::Trace);
+	logHandler("calibrateGyro", "Finished calibrating Inertial Giro.", Log::Level::Trace);
 	return;
 }
 
@@ -41,7 +81,7 @@ std::pair<std::string, int> ctrl1BttnPressed()
 {
 	if (Competition.isEnabled())
 	{
-		logHandler("ctrl1BttnPressed", "Robot is IN comptition mode!", Log::Level::Error);
+		logHandler("ctrl1BttnPressed", "Robot is IN competition mode!", Log::Level::Error);
 	}
 
 	std::string buttonPressed;
@@ -248,12 +288,10 @@ void motorTempMonitor()
 		// Update the odometer with the new position
 		ConfigManager.updateOdometer(averagePosition);
 
-		// Check if the service interval has been exceeded
-		ConfigManager.checkServiceInterval();
 		// Log motor temperatures
 		motorTemps << "\n | LeftTemp: " << frontLeftTemp << "°\n | RightTemp: " << frontRightTemp << "°\n | RearLeftTemp: " << rearLeftTemp << "°\n | RearRightTemp: " << rearRightTemp << "°\n | Battery Voltage: " << Brain.Battery.voltage() << "V\n";
 		logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Info);
-		dataBuffer << "\nX Axis: " << InertalGyro.pitch(vex::rotationUnits::deg) << "\nY Axis: " << InertalGyro.roll(vex::rotationUnits::deg) << "\nZ Axis: " << InertalGyro.yaw(vex::rotationUnits::deg);
+		dataBuffer << "\nX Axis: " << InertialGyro.pitch(vex::rotationUnits::deg) << "\nY Axis: " << InertialGyro.roll(vex::rotationUnits::deg) << "\nZ Axis: " << InertialGyro.yaw(vex::rotationUnits::deg);
 		logHandler("motorTempMonitor", dataBuffer.str(), Log::Level::Info);
 		clearScreen(false, true, true);
 		primaryController.Screen.print("FLM: %d° | FRM: %d°", frontLeftTemp, frontRightTemp);
@@ -264,4 +302,32 @@ void motorTempMonitor()
 		vex::this_thread::sleep_for(5000);
 	}
 	return;
+}
+
+void gifplayer()
+{
+	if (!Competition.isEnabled())
+	{
+		vex::Gif gif("assets/loading.gif", 0, 0);
+		while (!Competition.isEnabled())
+		{
+			Brain.Screen.print("");
+		}
+	}
+	else if (Competition.isAutonomous())
+	{
+		vex::Gif gif("assets/auto.gif", 0, 0);
+		while (Competition.isAutonomous())
+		{
+			Brain.Screen.print("");
+		}
+	}
+	else
+	{
+		vex::Gif gif("assets/driver.gif", 0, 0);
+		while (Competition.isDriverControl())
+		{
+			Brain.Screen.print("");
+		}
+	}
 }

@@ -33,7 +33,7 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 {
     if (Competition.isEnabled())
     {
-        logHandler("getUserOption", "Robot is IN comptition mode!", Log::Level::Error);
+        logHandler("getUserOption", "Robot is IN competition mode!", Log::Level::Error);
     }
 
     if (options.size() > ConfigManager.getMaxOptionSize() or options.size() < 2)

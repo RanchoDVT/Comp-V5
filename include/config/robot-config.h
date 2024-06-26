@@ -15,7 +15,7 @@ extern vex::competition Competition;
 extern vex::controller primaryController;
 extern vex::controller partnerController;
 
-extern vex::inertial InertalGyro;
+extern vex::inertial InertialGyro;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

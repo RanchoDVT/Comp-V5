@@ -678,7 +678,7 @@ vex::Gif::~Gif()
     cleanup();
 };
 
-// cleanup memory when gif finishs
+// cleanup memory when gif finishes
 //
 
 void vex::Gif::cleanup()

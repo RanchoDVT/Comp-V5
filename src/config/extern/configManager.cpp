@@ -11,7 +11,6 @@ configManager::configManager(const std::string &configFileName, const std::strin
       POLLINGRATE(1), PRINTLOGO(true), CTRLR2ENABLE(false), VISIONENABLE(false),
       CTRLR1POLLINGRATE(25), LOCALLOGO(false), odometer(0), lastService(0), serviceInterval(1000)
 {
-    setValuesFromConfig();
     readMaintenanceData();
 }
 // Setters with validation
@@ -140,7 +139,9 @@ void configManager::updateOdometer(int averagePosition)
     odometer += averagePosition;
     if (odometer - lastService >= serviceInterval)
     {
-        Brain.Screen.printAt(10, 40, "Service Required! Odometer: %d", odometer);
+        std::ostringstream message;
+        message << "Service needed! Distance: " << odometer;
+        logHandler("Service", message.str(), Log::Level::Warn);
         lastService = odometer;
     }
     writeMaintenanceData();
@@ -150,6 +151,8 @@ void configManager::checkServiceInterval()
 {
     if (odometer - lastService >= serviceInterval)
     {
-        Brain.Screen.printAt(10, 40, "Service Required! Odometer: %d", odometer);
+        std::ostringstream message;
+        message << "Service needed! Distance: " << odometer;
+        logHandler("Service", message.str(), Log::Level::Warn);
     }
 }

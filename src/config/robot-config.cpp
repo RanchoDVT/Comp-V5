@@ -25,8 +25,8 @@ vex::motor frontRightMotor = vex::motor(frontRightPort, frontRightGearRatio, fro
 vex::motor rearRightMotor = vex::motor(rearRightPort, rearRightGearRatio, rearRightReversed);
 vex::motor_group RightDriveSmart = vex::motor_group(frontRightMotor, rearRightMotor);
 
-vex::inertial InertalGyro = vex::inertial(vex::PORT3);
-vex::smartdrive Drivetrain = vex::smartdrive(LeftDriveSmart, RightDriveSmart, InertalGyro, 319.19, 320, 165, vex::distanceUnits::mm, 1);
+vex::inertial InertialGyro = vex::inertial(vex::PORT3);
+vex::smartdrive Drivetrain = vex::smartdrive(LeftDriveSmart, RightDriveSmart, InertialGyro, 319.19, 320, 165, vex::distanceUnits::mm, 1);
 
 vex::controller primaryController = vex::controller(vex::controllerType::primary);
 vex::controller partnerController = vex::controller(vex::controllerType::partner);
@@ -45,6 +45,9 @@ void vexCodeInit(void)
     // Parse the configuration
     ConfigManager.parseConfig();
 
+    // Check if the service interval has been exceeded
+    ConfigManager.checkServiceInterval();  
+
     clearScreen(true, true, true);
 
     std::ostringstream message;
@@ -54,7 +57,7 @@ void vexCodeInit(void)
 
     if (Competition.isEnabled())
     {
-        logHandler("startup", "Robot is IN Comptition mode!", Log::Level::Fatal);
+        logHandler("startup", "Robot is IN Competition mode!", Log::Level::Fatal);
     }
 
     vex::competition::bStopAllTasksBetweenModes = false;

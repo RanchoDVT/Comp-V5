@@ -136,6 +136,7 @@ void configManager::setValuesFromConfig()
             else if (key == "LOCALLOGO")
             {
                 setLocalLogo(value.c_str());
+                logHandler("configManager::setValuesFromConfig", "Warning! LocalLogo will be deprecated soon! Use ""PRINTLOGO"".", Log::Level::Warn);
             }
             else if (key == "VISIONENABLE")
             {
@@ -217,9 +218,9 @@ void configManager::parseConfig()
         VISIONENABLE = false;
         maxOptionSize = 4;
         CTRLR1POLLINGRATE = 25;
-        LOCALLOGO = true;
         logHandler("configParser", "No SD card installed. Using default values.", Log::Level::Info);
     }
     calibrateGyro();
+    gifplayer();
     Drivetrain.setStopping(vex::brakeType::coast);
 }
