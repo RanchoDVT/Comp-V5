@@ -7,8 +7,8 @@ Build size: 374KB
 ### New 🎉
 
 - New configManager for well, configuring things!
- - With this we now can get a prot number for a motor, it's gear ratio, and wither it is reversed or not.
- - maintenance warning's after a certain distance are a thing now! 
+  - With this we now can get a prot number for a motor, it's gear ratio, and wither it is reversed or not.
+  - maintenance warning's after a certain distance are a thing now!
 - gifplayer is back!
 - Using a custom SDK for C++23 and C23!
 
