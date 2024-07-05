@@ -29,7 +29,7 @@ extern std::string BuildDate;
 
 /// @brief Handles logging, to sd card if supported, to user if warn and higher, and outputs it in the console.
 /// @param functionName Name of function that you want to log.
-/// @param message The message! (Ig you can't understand this, you don't deserve a computer)
+/// @param message The message! (If you can't understand this, you don't deserve a computer)
 /// @param level The log level (from the class Log::Level)
 void logHandler(const std::string &functionName, const std::string &message, const Log::Level level);
 const char *LogToString(const Log::Level &str);

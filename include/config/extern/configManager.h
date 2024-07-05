@@ -33,7 +33,6 @@ public:
     vex::gearSetting getGearSetting(const std::string &ratio) const;
     int getMotorPort(const std::string &motorName) const;
 
-    // New methods for odometer and maintenance
     int getOdometer() const { return odometer; }
     int getLastService() const { return lastService; }
     int getServiceInterval() const { return serviceInterval; }
@@ -45,7 +44,7 @@ private:
     std::map<std::string, std::string> gearRatios;
     std::map<std::string, bool> motorReversed;
     std::string configFileName;
-    std::string maintenanceFileName; // New member variable for maintenance data file
+    std::string maintenanceFileName;
     std::size_t maxOptionSize;
     bool logToFile;
     std::size_t POLLINGRATE;
@@ -55,11 +54,10 @@ private:
     std::size_t CTRLR1POLLINGRATE;
     bool LOCALLOGO;
 
-    // New member variables for odometer and maintenance
     int odometer;
     int lastService;
     int serviceInterval;
 
-    void readMaintenanceData();  // New method to read maintenance data
-    void writeMaintenanceData(); // New method to write maintenance data
+    void readMaintenanceData();
+    void writeMaintenanceData();
 };

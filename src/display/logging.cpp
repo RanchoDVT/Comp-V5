@@ -60,6 +60,5 @@ void logHandler(const std::string &functionName, const std::string &message, con
     default:
         break;
     }
-
     return;
 }

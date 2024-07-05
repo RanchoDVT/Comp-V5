@@ -10,7 +10,7 @@ Build size: 374KB
   - With this we now can get a prot number for a motor, it's gear ratio, and wither it is reversed or not.
   - maintenance warning's after a certain distance are a thing now!
 - gifplayer is back!
-- Using a custom SDK for C++23 and C23!
+- Updated custom sdk to 1.1.3!
 
 ### Fixed / Improved 🛠️
 
@@ -33,7 +33,6 @@ Build size: 339KB
 
 - Added new functions `resetOrInitializeConfig`, `stringtobool`, `stringtofloat`, `configParser`.
 
-- Ability to create folders is here :)
 - Custom PID!
 
 ### Fixed / Improved 🛠️
