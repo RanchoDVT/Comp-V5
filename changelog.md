@@ -1,8 +1,27 @@
 # Version history 📕
 
-## Version 2.0pr4 | 5/15/24 (Newest)
+## Version 3.0b2 | 6/26/24 (Newest)
 
-Build size: 354KB
+Build size: 374KB
+
+### New 🎉
+
+- New configManager for well, configuring things!
+  - With this we now can get a prot number for a motor, it's gear ratio, and wither it is reversed or not.
+  - maintenance warning's after a certain distance are a thing now!
+- gifplayer is back!
+- Updated custom sdk to 1.1.3!
+
+### Fixed / Improved 🛠️
+
+- I don't even know how many spelling fixes...
+- Better code structure to make it easy for everyone to look at.
+- Improved the Makefile, now supports any depth of folders for include and src.
+- Using -O3 rather than -Os for speed =) (Performance should be ~5% faster)
+
+## Version 2.0pr4 | 5/15/24
+
+Build size: 339KB
 
 ### New 🎉
 
@@ -14,7 +33,6 @@ Build size: 354KB
 
 - Added new functions `resetOrInitializeConfig`, `stringtobool`, `stringtofloat`, `configParser`.
 
-- Ability to create folders is here :)
 - Custom PID!
 
 ### Fixed / Improved 🛠️

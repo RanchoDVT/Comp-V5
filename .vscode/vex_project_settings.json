@@ -4,9 +4,9 @@
 		"json": 2
 	},
 	"project": {
-		"name": "Comp_V2",
-		"description": "Advanced Startup, Offical V2. [DEV]",
-		"creationDate": "4/22/2024, 7:26:12 PM",
+		"name": "Comp_V3",
+		"description": "Advanced Startup, Offical V3. [DEV]",
+		"creationDate": "1/1/24",
 		"platform": "V5",
 		"language": "cpp",
 		"slot": 1,
