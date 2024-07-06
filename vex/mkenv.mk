@@ -62,8 +62,8 @@ endif
 
 # Toolchain include and lib locations
 TOOL_INC  = -I"$(VEX_SDK_PATH)/$(PLATFORM)/clang/$(HEADERS)/include" \
-            -I"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/include/c++/13.2.1" \
-            -I"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/include/c++/13.2.1/arm-none-eabi/thumb/v7-a+fp/softfp" \
+            -I"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/include/c++/13.3.1" \
+            -I"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/include/c++/13.3.1/arm-none-eabi/thumb/v7-a+fp/softfp" \
             -I"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/include"
 
 TOOL_LIB  = -L"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/libs"
