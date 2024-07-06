@@ -3,67 +3,36 @@
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 
 <head>
-	<meta name="Home page" content="This is an example of a
-meta description. This will often show up in search results.">
-	<title>Voidless - Home</title>
-	<link rel="shortcut icon" href="images/Logo.png">
-	<link rel="stylesheet" href="style.css">
-	<script src="main.js"></script>
-
+    <meta name="Home page" content="This is an example of a meta description. This will often show up in search results.">
+    <title>Voidless - Home</title>
+    <link rel="shortcut icon" href="images/Logo.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="main.js"></script>
 </head>
 
 <body>
 
-	<nav>
-		<li><a class="active" href="index.html">Home</a></li>
-		<li class="dropdown">
-			<a href="projects.html" class="dropbtn">Projects</a>
-			<div class="dropdown-content">
-				<a target="_blank" href="https://github.com/Voidless7125/Comp-V5">Comp V5</a>
-				<a target="_blank" href="https://ranchodvt.github.io/Comp-V5/">This website!</a>
-			</div>
-		</li>
-		<li><a href="contact.html">Contact</a></li>
-		<li style="float: right;"><a href="about.html">About</a></li>
+    <nav>
+        <li><a class="active" href="index.html">Home</a></li>
+        <li class="dropdown">
+            <a href="projects.html" class="dropbtn">Projects</a>
+            <div class="dropdown-content">
+                <a target="_blank" href="https://github.com/Voidless7125/Comp-V5">Comp V5</a>
+                <a target="_blank" href="https://ranchodvt.github.io/Comp-V5/">This website!</a>
+            </div>
+        </li>
+        <li><a href="contact.html">Contact</a></li>
+        <li style="float: right;"><a href="about.html">About</a></li>
+    </nav>
 
-	</nav>
+    <div id="readme-content"></div>
 
-	<h1>Advanced Startup Vex V5</h1>
-	<h2>Getting started: ▶️</h2>
-	<p>1: Install VScode<br>2: Download and install these extensions:<br>(<a
-			href="https://marketplace.visualstudio.com/items?itemName=VEXRobotics.vexcode">VEX Robotics</a>, <a
-			href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools">C/C++</a>, <a
-			href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.makefile-tools">Makefile
-			Tools</a>)<br>And open the project and happy coding!</p>
+    <h2>Why we use voltage: ❔</h2>
+    <p>1: It dramatically reduces latency. It bypasses PID and lets you have finer controls. &quot;PID is internally calculated at a 10 millisecond rate. <a href="https://kb.vex.com/hc/en-us/articles/360044325872-Understanding-V5-Smart-Motor-11W-Performance">Reference</a><br>2: No performance limiting / ready to stop. If you use velocity, the motor wont hit top speed. If you told the motor to be at 100% velocity, it will be at 198 RPM rather than 200. Voltage overcomes this, and forces the performance you want.<br>3: It limits torque to 50% of what it can do. So even if it <em>can</em> hit 1.1NM of torque before stall, it will make it 0.55. We don't want this especially on a claw or arm.<br>4: Fixes the random, all motors turn off and back on.</p>
 
-	<h2>Next version: ⏭️</h2>
-	<h3>2.0pr4:</h3>
-		
-	<ol> 
+    <footer>Copyright © 2024 Voidless7125</footer>
 
-		<li>Ability to create folders to SD card, as you have to have the folders already there or else it can't create
-			the file…</li><br>
-
-		<li>Custom motor configs with config file. (I hope this is possible!) </li><br>
-
-		<li>Have time holding and more than one button pressed for ctrl1BttnPressed.</li><br>
-
-		<li>Improve getUserOption performance and readability.</li><br>
-	</ol>
-
-	<h2> Why we use voltage: ❔</h2>
-	<p>1: It dramatically reduces latency. It bypasses PID and lets you have finer controls. &quot;PID is internally
-		calculated at a 10 millisecond rate. <a
-			href="https://kb.vex.com/hc/en-us/articles/360044325872-Understanding-V5-Smart-Motor-11W-Performance">Reference</a>
-		<br>2: No performance limiting / ready to stop. If you use velocity, the motor wont hit top speed. If you told
-		the motor to be at 100% velocity, it will be at 198 RPM rather than 200. Voltage overcomes this, and forces the
-		performance you want.
-		<br>3: It limits torque to 50% of what it can do. So even if it <em>can</em> hit 1.1NM of torque before stall,
-		it will make it 0.55. We don't want this especially on a claw or arm.
-		<br>4: Fixes the random, all motors turn off and back on.
-	</p>
-	<br>
-<footer>Copyright © 2024 Voidless7125</footer>
 
 </body>
 
