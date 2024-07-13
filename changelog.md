@@ -1,12 +1,31 @@
 # Version history 📕
 
-## Version 3.0b2 | 6/26/24 (Newest)
+## Version 3.0b3 | 7/13/24 (Newest)
+
+Build size: 375KB
+
+### Fixed / Improved 🛠️
+
+- Improved `getuseroption` to support unlimited amount of options!  
+    You will be able to configure the max amount with a sd card.
+- Turning is now more accurate.
+- `StringToLong` has better error handling.
+
+### Deprecated ✖️
+
+- `LOCALLOGO` will be removed in beta4. Please use `PRINTLOGO`.
+
+### try/catch 🪝
+
+- Try and catch are now enabled. I did this to catch errors in StringToLong. Other error catches will be migrated.
+
+## Version 3.0b2 | 6/26/24
 
 Build size: 374KB
 
 ### New 🎉
 
-- New configManager for well, configuring things!
+- New `configManager` for well, configuring things!
   - With this we now can get a prot number for a motor, it's gear ratio, and wither it is reversed or not.
   - maintenance warning's after a certain distance are a thing now!
 - gifplayer is back!

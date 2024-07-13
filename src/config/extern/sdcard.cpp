@@ -74,23 +74,24 @@ bool configManager::stringToBool(const std::string &str)
 // Method to convert a string to long
 long configManager::stringToLong(const std::string &str)
 {
-    std::stringstream ss;
-    ss << str;
-
-    long num = 0;
-
-    ss >> num;
-
-    if (ss.good() or (num == 0 && str[0] != 0))
+    try
+    {
+        long num = std::stol(str);
+        return num;
+    }
+    catch (const std::invalid_argument &e)
     {
         std::ostringstream message;
-        message << "Expected float val. Received: " << str;
+        message << "Long val has invalid chars! Received: " << str;
         configManager::resetOrInitializeConfig(false, message.str());
         return 1;
     }
-    else
+    catch (const std::out_of_range &e)
     {
-        return num;
+        std::ostringstream message;
+        message << "Val is too large to fit in long! Received: " << str;
+        configManager::resetOrInitializeConfig(false, message.str());
+        return 1;
     }
 }
 
@@ -136,7 +137,10 @@ void configManager::setValuesFromConfig()
             else if (key == "LOCALLOGO")
             {
                 setLocalLogo(value.c_str());
-                logHandler("configManager::setValuesFromConfig", "Warning! LocalLogo will be deprecated soon! Use ""PRINTLOGO"".", Log::Level::Warn);
+                logHandler("configManager::setValuesFromConfig", "Warning! LocalLogo will be deprecated soon! Use "
+                                                                 "PRINTLOGO"
+                                                                 ".",
+                           Log::Level::Warn);
             }
             else if (key == "VISIONENABLE")
             {

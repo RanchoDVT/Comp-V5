@@ -11,10 +11,10 @@ Happy coding! =)
 
 ## Rewrite (3.0)
 
-Here we go! This is a rewritten version of Comp_V2 (with some exceptions).\
-We are at b2, I don't Vex V5 Hardware to test with, as school is over.\
+Here we go! This is a rewritten version of Comp_V2 (with some exceptions).  
+We are at b2, I don't Vex V5 Hardware to test with, as school is over.  
 When high school starts for me, I *will* be in a robotics class, and then I can start testing.
 
-3.0b2:
+3.0b4:
 
-1: Readd the gif player using the newest version of gifdec ✅
+1: Automatic Emergency Braking 🔃 (Must have vision sensor or AI vision)

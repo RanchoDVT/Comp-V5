@@ -72,7 +72,7 @@ TOOL_LIB  = -L"$(VEX_SDK_PATH)/$(PLATFORM)/gcc/libs"
 CFLAGS_CL = -target thumbv7-none-eabi -fshort-enums -Wno-unknown-attributes -U__INT32_TYPE__ -U__UINT32_TYPE__ -D__INT32_TYPE__=long -D__UINT32_TYPE__='unsigned long'
 CFLAGS_V7 = -march=armv7-a -mfpu=neon -mfloat-abi=softfp
 CFLAGS    = ${CFLAGS_CL} ${CFLAGS_V7} -O3 -Wall -Werror=return-type -std=gnu23 $(DEFINES)
-CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -O3 -Wall -Werror=return-type -fno-rtti -fno-threadsafe-statics -fno-exceptions -std=gnu++23 -ffunction-sections -fdata-sections $(DEFINES)
+CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -O3 -Wall -Werror=return-type -fno-rtti -fno-threadsafe-statics -std=gnu++23 -ffunction-sections -fdata-sections $(DEFINES)
 
 # Linker flags
 LNK_FLAGS = -z noexecstack --no-warn-rwx-segments -nostdlib -T "$(VEX_SDK_PATH)/$(PLATFORM)/lscript.ld" -R "$(VEX_SDK_PATH)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(VEX_SDK_PATH)/$(PLATFORM)" ${TOOL_LIB}

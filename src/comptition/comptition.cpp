@@ -28,7 +28,7 @@ void userControl()
 	while (Competition.isEnabled())
 	{
 		turnVolts = primaryController.Axis1.position() * 0.12; // -12 to 12
-		forwardVolts = primaryController.Axis3.position() * 0.12 * (1 - (std::abs(turnVolts) / 12) * 0.5);
+		forwardVolts = primaryController.Axis3.position() * 0.12 * (1 - (std::abs(turnVolts) / 12));
 		LeftDriveSmart.spin(vex::forward, forwardVolts + turnVolts, vex::voltageUnits::volt);
 		RightDriveSmart.spin(vex::forward, forwardVolts - turnVolts, vex::voltageUnits::volt);
 		vex::this_thread::sleep_for(ConfigManager.getCtrlr1PollingRate());

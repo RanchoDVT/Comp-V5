@@ -10,7 +10,7 @@
 #include "vex.h"
 
 std::string Version = "3.0b2";
-std::string BuildDate = "6/21/24";
+std::string BuildDate = "7/13/24";
 
 int main()
 {
