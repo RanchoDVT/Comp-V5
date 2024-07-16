@@ -3,16 +3,33 @@
 #include <fstream>
 #include <sstream>
 
-configManager ConfigManager("config/config.cfg", "maintenance.cfg");
+configManager ConfigManager("config.cfg", "maintenance.txt");
 
 // Constructor
 configManager::configManager(const std::string &configFileName, const std::string &maintenanceFileName)
     : configFileName(configFileName), maintenanceFileName(maintenanceFileName), maxOptionSize(4), logToFile(true),
       POLLINGRATE(1), PRINTLOGO(true), CTRLR2ENABLE(false), VISIONENABLE(false),
-      CTRLR1POLLINGRATE(25), LOCALLOGO(false), odometer(0), lastService(0), serviceInterval(1000)
+      CTRLR1POLLINGRATE(25), odometer(0), lastService(0), serviceInterval(1000)
 {
     readMaintenanceData();
+
+    // Initialize triPorts with pointers to Brain.ThreeWirePort
+    triPorts["A"] = &Brain.ThreeWirePort.A;
+    triPorts["B"] = &Brain.ThreeWirePort.B;
+    triPorts["C"] = &Brain.ThreeWirePort.C;
+    triPorts["D"] = &Brain.ThreeWirePort.D;
+    triPorts["E"] = &Brain.ThreeWirePort.E;
+    triPorts["F"] = &Brain.ThreeWirePort.F;
+    triPorts["G"] = &Brain.ThreeWirePort.G;
+    triPorts["H"] = &Brain.ThreeWirePort.H;
 }
+
+vex::triport::port *configManager::getTriPort(const std::string &portName) const
+{
+    auto it = triPorts.find(portName);
+    return (it != triPorts.end()) ? it->second : &Brain.ThreeWirePort.A; // Default to A if not found
+}
+
 // Setters with validation
 void configManager::setMaxOptionSize(size_t value)
 {
@@ -49,21 +66,16 @@ void configManager::setCtrlr1PollingRate(std::size_t value)
     logToFile = value;
 }
 
-void configManager::setLocalLogo(bool value)
-{
-    LOCALLOGO = value;
-}
-
 int configManager::getMotorPort(const std::string &motorName) const
-{
+{ 
     auto it = motorPorts.find(motorName);
     return (it != motorPorts.end()) ? it->second : -1; // Default invalid port
 }
 
 std::string configManager::getGearRatio(const std::string &motorName) const
 {
-    auto it = gearRatios.find(motorName);
-    return (it != gearRatios.end()) ? it->second : "6_1"; // Default ratio
+    auto it = motorGearRatios.find(motorName);
+    return (it != motorGearRatios.end()) ? it->second : "18_1"; // Default ratio
 }
 
 bool configManager::getMotorReversed(const std::string &motorName) const
@@ -88,7 +100,7 @@ vex::gearSetting configManager::getGearSetting(const std::string &ratio) const
     }
     else
     {
-        return vex::gearSetting::ratio6_1; // Default
+        return vex::gearSetting::ratio18_1; // Default
     }
 }
 
@@ -137,13 +149,6 @@ void configManager::writeMaintenanceData()
 void configManager::updateOdometer(int averagePosition)
 {
     odometer += averagePosition;
-    if (odometer - lastService >= serviceInterval)
-    {
-        std::ostringstream message;
-        message << "Service needed! Distance: " << odometer;
-        logHandler("Service", message.str(), Log::Level::Warn);
-        lastService = odometer;
-    }
     writeMaintenanceData();
 }
 
@@ -153,6 +158,6 @@ void configManager::checkServiceInterval()
     {
         std::ostringstream message;
         message << "Service needed! Distance: " << odometer;
-        logHandler("Service", message.str(), Log::Level::Warn);
+        logHandler("Service", message.str(), Log::Level::Warn, 5);
     }
 }

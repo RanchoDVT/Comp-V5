@@ -2,7 +2,7 @@
 
 void autonomous()
 {
-    logHandler("WIP", "WIP2", Log::Level::Warn);
+    logHandler("autonomous", "Test message.", Log::Level::Warn, 2);
     return;
 }
 

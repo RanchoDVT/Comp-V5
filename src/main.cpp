@@ -9,13 +9,14 @@
 
 #include "vex.h"
 
-std::string Version = "3.0b2";
-std::string BuildDate = "7/13/24";
+std::string Version = "3.0b2 [DEV]";
+std::string BuildDate = "7/15/24";
 
 int main()
 {
     printf("\033[2J\033[1;1H\033[0m"); // Clears console and Sets color to grey.
-    Competition.autonomous(autonomous);
+    ConfigManager.parseConfig();
     vexCodeInit();
+    Competition.autonomous(autonomous);
     Competition.drivercontrol(userControl);
 }

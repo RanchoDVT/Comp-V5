@@ -1,13 +1,5 @@
 #include "vex.h"
 
-/**
- * @author DVT7125
- * @date 4/10/24
- * @brief Clears the screen of the controller and optionally the brain's screen.
- * @param brainClear Wither to clear the brain (`true`) or not (`false`).
- * @param primaryControllerClear Wither to clear primaryController (`true`) or not (`false`).
- * @param partnerControllerClear Wither to clear partnerController (`true`) or not (`false`).
- */
 void clearScreen(const bool &brainClear, const bool &primaryControllerClear, const bool &partnerControllerClear)
 {
     if (brainClear)
@@ -33,12 +25,12 @@ std::string getUserOption(const std::string &settingName, const std::vector<std:
 {
     if (Competition.isEnabled())
     {
-        logHandler("getUserOption", "Robot is IN competition mode!", Log::Level::Error);
+        logHandler("getUserOption", "Robot is IN competition mode!", Log::Level::Error, 2);
     }
 
     if (options.size() > ConfigManager.getMaxOptionSize() || options.size() < 2)
     {
-        logHandler("getUserOption", "`options` size error!", Log::Level::Error);
+        logHandler("getUserOption", "`options` size error!", Log::Level::Error, 2);
         return "DEFAULT";
     }
 

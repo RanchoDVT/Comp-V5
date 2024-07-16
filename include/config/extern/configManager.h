@@ -4,7 +4,7 @@ class configManager
 {
 public:
     configManager(const std::string &configFileName, const std::string &maintenanceFileName);
-    void resetOrInitializeConfig(bool resetReadme, const std::string &message);
+    void resetOrInitializeConfig(const std::string &message);
     bool stringToBool(const std::string &str);
     long stringToLong(const std::string &str);
     void setValuesFromConfig();
@@ -17,7 +17,6 @@ public:
     bool getCtrlr2Enabled() const { return CTRLR2ENABLE; }
     bool getVisionEnabled() const { return VISIONENABLE; }
     std::size_t getCtrlr1PollingRate() const { return CTRLR1POLLINGRATE; }
-    bool getLocalLogo() const { return LOCALLOGO; }
 
     void setMaxOptionSize(size_t value);
     void setLogToFile(bool value);
@@ -26,12 +25,12 @@ public:
     void setCtrlr2Enabled(bool value);
     void setVisionEnabled(bool value);
     void setCtrlr1PollingRate(std::size_t value);
-    void setLocalLogo(bool value);
 
     std::string getGearRatio(const std::string &motorName) const;
     bool getMotorReversed(const std::string &motorName) const;
     vex::gearSetting getGearSetting(const std::string &ratio) const;
     int getMotorPort(const std::string &motorName) const;
+    vex::triport::port *getTriPort(const std::string &portName) const;
 
     int getOdometer() const { return odometer; }
     int getLastService() const { return lastService; }
@@ -41,8 +40,10 @@ public:
 
 private:
     std::map<std::string, int> motorPorts;
-    std::map<std::string, std::string> gearRatios;
+    std::map<std::string, std::string> motorGearRatios;
     std::map<std::string, bool> motorReversed;
+    std::map<std::string, vex::triport::port *> triPorts;
+
     std::string configFileName;
     std::string maintenanceFileName;
     std::size_t maxOptionSize;

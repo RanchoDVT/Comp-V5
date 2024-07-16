@@ -1,71 +1,5 @@
 #include "vex.h"
 
-/**
- * @brief Convert a Log::Level enum value to its string representation.
- * @param str Log::Level enum value.
- * @return const char* String representation of the Log::Level enum.
- */
-const char *LogToString(const Log::Level &str)
-{
-	switch (str)
-	{
-	case Log::Level::Trace:
-		return "Trace";
-	case Log::Level::Debug:
-		return "Debug";
-	case Log::Level::Info:
-		return "Info";
-	case Log::Level::Warn:
-		return "Warn";
-	case Log::Level::Error:
-		return "Error";
-	case Log::Level::Fatal:
-		return "Fatal";
-	default:
-		return "Error";
-	}
-}
-
-const char *LogToColor(const Log::Level &str)
-{
-	switch (str)
-	{
-	case Log::Level::Trace:
-	{
-		return "\033[92m[Trace]";
-	}
-
-	case Log::Level::Debug:
-	{
-		return "\033[93m[Debug]";
-	}
-
-	case Log::Level::Info:
-	{
-		return "\033[94m[Info]";
-	}
-
-	case Log::Level::Warn:
-	{
-		return " \033[38;5;216m[Warn]";
-	}
-
-	case Log::Level::Error:
-	{
-		return "\033[31m[Error]";
-	}
-
-	case Log::Level::Fatal:
-	{
-		return "\033[31m[Error]";
-	}
-	default:
-	{
-		return "\033[31m[Error]";
-	}
-	}
-}
-
 void calibrateGyro()
 {
 	InertialGyro.calibrate();
@@ -81,7 +15,7 @@ std::pair<std::string, int> ctrl1BttnPressed()
 {
 	if (Competition.isEnabled())
 	{
-		logHandler("ctrl1BttnPressed", "Robot is IN competition mode!", Log::Level::Error);
+		logHandler("ctrl1BttnPressed", "Robot is IN competition mode!", Log::Level::Error, 3);
 	}
 
 	std::string buttonPressed;
@@ -230,9 +164,6 @@ std::pair<std::string, int> ctrl1BttnPressed()
 	return std::make_pair(buttonPressed, pressDuration);
 }
 
-/**
- * @brief Monitor motor temperatures and battery voltage for potential overheating and low voltage conditions.
- */
 void motorTempMonitor()
 {
 	logHandler("motorTempMonitor", "motorTempMonitor is starting up...", Log::Level::Trace);
@@ -257,30 +188,30 @@ void motorTempMonitor()
 		if (frontLeftTemp >= 55)
 		{
 			motorTemps << "FLM overheat: " << frontLeftTemp << "°";
-			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn);
+			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn, 3);
 			motorTemps.str(std::string());
 		}
 		if (frontRightTemp >= 55)
 		{
 			motorTemps << "FRM overheat: " << frontRightTemp << "°";
-			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn);
+			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn, 3);
 			motorTemps.str(std::string());
 		}
 		if (rearLeftTemp >= 55)
 		{
 			motorTemps << "RLM overheat: " << rearLeftTemp << "°";
-			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn);
+			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn, 3);
 			motorTemps.str(std::string());
 		}
 		if (rearRightTemp >= 55)
 		{
 			motorTemps << "RRM overheat: " << rearRightTemp << "°";
-			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn);
+			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn, 3);
 			motorTemps.str(std::string());
 		}
 		if (Brain.Battery.voltage() < 12)
 		{
-			logHandler("motorTempMonitor", "Brain voltage at a critical level! Performance will be reduced!", Log::Level::Warn);
+			logHandler("motorTempMonitor", "Brain voltage at a critical level!", Log::Level::Warn, 3);
 		}
 		// Get the average of the two motors
 		int averagePosition = (leftMotorPosition + rightMotorPosition) / 2;
@@ -306,7 +237,11 @@ void motorTempMonitor()
 
 void gifplayer()
 {
-	if (!Competition.isEnabled())
+	if (!ConfigManager.getPrintLogo())
+	{
+		return;
+	}
+	else if (!Competition.isEnabled())
 	{
 		vex::Gif gif("assets/loading.gif", 0, 0);
 		while (!Competition.isEnabled())

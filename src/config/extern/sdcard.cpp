@@ -3,7 +3,7 @@
 #include <fstream>
 
 // Method to reset or initialize the config file
-void configManager::resetOrInitializeConfig(bool resetReadme, const std::string &message)
+void configManager::resetOrInitializeConfig(const std::string &message)
 {
     maxOptionSize = 4;
     std::string resetcfg = getUserOption(message, {"Yes", "No"});
@@ -11,62 +11,41 @@ void configManager::resetOrInitializeConfig(bool resetReadme, const std::string 
     {
         primaryController.Screen.print("Reseting config file...");
 
-        if (resetReadme)
+        std::ofstream configFile(configFileName);
+        if (!configFile)
         {
-            std::ofstream readmefile("readme.md");
-            if (!readmefile)
-            {
-                logHandler("resetOrInitializeConfig", "Could not create readme.", Log::Level::Warn);
-                return;
-            }
-            readmefile.close();
+            logHandler("resetOrInitializeConfig", "Could not create config.", Log::Level::Warn, 3);
+            return;
         }
-        else
-        {
-            std::ofstream configFile(configFileName);
-            if (!configFile)
-            {
-                logHandler("resetOrInitializeConfig", "Could not create config.", Log::Level::Warn);
-                return;
-            }
-            // Write default configuration to the file
-            configFile << ";Config File:\n";
-            configFile << "POLLINGRATE=1\n";
-            configFile << "PRINTLOGO=true\n";
-            configFile << "CTRLR2ENABLE=false\n";
-            configFile << "LOGTOFILE=true\n";
-            configFile << "VISIONENABLE=false\n";
-            configFile << "MAXOPTIONSSIZE=4\n";
-            configFile << "CTRLR1POLLINGRATE=25\n";
-            configFile << "LOCALLOGO=false\n";
-            configFile << "VERSION=" << Version << "\n";
-            configFile.close();
-        }
-
-        logHandler("resetConfig", "Successfully reset config file.", Log::Level::Debug);
+        // Write default configuration to the file
+        configFile << ";Config File:\n";
+        configFile << "POLLINGRATE=1\n";
+        configFile << "PRINTLOGO=true\n";
+        configFile << "CTRLR2ENABLE=false\n";
+        configFile << "LOGTOFILE=true\n";
+        configFile << "VISIONENABLE=false\n";
+        configFile << "MAXOPTIONSSIZE=4\n";
+        configFile << "CTRLR1POLLINGRATE=25\n";
+        configFile << "LOCALLOGO=false\n";
+        configFile << "VERSION=" << Version << "\n";
+        configFile.close();
     }
-    else
-    {
-        logHandler("resetConfig", "Skipped reseting config file.", Log::Level::Debug);
-    }
+    logHandler("resetConfig", "Successfully reset config file.", Log::Level::Debug);
 }
 
 // Method to convert a string to boolean
 bool configManager::stringToBool(const std::string &str)
 {
-    if (str == "true" || str == "1" || str == "on" || str == "True" || str == "On")
+    try
     {
-        return true;
+        bool boolval = std::stoi(str);
+        return boolval;
     }
-    else if (str == "false" || str == "0" || str == "off" || str == "False" || str == "Off")
-    {
-        return false;
-    }
-    else
+    catch (const std::invalid_argument &e)
     {
         std::ostringstream message;
         message << "Expected bool value. Received: " << str;
-        resetOrInitializeConfig(false, message.str());
+        resetOrInitializeConfig(message.str());
         return false;
     }
 }
@@ -83,14 +62,14 @@ long configManager::stringToLong(const std::string &str)
     {
         std::ostringstream message;
         message << "Long val has invalid chars! Received: " << str;
-        configManager::resetOrInitializeConfig(false, message.str());
+        configManager::resetOrInitializeConfig(message.str());
         return 1;
     }
     catch (const std::out_of_range &e)
     {
         std::ostringstream message;
         message << "Val is too large to fit in long! Received: " << str;
-        configManager::resetOrInitializeConfig(false, message.str());
+        configManager::resetOrInitializeConfig(message.str());
         return 1;
     }
 }
@@ -101,93 +80,173 @@ void configManager::setValuesFromConfig()
     std::ifstream configFile(configFileName);
     if (!configFile)
     {
-        logHandler("setValForConfig", "Could not open config file. Reason Unknown.", Log::Level::Warn);
+        logHandler("setValForConfig", "Could not open config file. Reason Unknown.", Log::Level::Warn, 4);
         return;
     }
 
-    std::string line;
-    while (std::getline(configFile, line))
+    std::string configLine;
+    while (std::getline(configFile, configLine))
     {
-        // Parse each line from config file
-        if (line.empty() || line[0] == ';' || line[0] == '#')
+        if (configLine.empty() or configLine[0] == ';' or configLine[0] == '#')
         {
             continue; // Skip empty lines and comments
         }
 
-        std::istringstream iss(line);
-        std::string key, value;
-        if (std::getline(iss, key, '=') && std::getline(iss, value))
+        if (configLine == "MOTOR_CONFIG")
         {
-            if (key == "PORT")
+            std::getline(configFile, configLine); // Skip the opening brace
+            while (std::getline(configFile, configLine) and configLine != "}")
             {
-                motorPorts[key] = stringToLong(value);
-            }
-            else if (key == "GEAR_RATIO")
-            {
-                gearRatios[key] = value;
-            }
-            else if (key == "REVERSED")
-            {
-                motorReversed[key] = stringToBool(value);
-            }
-            else if (key == "PRINTLOGO")
-            {
-                setPrintLogo(value.c_str());
-            }
-            else if (key == "LOCALLOGO")
-            {
-                setLocalLogo(value.c_str());
-                logHandler("configManager::setValuesFromConfig", "Warning! LocalLogo will be deprecated soon! Use "
-                                                                 "PRINTLOGO"
-                                                                 ".",
-                           Log::Level::Warn);
-            }
-            else if (key == "VISIONENABLE")
-            {
-                setVisionEnabled(value.c_str());
-            }
-            else if (key == "CTRLR2ENABLE")
-            {
-                setCtrlr2Enabled(value.c_str());
-            }
-            else if (key == "LOGTOFILE")
-            {
-                setLogToFile(value.c_str());
-            }
-            else if (key == "MAXOPTIONSSIZE")
-            {
-                setMaxOptionSize(uintmax_t(value.c_str()));
-            }
-            else if (key == "POLLINGRATE")
-            {
-                setPollingRate(uintmax_t(value.c_str()));
-            }
-            else if (key == "CTRLR1POLLINGRATE")
-            {
-                setCtrlr1PollingRate(uintmax_t(value.c_str()));
-            }
-            else if (key == "VERSION")
-            {
-                if (value != Version)
+                if (configLine.empty() or configLine[0] == ';' or configLine[0] == '#')
                 {
-                    std::ostringstream message;
-                    message << "Version mismatch with Config file (" << value << ") and code version (" << Version << "). Do you want to reset the config file?";
-                    resetOrInitializeConfig(false, message.str());
+                    continue; // Skip empty lines and comments
+                }
+
+                std::string motorName = configLine;
+                std::getline(configFile, configLine); // Skip the opening brace
+
+                std::string motorPort, motorGearRatio, motorReversedStr;
+                while (std::getline(configFile, configLine) and configLine != "}")
+                {
+                    std::istringstream iss(configLine);
+                    std::string configKey, configValue;
+                    if (std::getline(iss, configKey, '=') and std::getline(iss, configValue))
+                    {
+                        if (configKey == "PORT")
+                        {
+                            motorPort = configValue;
+                        }
+                        else if (configKey == "GEAR_RATIO")
+                        {
+                            motorGearRatio = configValue;
+                        }
+                        else if (configKey == "REVERSED")
+                        {
+                            motorReversedStr = configValue;
+                        }
+                    }
+                }
+
+                motorPorts[motorName] = std::stoi(motorPort);
+                motorGearRatios[motorName] = motorGearRatio;
+                motorReversed[motorName] = stringToBool(motorReversedStr);
+            }
+        }
+        else if (configLine == "TRIPORT_CONFIG")
+        {
+            std::getline(configFile, configLine); // Skip the opening brace
+            while (std::getline(configFile, configLine) and configLine != "}")
+            {
+                if (configLine.empty() or configLine[0] == ';' or configLine[0] == '#')
+                {
+                    continue; // Skip empty lines and comments
+                }
+
+                std::string triportName = configLine;
+                std::getline(configFile, configLine); // Skip the opening brace
+
+                std::string triportPort;
+                while (std::getline(configFile, configLine) and configLine != "}")
+                {
+                    std::istringstream iss(configLine);
+                    std::string configKey, configValue;
+                    if (std::getline(iss, configKey, '=') and std::getline(iss, configValue))
+                    {
+                        if (configKey == "PORT")
+                        {
+                            triportPort = configValue;
+                        }
+                    }
+                }
+
+                if (triportPort == "A")
+                {
+                    triPorts[triportName] = &Brain.ThreeWirePort.A;
+                }
+                else if (triportPort == "B")
+                {
+                    triPorts[triportName] = &Brain.ThreeWirePort.B;
+                }
+                else if (triportPort == "C")
+                {
+                    triPorts[triportName] = &Brain.ThreeWirePort.C;
+                }
+                else if (triportPort == "D")
+                {
+                    triPorts[triportName] = &Brain.ThreeWirePort.D;
+                }
+                else if (triportPort == "E")
+                {
+                    triPorts[triportName] = &Brain.ThreeWirePort.E;
+                }
+                else if (triportPort == "F")
+                {
+                    triPorts[triportName] = &Brain.ThreeWirePort.F;
+                }
+                else if (triportPort == "G")
+                {
+                    triPorts[triportName] = &Brain.ThreeWirePort.G;
+                }
+                else if (triportPort == "H")
+                {
+                    triPorts[triportName] = &Brain.ThreeWirePort.H;
                 }
             }
-            else
+            std::istringstream iss(configLine);
+            std::string key, value;
+            if (std::getline(iss, key, '=') and std::getline(iss, value))
             {
-                std::ostringstream message;
-                message << "Unknown key in config file: " << key << ". Do you want to reset the config?";
-                logHandler("setValForConfig", message.str(), Log::Level::Warn);
-                resetOrInitializeConfig(false, message.str());
+                if (configLine == "PRINTLOGO")
+                {
+                    setPrintLogo(stringToBool(value));
+                }
+                else if (configLine == "VISIONENABLE")
+                {
+                    setVisionEnabled(stringToBool(value));
+                }
+                else if (configLine == "CTRLR2ENABLE")
+                {
+                    setCtrlr2Enabled(stringToBool(value));
+                }
+                else if (configLine == "LOGTOFILE")
+                {
+                    setLogToFile(stringToBool(value));
+                }
+                else if (configLine == "MAXOPTIONSSIZE")
+                {
+                    setMaxOptionSize(stringToLong(value));
+                }
+                else if (configLine == "POLLINGRATE")
+                {
+                    setPollingRate(stringToLong(value));
+                }
+                else if (configLine == "CTRLR1POLLINGRATE")
+                {
+                    setCtrlr1PollingRate(stringToLong(value));
+                }
+
+                else if (configLine == "VERSION")
+                {
+                    if (value != Version)
+                    {
+                        std::ostringstream message;
+                        message << "Version mismatch with Config file (" << value << ") and code version (" << Version << "). Do you want to reset the config file?";
+                        resetOrInitializeConfig(message.str());
+                    }
+                }
+                else
+                {
+                    std::ostringstream message;
+                    message << "Unknown key in config file: " << key << ". Do you want to reset the config?";
+                    resetOrInitializeConfig(message.str());
+                }
             }
         }
         else
         {
             std::ostringstream message;
-            message << "Invalid line in config file: " << line << ". Do you want to reset the config?";
-            resetOrInitializeConfig(false, message.str());
+            message << "Invalid line in config file: " << configLine << ". Do you want to reset the config?";
+            resetOrInitializeConfig(message.str());
         }
     }
     configFile.close();
@@ -203,13 +262,13 @@ void configManager::parseConfig()
     primaryController.Screen.print("Starting up...");
     if (Brain.SDcard.isInserted())
     {
-        if (Brain.SDcard.exists("config/config.cfg"))
+        if (Brain.SDcard.exists(configFileName.c_str()))
         {
             setValuesFromConfig();
         }
         else
         {
-            resetOrInitializeConfig(false, "Missing config file. Create it?");
+            resetOrInitializeConfig("Missing config file. Create it?");
             setValuesFromConfig();
         }
     }

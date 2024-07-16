@@ -45,14 +45,14 @@ gd_open_gif(const char *fname)
     read(fd, sigver, 3);
     if (memcmp(sigver, "GIF", 3) != 0)
     {
-        fprintf(stderr, "invalid signature\n");
+        logHandler("gd_open_gif (Extern)", "Invalid gif signature.", Log::Level::Error, 3);
         goto fail;
     }
     /* Version */
     read(fd, sigver, 3);
     if (memcmp(sigver, "89a", 3) != 0)
     {
-        fprintf(stderr, "invalid version\n");
+        logHandler("gd_open_gif (Extern)", "Invalid gif version.", Log::Level::Error, 3);
         goto fail;
     }
     /* Width x Height */
@@ -63,7 +63,7 @@ gd_open_gif(const char *fname)
     /* Presence of GCT */
     if (!(fdsz & 0x80))
     {
-        fprintf(stderr, "no global color table\n");
+        logHandler("gd_open_gif (Extern)", "No color table for gif file detected.", Log::Level::Error, 5);
         goto fail;
     }
     /* Color Space's Depth */
@@ -236,7 +236,7 @@ read_ext(gd_GIF *gif)
         read_application_ext(gif);
         break;
     default:
-        fprintf(stderr, "unknown extension: %02X\n", label);
+        logHandler("gd_open_gif (Extern)", "Unknown Gif extention: %02X" + std::to_string(label), Log::Level::Error, 3);
     }
 }
 
@@ -598,7 +598,7 @@ int vex::Gif::render_task(void *arg)
         }
         if (err == -1)
         {
-            printf("Gif: error\n");
+            logHandler("vex::Gif::render_task (Extern)", "Unknown gif Error.", Log::Level::Error, 3);
             break;
         }
         // done ?
