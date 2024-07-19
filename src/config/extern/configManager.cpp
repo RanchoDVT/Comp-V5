@@ -8,8 +8,7 @@ configManager ConfigManager("config.cfg", "maintenance.txt");
 // Constructor
 configManager::configManager(const std::string &configFileName, const std::string &maintenanceFileName)
     : configFileName(configFileName), maintenanceFileName(maintenanceFileName), maxOptionSize(4), logToFile(true),
-      POLLINGRATE(1), PRINTLOGO(true), CTRLR2ENABLE(false), VISIONENABLE(false),
-      CTRLR1POLLINGRATE(25), odometer(0), lastService(0), serviceInterval(1000)
+      POLLINGRATE(5), PRINTLOGO(true), CTRLR1POLLINGRATE(25), odometer(0), lastService(0), serviceInterval(1000)
 {
     readMaintenanceData();
 
@@ -49,16 +48,6 @@ void configManager::setPollingRate(size_t value)
 void configManager::setPrintLogo(bool value)
 {
     PRINTLOGO = value;
-}
-
-void configManager::setCtrlr2Enabled(bool value)
-{
-    CTRLR2ENABLE = value;
-}
-
-void configManager::setVisionEnabled(bool value)
-{
-    VISIONENABLE = value;
 }
 
 void configManager::setCtrlr1PollingRate(std::size_t value)
@@ -118,15 +107,15 @@ void configManager::readMaintenanceData()
             {
                 if (key == "ODOMETER")
                 {
-                    odometer = std::stoi(value);
+                    odometer = stringToLong(value);
                 }
                 else if (key == "LAST_SERVICE")
                 {
-                    lastService = std::stoi(value);
+                    lastService = stringToLong(value);
                 }
                 else if (key == "SERVICE_INTERVAL")
                 {
-                    serviceInterval = std::stoi(value);
+                    serviceInterval = stringToLong(value);
                 }
             }
         }

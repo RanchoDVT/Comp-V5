@@ -17,7 +17,7 @@ bool rearLeftReversed = ConfigManager.getMotorReversed("REAR_LEFT_MOTOR");
 bool frontRightReversed = ConfigManager.getMotorReversed("FRONT_RIGHT_MOTOR");
 bool rearRightReversed = ConfigManager.getMotorReversed("REAR_RIGHT_MOTOR");
 
-auto bumperTriPort = ConfigManager.getTriPort("REAR_BUMPER");
+vex::triport::port *bumperTriPort = ConfigManager.getTriPort("REAR_BUMPER"); // Thanks vex for making this with pointers! (sarcasm)
 
 vex::motor frontLeftMotor = vex::motor(frontLeftPort, frontLeftGearRatio, frontLeftReversed);
 vex::motor rearLeftMotor = vex::motor(rearLeftPort, rearLeftGearRatio, rearLeftReversed);
@@ -55,7 +55,7 @@ void vexCodeInit(void)
     {
         logHandler("startup", "Robot is IN Competition mode!", Log::Level::Fatal);
     }
-    
+
     ConfigManager.checkServiceInterval();
 
     vex::competition::bStopAllTasksBetweenModes = false;

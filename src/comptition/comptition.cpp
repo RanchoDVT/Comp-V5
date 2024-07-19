@@ -19,7 +19,7 @@ void userControl()
 		logHandler("drivetrain_main", "Ctrl1 is NOT in command mode!", Log::Level::Fatal);
 	}
 
-	vex::thread motortemp(motorTempMonitor);
+	vex::thread motortemp(motorMonitor);
 
 	// Variables
 	double turnVolts;

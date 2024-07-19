@@ -14,8 +14,6 @@ public:
     bool getLogToFile() const { return logToFile; }
     std::size_t getPollingRate() const { return POLLINGRATE; }
     bool getPrintLogo() const { return PRINTLOGO; }
-    bool getCtrlr2Enabled() const { return CTRLR2ENABLE; }
-    bool getVisionEnabled() const { return VISIONENABLE; }
     std::size_t getCtrlr1PollingRate() const { return CTRLR1POLLINGRATE; }
 
     void setMaxOptionSize(size_t value);
@@ -50,10 +48,7 @@ private:
     bool logToFile;
     std::size_t POLLINGRATE;
     bool PRINTLOGO;
-    bool CTRLR2ENABLE;
-    bool VISIONENABLE;
     std::size_t CTRLR1POLLINGRATE;
-    bool LOCALLOGO;
 
     int odometer;
     int lastService;

@@ -33,10 +33,8 @@ extern std::string BuildDate;
 /// @param message The message! (If you can't understand this, you don't deserve a computer)
 /// @param level The log level (from the class Log::Level)
 /// @param timeOfDisplay How long the message stays on the screen for.
-void logHandler(const std::string &functionName, const std::string &message, const Log::Level level, const float &timeOfDisplay);
+void logHandler(const std::string &functionName, const std::string &message, const Log::Level level, const float &timeOfDisplay = 2);
 
-// Overload logHandler for Trace, Debug, Info without timeOfDisplay
-void logHandler(const std::string &functionName, const std::string &message, const Log::Level level);
 
 /// @brief GUI for settting options
 /// @param settingName The name for what you want to change (duh)
@@ -60,7 +58,7 @@ void autonomous();
 void userControl();
 
 /// @brief
-void motorTempMonitor();
+void motorMonitor();
 
 /// @brief Gets input from the controller, NO GUI.
 /// @return Time of button held (int), and what button got pressed (string)

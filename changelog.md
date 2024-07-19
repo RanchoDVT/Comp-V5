@@ -13,7 +13,7 @@ Build size: 375KB
 
 ### Deprecated ✖️
 
-- `LOCALLOGO` will be removed in beta4. Please use `PRINTLOGO`.
+- `LOCALLOGO`, `CTRLR2ENABLE` and `VISIONENABLE` will be removed. Local images are no longer supported, a second controller is auto detected; and A vision sensor is auto detected.
 
 ### try/catch 🪝
 
@@ -72,7 +72,7 @@ Build size: 325KB
 - New class: `Log::Level`
 - New armVol for controlling the arm voltage setting.
 - New scrolling support for `get_User_Option`.
-- New function `motorTempMonitor` that shows motor temps and battery voltage on the controller screen.
+- New function `motorMonitor` that shows motor temps and battery voltage on the controller screen.
 
 ### Fixed / Updated: 🛠️
 

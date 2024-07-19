@@ -15,7 +15,7 @@ Here we go! This is a rewritten version of Comp_V2 (with some exceptions).
 We are at b2, I don't Vex V5 Hardware to test with, as school is over.  
 When high school starts for me, I *will* be in a robotics class, and then I can start testing.
 
-3.0b4:
+3.0b3:
 
 1: Automatic Emergency Braking 🔃 (Must have vision sensor or AI vision)  
 2: Read advanced motor config and triport config. ✅  

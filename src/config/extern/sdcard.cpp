@@ -9,7 +9,7 @@ void configManager::resetOrInitializeConfig(const std::string &message)
     std::string resetcfg = getUserOption(message, {"Yes", "No"});
     if (resetcfg == "Yes")
     {
-        primaryController.Screen.print("Reseting config file...");
+        primaryController.Screen.print("Resetting config file...");
 
         std::ofstream configFile(configFileName);
         if (!configFile)
@@ -21,12 +21,9 @@ void configManager::resetOrInitializeConfig(const std::string &message)
         configFile << ";Config File:\n";
         configFile << "POLLINGRATE=1\n";
         configFile << "PRINTLOGO=true\n";
-        configFile << "CTRLR2ENABLE=false\n";
         configFile << "LOGTOFILE=true\n";
-        configFile << "VISIONENABLE=false\n";
         configFile << "MAXOPTIONSSIZE=4\n";
         configFile << "CTRLR1POLLINGRATE=25\n";
-        configFile << "LOCALLOGO=false\n";
         configFile << "VERSION=" << Version << "\n";
         configFile.close();
     }
@@ -62,14 +59,14 @@ long configManager::stringToLong(const std::string &str)
     {
         std::ostringstream message;
         message << "Long val has invalid chars! Received: " << str;
-        configManager::resetOrInitializeConfig(message.str());
+        resetOrInitializeConfig(message.str());
         return 1;
     }
     catch (const std::out_of_range &e)
     {
         std::ostringstream message;
         message << "Val is too large to fit in long! Received: " << str;
-        configManager::resetOrInitializeConfig(message.str());
+        resetOrInitializeConfig(message.str());
         return 1;
     }
 }
@@ -132,6 +129,34 @@ void configManager::setValuesFromConfig()
                 motorReversed[motorName] = stringToBool(motorReversedStr);
             }
         }
+        else if (configLine == "INERTIAL")
+        {
+            std::getline(configFile, configLine); // Skip the opening brace
+            while (std::getline(configFile, configLine) and configLine != "}")
+            {
+                if (configLine.empty() or configLine[0] == ';' or configLine[0] == '#')
+                {
+                    continue; // Skip empty lines and comments
+                }
+
+                std::string triportName = configLine;
+                std::getline(configFile, configLine); // Skip the opening brace
+
+                std::string triportPort;
+                while (std::getline(configFile, configLine) and configLine != "}")
+                {
+                    std::istringstream iss(configLine);
+                    std::string configKey, configValue;
+                    if (std::getline(iss, configKey, '=') and std::getline(iss, configValue))
+                    {
+                        if (configKey == "PORT")
+                        {
+                            triportPort = configValue;
+                        }
+                    }
+                }
+            }
+        }
         else if (configLine == "TRIPORT_CONFIG")
         {
             std::getline(configFile, configLine); // Skip the opening brace
@@ -192,40 +217,34 @@ void configManager::setValuesFromConfig()
                     triPorts[triportName] = &Brain.ThreeWirePort.H;
                 }
             }
+        }
+        else
+        {
             std::istringstream iss(configLine);
             std::string key, value;
             if (std::getline(iss, key, '=') and std::getline(iss, value))
             {
-                if (configLine == "PRINTLOGO")
+                if (key == "PRINTLOGO")
                 {
                     setPrintLogo(stringToBool(value));
                 }
-                else if (configLine == "VISIONENABLE")
-                {
-                    setVisionEnabled(stringToBool(value));
-                }
-                else if (configLine == "CTRLR2ENABLE")
-                {
-                    setCtrlr2Enabled(stringToBool(value));
-                }
-                else if (configLine == "LOGTOFILE")
+                else if (key == "LOGTOFILE")
                 {
                     setLogToFile(stringToBool(value));
                 }
-                else if (configLine == "MAXOPTIONSSIZE")
+                else if (key == "MAXOPTIONSSIZE")
                 {
                     setMaxOptionSize(stringToLong(value));
                 }
-                else if (configLine == "POLLINGRATE")
+                else if (key == "POLLINGRATE")
                 {
                     setPollingRate(stringToLong(value));
                 }
-                else if (configLine == "CTRLR1POLLINGRATE")
+                else if (key == "CTRLR1POLLINGRATE")
                 {
                     setCtrlr1PollingRate(stringToLong(value));
                 }
-
-                else if (configLine == "VERSION")
+                else if (key == "VERSION")
                 {
                     if (value != Version)
                     {
@@ -241,12 +260,12 @@ void configManager::setValuesFromConfig()
                     resetOrInitializeConfig(message.str());
                 }
             }
-        }
-        else
-        {
-            std::ostringstream message;
-            message << "Invalid line in config file: " << configLine << ". Do you want to reset the config?";
-            resetOrInitializeConfig(message.str());
+            else
+            {
+                std::ostringstream message;
+                message << "Invalid line in config file: " << configLine << ". Do you want to reset the config?";
+                resetOrInitializeConfig(message.str());
+            }
         }
     }
     configFile.close();
@@ -256,10 +275,10 @@ void configManager::setValuesFromConfig()
 void configManager::parseConfig()
 {
     std::ostringstream message;
-    message << "Version: " << Version
-            << " | Build date: " << BuildDate;
+    message << "Version: " << Version << " | Build date: " << BuildDate;
     logHandler("main", message.str(), Log::Level::Info);
     primaryController.Screen.print("Starting up...");
+
     if (Brain.SDcard.isInserted())
     {
         if (Brain.SDcard.exists(configFileName.c_str()))
@@ -277,8 +296,6 @@ void configManager::parseConfig()
         // Default values
         POLLINGRATE = 1;
         PRINTLOGO = false;
-        CTRLR2ENABLE = false;
-        VISIONENABLE = false;
         maxOptionSize = 4;
         CTRLR1POLLINGRATE = 25;
         logHandler("configParser", "No SD card installed. Using default values.", Log::Level::Info);

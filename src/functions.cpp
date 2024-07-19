@@ -164,9 +164,9 @@ std::pair<std::string, int> ctrl1BttnPressed()
 	return std::make_pair(buttonPressed, pressDuration);
 }
 
-void motorTempMonitor()
+void motorMonitor()
 {
-	logHandler("motorTempMonitor", "motorTempMonitor is starting up...", Log::Level::Trace);
+	logHandler("motorMonitor", "motorMonitor is starting up...", Log::Level::Trace);
 	std::ostringstream motorTemps;
 	std::ostringstream dataBuffer;
 
@@ -188,30 +188,30 @@ void motorTempMonitor()
 		if (frontLeftTemp >= 55)
 		{
 			motorTemps << "FLM overheat: " << frontLeftTemp << "°";
-			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn, 3);
+			logHandler("motorMonitor", motorTemps.str(), Log::Level::Warn, 3);
 			motorTemps.str(std::string());
 		}
 		if (frontRightTemp >= 55)
 		{
 			motorTemps << "FRM overheat: " << frontRightTemp << "°";
-			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn, 3);
+			logHandler("motorMonitor", motorTemps.str(), Log::Level::Warn, 3);
 			motorTemps.str(std::string());
 		}
 		if (rearLeftTemp >= 55)
 		{
 			motorTemps << "RLM overheat: " << rearLeftTemp << "°";
-			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn, 3);
+			logHandler("motorMonitor", motorTemps.str(), Log::Level::Warn, 3);
 			motorTemps.str(std::string());
 		}
 		if (rearRightTemp >= 55)
 		{
 			motorTemps << "RRM overheat: " << rearRightTemp << "°";
-			logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Warn, 3);
+			logHandler("motorMonitor", motorTemps.str(), Log::Level::Warn, 3);
 			motorTemps.str(std::string());
 		}
 		if (Brain.Battery.voltage() < 12)
 		{
-			logHandler("motorTempMonitor", "Brain voltage at a critical level!", Log::Level::Warn, 3);
+			logHandler("motorMonitor", "Brain voltage at a critical level!", Log::Level::Warn, 3);
 		}
 		// Get the average of the two motors
 		int averagePosition = (leftMotorPosition + rightMotorPosition) / 2;
@@ -221,9 +221,9 @@ void motorTempMonitor()
 
 		// Log motor temperatures
 		motorTemps << "\n | LeftTemp: " << frontLeftTemp << "°\n | RightTemp: " << frontRightTemp << "°\n | RearLeftTemp: " << rearLeftTemp << "°\n | RearRightTemp: " << rearRightTemp << "°\n | Battery Voltage: " << Brain.Battery.voltage() << "V\n";
-		logHandler("motorTempMonitor", motorTemps.str(), Log::Level::Info);
+		logHandler("motorMonitor", motorTemps.str(), Log::Level::Info);
 		dataBuffer << "\nX Axis: " << InertialGyro.pitch(vex::rotationUnits::deg) << "\nY Axis: " << InertialGyro.roll(vex::rotationUnits::deg) << "\nZ Axis: " << InertialGyro.yaw(vex::rotationUnits::deg);
-		logHandler("motorTempMonitor", dataBuffer.str(), Log::Level::Info);
+		logHandler("motorMonitor", dataBuffer.str(), Log::Level::Info);
 		clearScreen(false, true, true);
 		primaryController.Screen.print("FLM: %d° | FRM: %d°", frontLeftTemp, frontRightTemp);
 		primaryController.Screen.newLine();

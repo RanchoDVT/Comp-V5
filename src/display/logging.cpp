@@ -76,7 +76,6 @@ void scrollText(const std::string &text, vex::controller &controller, const floa
     int displayLength = 20;
     int startIndex = 0;
     bool forward = true;
-
     for (float elapsed = 0; elapsed < timeOfDisplay; elapsed += 0.3)
     {
         controller.Screen.setCursor(1, 1);
@@ -101,8 +100,9 @@ void scrollText(const std::string &text, vex::controller &controller, const floa
             }
         }
 
-        wait(0.3, vex::timeUnits::sec);
+        vex::this_thread::sleep_for(30);
     }
+    return;
 }
 
 // Display messages on controller screens
@@ -110,35 +110,21 @@ void scrollText(const std::string &text, vex::controller &controller, const floa
 void displayControllerMessage(const std::string &functionName, const std::string &message, const float &timeOfDisplay)
 {
     clearScreen(false, true, true);
+    primaryController.Screen.setCursor(2, 1);
+    primaryController.Screen.print("Check logs.");
+    primaryController.Screen.newLine();
+    primaryController.Screen.print(("Module: " + functionName).c_str());
+    partnerController.Screen.print(message.c_str());
+    partnerController.Screen.newLine();
+    partnerController.Screen.print("Check logs.");
+    partnerController.Screen.newLine();
+    partnerController.Screen.print(("Module: " + functionName).c_str());
     if (message.length() > 20)
     {
         scrollText(message, primaryController, timeOfDisplay);
         scrollText(message, partnerController, timeOfDisplay);
-        primaryController.Screen.newLine();
-        primaryController.Screen.print("Check logs.");
-        primaryController.Screen.newLine();
-        primaryController.Screen.print(("Module: " + functionName).c_str());
-        partnerController.Screen.print(message.c_str());
-        partnerController.Screen.newLine();
-        partnerController.Screen.print("Check logs.");
-        partnerController.Screen.newLine();
-        partnerController.Screen.print(("Module: " + functionName).c_str());
-        wait(timeOfDisplay, vex::timeUnits::sec); // Prevent other tasks from running and let user read message.
     }
-    else
-    {
-        primaryController.Screen.print(message.c_str());
-        primaryController.Screen.newLine();
-        primaryController.Screen.print("Check logs.");
-        primaryController.Screen.newLine();
-        primaryController.Screen.print(("Module: " + functionName).c_str());
-        partnerController.Screen.print(message.c_str());
-        partnerController.Screen.newLine();
-        partnerController.Screen.print("Check logs.");
-        partnerController.Screen.newLine();
-        partnerController.Screen.print(("Module: " + functionName).c_str());
-        wait(timeOfDisplay, vex::timeUnits::sec); // Prevent other tasks from running and let user read message.
-    }
+    vex::this_thread::sleep_for(timeOfDisplay / 10);
     clearScreen(false, true, true);
 }
 
@@ -167,12 +153,5 @@ void logHandler(const std::string &functionName, const std::string &message, con
         displayControllerMessage(functionName, message, timeOfDisplay);
         vex::thread::interruptAll(); // Scary! 👾
         vexSystemExitRequest();      // Exit program
-        wait(10, vex::timeUnits::sec);
     }
-}
-
-// Overload logHandler for Trace, Debug, Info without timeOfDisplay
-void logHandler(const std::string &functionName, const std::string &message, const Log::Level level)
-{
-    logHandler(functionName, message, level, 2);
-}
+} 
