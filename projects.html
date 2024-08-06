@@ -8,8 +8,8 @@ meta description. This will often show up in search results.">
 	<title>Voidless - Projects</title>
 	<link rel="shortcut icon" href="images/Logo.png">
 	<link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script src="main.js"></script>
 
 </head>
 
@@ -30,8 +30,113 @@ meta description. This will often show up in search results.">
 	</nav>
 
 	<h3>Voidless - Comp V2 (Vex V5)</h3>
-	<div id="changelog-content"></div>
+	<h1>Config File Generator</h1>
+    <form id="config-form" action="javascript:void(0);">
+        <h2>Motor Configuration</h2>
+        <div class="form-group">
+            <label for="front-left-port">Front Left Motor Port:</label>
+            <input type="number" id="front-left-port" name="front_left_port" min="0" value="1" required>
+        </div>
+        <div class="form-group">
+            <label for="front-left-gear-ratio">Front Left Gear Ratio:</label>
+            <select id="front-left-gear-ratio" name="front_left_gear_ratio" required>
+                <option value="6_1">6_1</option>
+                <option value="18_1">18_1</option>
+                <option value="36_1">36_1</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="front-left-reversed">Front Left Reversed:</label>
+            <input type="checkbox" id="front-left-reversed" name="front_left_reversed">
+        </div>
+		<br>
+        <div class="form-group">
+            <label for="front-right-port">Front Right Motor Port:</label>
+            <input type="number" id="front-right-port" name="front_right_port" min="0" value="10" required>
+        </div>
+        <div class="form-group">
+            <label for="front-right-gear-ratio">Front Right Gear Ratio:</label>
+            <select id="front-right-gear-ratio" name="front_right_gear_ratio" required>
+                <option value="6_1">6_1</option>
+                <option value="18_1">18_1</option>
+                <option value="36_1">36_1</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="front-right-reversed">Front Right Reversed:</label>
+            <input type="checkbox" id="front-right-reversed" name="front_right_reversed" checked>
+        </div>
+		<br>
+        <div class="form-group">
+            <label for="rear-left-port">Rear Left Motor Port:</label>
+            <input type="number" id="rear-left-port" name="rear_left_port" min="0" value="11" required>
+        </div>
+        <div class="form-group">
+            <label for="rear-left-gear-ratio">Rear Left Gear Ratio:</label>
+            <select id="rear-left-gear-ratio" name="rear_left_gear_ratio" required>
+                <option value="6_1">6_1</option>
+                <option value="18_1">18_1</option>
+                <option value="36_1">36_1</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="rear-left-reversed">Rear Left Reversed:</label>
+            <input type="checkbox" id="rear-left-reversed" name="rear_left_reversed">
+        </div>
+		<br>
+        <div class="form-group">
+            <label for="rear-right-port">Rear Right Motor Port:</label>
+            <input type="number" id="rear-right-port" name="rear_right_port" min="0" value="20" required>
+        </div>
+        <div class="form-group">
+            <label for="rear-right-gear-ratio">Rear Right Gear Ratio:</label>
+            <select id="rear-right-gear-ratio" name="rear_right_gear_ratio" required>
+                <option value="6_1">6_1</option>
+                <option value="18_1">18_1</option>
+                <option value="36_1">36_1</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="rear-right-reversed">Rear Right Reversed:</label>
+            <input type="checkbox" id="rear-right-reversed" name="rear_right_reversed" checked>
+        </div>
+        <div class="form-group">
+            <label for="inertial-port">Inertial Sensor Port:</label>
+            <input type="number" id="inertial-port" name="inertial_port" min="0" value="3" required>
+        </div>
 
+        <h2>Other Settings</h2>
+        <div class="form-group">
+            <label for="print-logo">Print Logo:</label>
+            <input type="checkbox" id="print-logo" name="print_logo" checked>
+        </div>
+        <div class="form-group">
+            <label for="log-to-file">Log to File:</label>
+            <input type="checkbox" id="log-to-file" name="log_to_file" checked>
+        </div>
+        <div class="form-group">
+            <label for="max-options-size">Max Options Size:</label>
+            <input type="number" id="max-options-size" name="max_options_size" min="2" max="10" value="4" required>
+        </div>
+        <div class="form-group">
+            <label for="polling-rate">Polling Rate:</label>
+            <input type="number" id="polling-rate" name="polling_rate" min="1" max="100" value="5" required>
+        </div>
+        <div class="form-group">
+            <label for="ctrlr1-polling-rate">Controller 1 Polling Rate:</label>
+            <input type="number" id="ctrlr1-polling-rate" name="ctrlr1_polling_rate" min="1" max="100" value="25" required>
+        </div>
+        <div class="form-group">
+            <label for="version">Version:</label>
+            <input type="text" id="version" name="version" value="3.0b3" required>
+        </div>
+
+        <button type="submit">Generate Config</button>
+		<button id="copy-button" style="display: none;">Copy to Clipboard</button>	
+    </form>
+	<pre id="config-output" class="config-output"></pre>
+	<div id="changelog-content"></div>
+	<br>
 	<footer>Copyright © 2024 Voidless7125</footer>
 
 </body>

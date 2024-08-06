@@ -13,8 +13,44 @@ nav {
 	background-color: #38444d;
 }
 
+input {
+	background: black;
+	color: white;
+	border: white;
+	border-style: solid;
+	border-width: thin
+}
+
+select {
+	background: black;
+	color: white;
+
+}
+
+.config-output {
+    border-bottom: 1px solid white;
+	padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    white-space: pre-wrap; /* Ensures text wraps properly (Who thought this was a good idea???)*/
+    overflow-x: auto; /* Handles horizontal overflow (Same with this!!!)*/
+}
+
+
 nav li {
 	float: left;
+}
+
+button {
+	background: black;
+	color: white;
+	border: white;
+	border-style: solid;
+	border-width: thin;
+}
+
+.form-group {
+	margin-bottom: 15px;
 }
 
 footer {
@@ -75,7 +111,8 @@ li:last-child a {
 	text-decoration: none;
 	display: block;
 	text-align: left;
-	border: none; /* Remove borders */
+	border: none;
+	/* Remove borders */
 }
 
 .dropdown:hover .dropdown-content {
