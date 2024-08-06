@@ -30,29 +30,29 @@ vex::triport::port *configManager::getTriPort(const std::string &portName) const
 }
 
 // Setters with validation
-void configManager::setMaxOptionSize(size_t value)
+void configManager::setMaxOptionSize(const size_t &value)
 {
-    maxOptionSize = value;
+    maxOptionSize = stringToLong(std::to_string(value));
 }
 
-void configManager::setLogToFile(bool value)
+void configManager::setLogToFile(const bool &value)
 {
-    logToFile = value;
+    logToFile = (value);
 }
 
-void configManager::setPollingRate(size_t value)
+void configManager::setPollingRate(const size_t &value)
 {
-    POLLINGRATE = value;
+    POLLINGRATE = stringToLong(std::to_string(value));
 }
 
-void configManager::setPrintLogo(bool value)
+void configManager::setPrintLogo(const bool &value)
 {
     PRINTLOGO = value;
 }
 
-void configManager::setCtrlr1PollingRate(std::size_t value)
+void configManager::setCtrlr1PollingRate(const std::size_t &value)
 {
-    logToFile = value;
+    logToFile = stringToLong(std::to_string(value));;
 }
 
 int configManager::getMotorPort(const std::string &motorName) const
@@ -135,7 +135,7 @@ void configManager::writeMaintenanceData()
     }
 }
 
-void configManager::updateOdometer(int averagePosition)
+void configManager::updateOdometer(const int &averagePosition)
 {
     odometer += averagePosition;
     writeMaintenanceData();

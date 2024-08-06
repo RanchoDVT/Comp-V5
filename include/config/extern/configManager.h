@@ -16,13 +16,11 @@ public:
     bool getPrintLogo() const { return PRINTLOGO; }
     std::size_t getCtrlr1PollingRate() const { return CTRLR1POLLINGRATE; }
 
-    void setMaxOptionSize(size_t value);
-    void setLogToFile(bool value);
-    void setPollingRate(std::size_t value);
-    void setPrintLogo(bool value);
-    void setCtrlr2Enabled(bool value);
-    void setVisionEnabled(bool value);
-    void setCtrlr1PollingRate(std::size_t value);
+    void setMaxOptionSize(const size_t &value);
+    void setLogToFile(const bool &value);
+    void setPollingRate(const std::size_t &value);
+    void setPrintLogo(const bool &value);
+    void setCtrlr1PollingRate(const std::size_t &value);
 
     std::string getGearRatio(const std::string &motorName) const;
     bool getMotorReversed(const std::string &motorName) const;
@@ -33,7 +31,7 @@ public:
     int getOdometer() const { return odometer; }
     int getLastService() const { return lastService; }
     int getServiceInterval() const { return serviceInterval; }
-    void updateOdometer(int averagePosition);
+    void updateOdometer(const int &averagePosition);
     void checkServiceInterval();
 
 private:
