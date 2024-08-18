@@ -10,7 +10,7 @@
 #include "vex.h"
 
 std::string Version = "3.0b3 [RC1]";
-std::string BuildDate = "7/18/24";
+std::string BuildDate = "8/17/24";
 
 int main()
 {
@@ -19,4 +19,8 @@ int main()
     vexCodeInit();
     Competition.autonomous(autonomous);
     Competition.drivercontrol(userControl);
+    while (Competition.isEnabled())
+    {
+        vex::this_thread::sleep_for(10);
+    }
 }

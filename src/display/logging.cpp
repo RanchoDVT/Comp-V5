@@ -124,7 +124,7 @@ void displayControllerMessage(const std::string &functionName, const std::string
         scrollText(message, primaryController, timeOfDisplay);
         scrollText(message, partnerController, timeOfDisplay);
     }
-    vex::this_thread::sleep_for(timeOfDisplay / 10);
+    vex::this_thread::sleep_for(timeOfDisplay * 1000);
     clearScreen(false, true, true);
 }
 

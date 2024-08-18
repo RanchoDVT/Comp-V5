@@ -2,8 +2,13 @@
 
 void autonomous()
 {
-    logHandler("autonomous", "Test message.", Log::Level::Warn, 2);
-    return;
+	logHandler("autonomous", "Test message.", Log::Level::Warn, 2);
+	return;
+}
+
+void collision(const vex::axisType axis, const double x, const double y, const double z)
+{
+	printf("collision %d %6.2f %6.2f %6.2f\n", (int)axis, x, y, z);
 }
 
 /**
@@ -20,7 +25,7 @@ void userControl()
 	}
 
 	vex::thread motortemp(motorMonitor);
-
+	InertialGyro.collision(collision);
 	// Variables
 	double turnVolts;
 	double forwardVolts;
@@ -29,8 +34,8 @@ void userControl()
 	{
 		turnVolts = primaryController.Axis1.position() * 0.12; // -12 to 12
 		forwardVolts = primaryController.Axis3.position() * 0.12 * (1 - (std::abs(turnVolts) / 12));
-		LeftDriveSmart.spin(vex::forward, forwardVolts + turnVolts, vex::voltageUnits::volt);
-		RightDriveSmart.spin(vex::forward, forwardVolts - turnVolts, vex::voltageUnits::volt);
+		LeftDriveSmart.spin(vex::directionType::fwd, forwardVolts + turnVolts, vex::voltageUnits::volt);
+		RightDriveSmart.spin(vex::directionType::fwd, forwardVolts - turnVolts, vex::voltageUnits::volt);
 		vex::this_thread::sleep_for(ConfigManager.getCtrlr1PollingRate());
 	}
 	return;
