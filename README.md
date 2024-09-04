@@ -18,11 +18,11 @@ When high school starts for me, I *will* be in a robotics class, and then I can 
 3.0b3:
 
 1:  Automatic Emergency Braking 🔃 (Requires vision sensor or AI vision)  
-(Requires rewrite of User_Control | Prevent acceleration when collision is detected)  
+(Requires rewrite of User_Control | Prevent acceleration when a collision is imminent)  
 
 - Forward warning - 2 Seconds till impact  
 - Caution - 1.5 Seconds till impact  
-- Emergency breaking - Less than 1 second till impact  
+- Emergency braking - Less than 1 second till impact  
 
 2:  Read advanced motor config and triport config. ✅  
 3:  Scrolling on loghandler when messages are too big ✅  
