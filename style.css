@@ -1,7 +1,9 @@
-body {
+html {
 	background-color: black;
 	color: white;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	scroll-behavior: smooth;
+	padding-bottom: 2%;
 }
 
 nav {
@@ -11,7 +13,12 @@ nav {
 	padding: 0;
 	overflow: hidden;
 	background-color: #38444d;
+	position: -webkit-sticky;
+	/* Safari */
+	position: sticky;
+	top: 0;
 }
+
 
 input {
 	background: black;
@@ -28,12 +35,14 @@ select {
 }
 
 .config-output {
-    border-bottom: 1px solid white;
+	border-bottom: 1px solid white;
 	padding-top: 10px;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    white-space: pre-wrap; /* Ensures text wraps properly (Who thought this was a good idea???)*/
-    overflow-x: auto; /* Handles horizontal overflow (Same with this!!!)*/
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+	white-space: pre-wrap;
+	/* Ensures text wraps properly (Who thought this was a good idea???)*/
+	overflow-x: auto;
+	/* Handles horizontal overflow (Same with this!!!)*/
 }
 
 
@@ -84,7 +93,7 @@ li a,
 }
 
 li a:hover:not(.active) {
-	background-color: darkgray;
+	background-color: lightslategray;
 }
 
 li.dropdown {

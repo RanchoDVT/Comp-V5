@@ -3,34 +3,33 @@
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 
 <head>
-	<meta name="description" content="This is an example of a
-meta description. This will often show up in search results.">
-	<title>Voidless - Projects</title>
-	<link rel="shortcut icon" href="images/Logo.png">
-	<link rel="stylesheet" href="style.css">
-	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-	<script src="main.js"></script>
+    <meta name="description" content="My projects - Voidless7125">
+    <title>Voidless - Projects</title>
+    <link rel="shortcut icon" href="images/Logo.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="main.js"></script>
 
 </head>
 
 <body>
 
-	<nav>
-		<li><a href="index.html">Home</a></li>
-		<li class="active" class="dropdown">
-			<a href="projects.html" class="dropbtn">Projects</a>
-			<div class="dropdown-content">
-				<a target="_blank" href="https://github.com/Voidless7125/Comp-V5">Comp V5</a>
-				<a target="_blank" href="https://ranchodvt.github.io/Comp-V5/">This website!</a>
-			</div>
-		</li>
-		<li><a href="contact.html">Contact</a></li>
-		<li style="float: right;"><a href="about.html">About</a></li>
+    <nav>
+        <li><a href="index.html">Home</a></li>
+        <li class="active" class="dropdown">
+            <a href="projects.html" class="dropbtn">Projects</a>
+            <div class="dropdown-content">
+                <a target="_blank" href="https://github.com/Voidless7125/Comp-V5">Comp V5</a>
+                <a target="_blank" href="https://ranchodvt.github.io/Comp-V5/">This website!</a>
+            </div>
+        </li>
+        <li><a href="contact.html">Contact</a></li>
+        <li style="float: right;"><a href="about.html">About</a></li>
 
-	</nav>
+    </nav>
 
-	<h3>Voidless - Comp V2 (Vex V5)</h3>
-	<h1>Config File Generator</h1>
+    <h3>Voidless - Comp V2 (Vex V5)</h3>
+    <h1>Config File Generator</h1>
     <form id="config-form" action="javascript:void(0);">
         <h2>Motor Configuration</h2>
         <div class="form-group">
@@ -49,7 +48,7 @@ meta description. This will often show up in search results.">
             <label for="front-left-reversed">Front Left Reversed:</label>
             <input type="checkbox" id="front-left-reversed" name="front_left_reversed">
         </div>
-		<br>
+        <br>
         <div class="form-group">
             <label for="front-right-port">Front Right Motor Port:</label>
             <input type="number" id="front-right-port" name="front_right_port" min="0" max="20" value="10" required>
@@ -66,7 +65,7 @@ meta description. This will often show up in search results.">
             <label for="front-right-reversed">Front Right Reversed:</label>
             <input type="checkbox" id="front-right-reversed" name="front_right_reversed" checked>
         </div>
-		<br>
+        <br>
         <div class="form-group">
             <label for="rear-left-port">Rear Left Motor Port:</label>
             <input type="number" id="rear-left-port" name="rear_left_port" min="0" max="20" value="11" required>
@@ -83,7 +82,7 @@ meta description. This will often show up in search results.">
             <label for="rear-left-reversed">Rear Left Reversed:</label>
             <input type="checkbox" id="rear-left-reversed" name="rear_left_reversed">
         </div>
-		<br>
+        <br>
         <div class="form-group">
             <label for="rear-right-port">Rear Right Motor Port:</label>
             <input type="number" id="rear-right-port" name="rear_right_port" min="0" max="20" value="20" required>
@@ -100,7 +99,7 @@ meta description. This will often show up in search results.">
             <label for="rear-right-reversed">Rear Right Reversed:</label>
             <input type="checkbox" id="rear-right-reversed" name="rear_right_reversed" checked>
         </div>
-	<br>
+        <br>
         <div class="form-group">
             <label for="inertial-port">Inertial Sensor Port:</label>
             <input type="number" id="inertial-port" name="inertial_port" min="0" max="20" value="3" required>
@@ -125,7 +124,8 @@ meta description. This will often show up in search results.">
         </div>
         <div class="form-group">
             <label for="ctrlr1-polling-rate">Controller 1 Polling Rate:</label>
-            <input type="number" id="ctrlr1-polling-rate" name="ctrlr1_polling_rate" min="1" max="100" value="25" required>
+            <input type="number" id="ctrlr1-polling-rate" name="ctrlr1_polling_rate" min="1" max="100" value="25"
+                required>
         </div>
         <div class="form-group">
             <label for="version">Version:</label>
@@ -133,12 +133,11 @@ meta description. This will often show up in search results.">
         </div>
 
         <button type="submit">Generate Config</button>
-		<button id="copy-button" style="display: none;">Copy to Clipboard</button>	
+        <button id="copy-button" style="display: none;">Copy to Clipboard</button>
     </form>
-	<pre id="config-output" class="config-output"></pre>
-	<div id="changelog-content"></div>
-	<br>
-	<footer>Copyright © 2024 Voidless7125</footer>
+    <pre id="config-output" class="config-output"></pre>
+    <div id="changelog-content"></div>
+    <footer>Copyright © 2024 Voidless7125</footer>
 
 </body>
 

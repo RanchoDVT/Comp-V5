@@ -91,7 +91,10 @@ document.addEventListener('DOMContentLoaded', function () {
       if (configOutput.textContent) {
         navigator.clipboard.writeText(configOutput.textContent)
           .then(() => {
-            alert('Config copied to clipboard!');
+            console.debug('Config copied to clipboard!');
+            const button =
+              document.querySelector('copyButton');
+              copyButton.innerHTML = 'Copied! ✅';
           })
           .catch(err => {
             console.error('Error copying text (Thats one rare error!): ', err);
