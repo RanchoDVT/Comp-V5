@@ -90,6 +90,10 @@ document.addEventListener('DOMContentLoaded', function () {
   {
       PORT=${formData.get('inertial_port')}
   }
+  Rear_Bumper
+  {
+      PORT=${formData.get('rear_bumper_port')}
+  }
   PRINTLOGO=${formData.has('print_logo')}
   LOGTOFILE=${formData.has('log_to_file')}
   MAXOPTIONSSIZE=${formData.get('max_options_size')}
@@ -97,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
   CTRLR1POLLINGRATE=${formData.get('ctrlr1_polling_rate')}
   VERSION=${await getLatestReleaseVersion()}
 }`
-completeCheck = true;
+      completeCheck = true;
 
       configOutput.textContent = config;
 
