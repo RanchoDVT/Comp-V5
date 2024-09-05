@@ -30,18 +30,37 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+
 // I hate js, why do I need a DOM loader check?
 document.addEventListener('DOMContentLoaded', function () {
+
   var configForm = document.getElementById('config-form');
   var copyButton = document.getElementById('copy-button');
   var configOutput = document.getElementById('config-output');
 
-  if (configForm) {
-    configForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      const formData = new FormData(event.target);
 
-      const config = `MOTOR_CONFIG
+  if (configForm) {
+    configForm.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      // Function to get the latest release version from GitHub
+      async function getLatestReleaseVersion() {
+        const response = await fetch('https://api.github.com/repos/RanchoDVT/Comp-V5/releases/latest', {
+          method: 'GET',
+          headers: {
+            'User-Agent': 'JavaScript'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const latestTag = data.tag_name;
+        return latestTag;
+      }
+      const formData = new FormData(event.target);
+      config = `MOTOR_CONFIG
 {
   FRONT_LEFT_MOTOR
   {
@@ -76,8 +95,9 @@ document.addEventListener('DOMContentLoaded', function () {
   MAXOPTIONSSIZE=${formData.get('max_options_size')}
   POLLINGRATE=${formData.get('polling_rate')}
   CTRLR1POLLINGRATE=${formData.get('ctrlr1_polling_rate')}
-  VERSION=${formData.get('version')}
-}`;
+  VERSION=${await getLatestReleaseVersion()}
+}`
+completeCheck = true;
 
       configOutput.textContent = config;
 
@@ -94,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.debug('Config copied to clipboard!');
             const button =
               document.querySelector('copyButton');
-              copyButton.innerHTML = 'Copied! ✅';
+            copyButton.innerHTML = 'Copied! ✅';
           })
           .catch(err => {
             console.error('Error copying text (Thats one rare error!): ', err);
