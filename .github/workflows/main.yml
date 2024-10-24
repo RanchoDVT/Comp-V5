@@ -1,0 +1,19 @@
+name: Build Vex SDK
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: your-docker-repo/vex-sdk:latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build with Vex SDK
+        run: make -C /opt/vex-sdk/v5 all
