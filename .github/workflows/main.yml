@@ -3,7 +3,8 @@ name: Build Vex SDK
 on:
   push:
     branches:
-      - main
+      - dev
+      - stable
 
 jobs:
   build:
