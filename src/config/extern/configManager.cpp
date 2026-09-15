@@ -31,7 +31,13 @@ configManager::configManager(const std::string &configFileName, const std::strin
       configFileName(configFileName),
       maintenanceFileName(maintenanceFileName),
       maxOptionSize(4),
-      logToFile(true),
+      // Default OFF until parseConfig() proves an SD card is present and
+      // either loads LOGTOFILE from config.cfg or falls back to the
+      // no-card defaults. This object is constructed at static-init time,
+      // well before main()/parseConfig() run, so a default of `true` here
+      // meant every build briefly believed file logging was safe before
+      // anyone had checked for a card - see SD_Card_Logging()/parseConfig().
+      logToFile(false),
       POLLINGRATE(5),
       PRINTLOGO(true),
       CTRLR1POLLINGRATE(25),

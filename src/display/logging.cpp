@@ -250,19 +250,27 @@ void SD_Card_Logging(const Log::Level &level, const std::string &functionName, c
         return;
     }
 
-    std::ofstream LogFile("log.rtf", std::ios_base::out | std::ios_base::app);
-    if (ConfigManager.getLogToFile())
+    // Only touch the filesystem at all if file logging is actually wanted
+    // AND a card is physically present. Previously the ofstream was
+    // constructed unconditionally above this check, which meant every
+    // single log call - including the very first one at boot - tried to
+    // open a file on the SD card even when logging was disabled or no
+    // card was inserted at all.
+    if (!ConfigManager.getLogToFile() || !Brain.SDcard.isInserted())
     {
-        if (!LogFile)
-        {
-            logFileCreationFailed = true;
-            logHandler("logHandler", "Could not create logfile.", Log::Level::Warn, 3);
-            ConfigManager.setLogToFile(false);
-            return;
-        }
-        LogFile << "{\\rtf1\\ansi\\deff0 {\\colortbl;\\red0\\green0\\blue0;\\red255\\green0\\blue0;\\red0\\green255\\blue0;\\red0\\green0\\blue255;\\red255\\green255\\blue0;\\red255\\green0\\blue255;\\red0\\green255\\blue255;}\n";
-        LogFile << "\\cf" << rtfColors[static_cast<int>(level)] << " ";
-        LogFile << "[" << LogToString(level) << "] > Time: " << Brain.Timer.time(vex::timeUnits::sec) << " > Module: " << functionName << " > " << message << "\\line\n";
-        LogFile << "}\n";
+        return;
     }
+
+    std::ofstream LogFile("log.rtf", std::ios_base::out | std::ios_base::app);
+    if (!LogFile)
+    {
+        logFileCreationFailed = true;
+        logHandler("logHandler", "Could not create logfile.", Log::Level::Warn, 3);
+        ConfigManager.setLogToFile(false);
+        return;
+    }
+    LogFile << "{\\rtf1\\ansi\\deff0 {\\colortbl;\\red0\\green0\\blue0;\\red255\\green0\\blue0;\\red0\\green255\\blue0;\\red0\\green0\\blue255;\\red255\\green255\\blue0;\\red255\\green0\\blue255;\\red0\\green255\\blue255;}\n";
+    LogFile << "\\cf" << rtfColors[static_cast<int>(level)] << " ";
+    LogFile << "[" << LogToString(level) << "] > Time: " << Brain.Timer.time(vex::timeUnits::sec) << " > Module: " << functionName << " > " << message << "\\line\n";
+    LogFile << "}\n";
 }

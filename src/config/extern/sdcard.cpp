@@ -572,9 +572,15 @@ void configManager::setValuesFromConfig()
  */
 void configManager::parseConfig()
 {
-    logHandler("main", std::format("Version: {} | Build date: {}", Version, BuildDate), Log::Level::Info);
     primaryController.Screen.print("Starting up...");
 
+    // IMPORTANT: no logHandler() call belongs above this point. logToFile
+    // defaults to false (see configManager's constructor) precisely so
+    // that nothing tries to touch the SD card before we know whether one
+    // is even inserted; the very first log call - "Version: ..." below -
+    // must run only after that has been decided, or it inherits whatever
+    // stale/default state logToFile happened to be in and can attempt an
+    // SD write with no card present.
     if (Brain.SDcard.isInserted())
     {
         if (!Brain.SDcard.exists(configFileName.c_str()))
@@ -599,6 +605,13 @@ void configManager::parseConfig()
         serviceInterval = 1000;
         leftDeadzone = 10;  // Default left deadzone
         rightDeadzone = 10; // Default right deadzone
+    }
+
+    // Safe now: SD presence is known and logToFile reflects either the
+    // loaded config or the no-card defaults above.
+    logHandler("main", std::format("Version: {} | Build date: {}", Version, BuildDate), Log::Level::Info);
+    if (!Brain.SDcard.isInserted())
+    {
         logHandler("configParser", "No SD card installed. Using default values.", Log::Level::Info);
     }
     // NOTE: motors/Drivetrain/InertialGyro do not exist yet at this point -

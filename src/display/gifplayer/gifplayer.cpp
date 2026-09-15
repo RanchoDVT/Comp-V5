@@ -16,6 +16,14 @@ int emu_open(const char *path, int)
     emu_size = 0;
 
     FILE *f = fopen(path, "rb");
+    if (f == nullptr)
+    {
+        // Missing gif (no SD card, wrong filename, gif just wasn't copied
+        // over, etc). Every fseek/ftell below this point would dereference
+        // a null FILE* - let gd_open_gif()'s existing "file not found"
+        // handling take over instead of crashing here.
+        return -1;
+    }
     fseek(f, 0, SEEK_END);
     emu_size = ftell(f);
     fseek(f, 0, SEEK_SET); // same as rewind(f);
